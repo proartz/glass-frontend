@@ -1,6 +1,7 @@
 <template>
-    <div>
+    <div class="pa-2">
         <h1>Orders</h1>
+        <v-btn @click="fetchOrders" :loading="loading">Refresh</v-btn>
 
         <v-container>
             
@@ -47,17 +48,24 @@
 export default {
     data() {
         return {
+            loading: false,
             orders: []
         }
     },
-    created() {
-        this.$http.get('http://192.168.1.21:9090/orders').then(response => {
+     methods: {
+        fetchOrders() {
+            this.loading = true;
+            this.$http.get('http://192.168.1.21:9090/orders').then(response => {
             this.orders = response.body;
+            this.loading = false;
         }, response => { 
             console.log(response.body);
         });
-    }
-
+        }
+    },
+    created() {
+        this.fetchOrders();
+    },
 }
 </script>
 
