@@ -1,5 +1,9 @@
 <template>
     <nav>
+        <v-snackbar v-model="snackbar" :timeout="4000" top>
+            <span>New order added.</span>
+            <v-btn @click="snackbar = false">Close</v-btn>
+        </v-snackbar>
         <v-toolbar app>
             <v-toolbar-side-icon></v-toolbar-side-icon>
             <v-toolbar-title>glass</v-toolbar-title>
@@ -15,6 +19,7 @@
 export default {
     data() {
         return {
+            snackbar: false,
             links: [
                 {icon: 'dashboard', text: 'Orders', route: '/orders'},
                 {icon: 'folder', text: 'Positions', route: '/positions'},

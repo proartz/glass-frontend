@@ -1,12 +1,12 @@
 <template>
-    <div class="pa-2">
-        <h1>Orders</h1>
-        <v-btn @click="fetchOrders" :loading="loading">Refresh</v-btn>
+    <div>
+        <h1 class="subheading grey--text">Orders</h1>
 
         <v-container>
-            
+            <v-btn @click="fetchOrders" :loading="loading">Refresh</v-btn>
+            <AddOrder @orderAdded="fetchOrders"/>
             <v-card v-for="order in orders" :key="order.customer">
-                <v-layout row :class="`order ${order.status}`">
+                <v-layout row wrap :class="`pa-3 order ${order.status}`">
                     <v-flex>
                         <div class="caption grey--text">External Order Id</div>
                         <div>{{ order.externalOrderId }}</div>
@@ -45,7 +45,9 @@
 </template>
 
 <script>
+import AddOrder from '@/components/AddOrder'
 export default {
+    components: { AddOrder },
     data() {
         return {
             loading: false,
