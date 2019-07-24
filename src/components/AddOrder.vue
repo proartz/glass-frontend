@@ -3,18 +3,24 @@
         <v-btn slot="activator">Add New Order</v-btn>
         <v-card>
             <v-card-title>
-                <h2>Add a New Order</h2>
+                <h2>Add New Order</h2>
             </v-card-title>
             <v-card-text>
                 <v-form ref="form">
                     <v-text-field label="Customer" v-model="customer"></v-text-field>
                     <v-text-field label="External Order Id" v-model="externalOrderId"></v-text-field>
                     <v-text-field label="Invoice Number" v-model="invoiceNumber"></v-text-field>
-                    <v-text-field label="price" v-model="price"></v-text-field>
+                    <v-text-field label="Price" v-model="price"></v-text-field>
                     <v-menu>
                         <v-text-field label="Realisation Date" :value="realisationDate" slot="activator"></v-text-field>
                         <v-date-picker v-model="realisationDate"></v-date-picker>
                     </v-menu>
+                    <AddItem @addItem='addItem' />
+                    <v-list>
+                        <v-list-tile v-for="item in items" :key="item.id">
+                            <v-list-tile-title>{{ materials[item.materialId - 1] }}</v-list-tile-title>
+                        </v-list-tile>
+                    </v-list>
                     <v-spacer></v-spacer>
                     <v-btn @click="submit" :loading="loading">Add Order</v-btn>
                 </v-form>
@@ -24,25 +30,40 @@
 </template>
 
 <script>
+import AddItem from '@/components/AddItem'
+
 export default {
+    components: { AddItem },
     data() {
         return {
             loading: false,
             dialog: false,
-            customer: '',
+            materials: ['HB140', 'DH320', 'UV330', 'RR147'],
+
+            items: [],
+            attachments: [],
             externalOrderId: '',
+            customer: '',
             invoiceNumber: '',
+            price: '',
             realisationDate: '',
-            price: 0
+            createDate: '',
+            status: 'new',   
         }
     },
     methods: {
+        addItem(item) {
+            const clone = JSON.parse(JSON.stringify(item));
+            clone.id = this.items.length;
+            console.log(clone);
+            this.items.push(clone);
+        },
         submit() {
             if(this.$refs.form.validate()) {
                 this.loading = true;
 
                 const order = {
-                    items: [],
+                    items: this.items,
                     attachments: [],
                     externalOrderId: this.externalOrderId,
                     customer: this.customer,
