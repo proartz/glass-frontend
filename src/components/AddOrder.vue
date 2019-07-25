@@ -15,10 +15,10 @@
                         <v-text-field label="Realisation Date" :value="realisationDate" slot="activator"></v-text-field>
                         <v-date-picker v-model="realisationDate"></v-date-picker>
                     </v-menu>
-                    <AddItem @addItem='addItem' />
+                    <AddItem @addItem='addItem' v-bind:materialsItems="materialsItems"/>
                     <v-list>
                         <v-list-tile v-for="item in items" :key="item.id">
-                            <v-list-tile-title>{{ materials[item.materialId - 1] }}</v-list-tile-title>
+                            <v-list-tile-title>{{ materialsItems[item.materialId - 1] }}</v-list-tile-title>
                         </v-list-tile>
                     </v-list>
                     <v-spacer></v-spacer>
@@ -38,7 +38,8 @@ export default {
         return {
             loading: false,
             dialog: false,
-            materials: ['HB140', 'DH320', 'UV330', 'RR147'],
+            materials: [],
+            materialsItems: [],
 
             items: [],
             attachments: [],
@@ -85,7 +86,24 @@ export default {
                     console.log(response);
                 });
             }
+        },
+        fetchMaterials() {
+            this.loading = true;
+            this.$http.get('http://localhost:9090/materials').then(response => {
+                this.materials = response.body;
+                console.log(this.materials);
+                this.materials.forEach((material) => {
+                    this.materialsItems.push(material.name);
+                })
+                console.log(this.materialsItems);
+                this.loading = false;
+            }), response => {
+                console.error(response);
+            }
         }
+    },
+    created() {
+        this.fetchMaterials();
     }
 }
 </script>

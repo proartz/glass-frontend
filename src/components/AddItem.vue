@@ -7,7 +7,7 @@
             </v-card-title>
             <v-card-text>
                 <v-form ref="form">
-                    <v-select v-model="material" :items="materials" label="Material"></v-select>
+                    <v-select v-model="material" :items="materialsItems" label="Material"></v-select>
                     <v-text-field label="Width" v-model="item.width"></v-text-field>
                     <v-text-field label="Height" v-model="item.height"></v-text-field>
                     <v-text-field label="Depth" v-model="item.depth"></v-text-field>
@@ -23,10 +23,10 @@
 
 <script>
 export default {
+    props: [ 'materialsItems' ],
     data() {
         return {
             dialog: false,
-            materials: ['HB140', 'DH320', 'UV330', 'RR147'],
             material: '',
             operationsItems: ['Drilling', 'Cutting', 'Smoothing', 'CNC'],
             operationsValues: [],
@@ -47,7 +47,7 @@ export default {
         addItem() {
             this.loading = true;
             if(this.$refs.form.validate()){
-                this.item.materialId = (this.materials.indexOf(this.material) + 1);
+                this.item.materialId = (this.materialsItems.indexOf(this.material) + 1);
                 this.operationsValues.forEach((value) => {
                     this.item.operations.push({name: value, status: "new"});
                 })
@@ -56,8 +56,8 @@ export default {
                 this.dialog = false;
                 this.$emit('addItem', this.item);
             }
-        }
-    }
+        },
+    },
 }
 </script>
 
