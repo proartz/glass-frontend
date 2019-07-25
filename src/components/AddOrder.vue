@@ -12,8 +12,8 @@
                     <v-text-field label="Invoice Number" v-model="invoiceNumber"></v-text-field>
                     <v-text-field label="Price" v-model="price"></v-text-field>
                     <v-menu>
-                        <v-text-field label="Realisation Date" :value="realisationDate" slot="activator"></v-text-field>
-                        <v-date-picker v-model="realisationDate"></v-date-picker>
+                        <v-text-field label="Due Date" :value="dueDate" slot="activator"></v-text-field>
+                        <v-date-picker v-model="dueDate"></v-date-picker>
                     </v-menu>
                     <AddItem @addItem='addItem' v-bind:materialsItems="materialsItems"/>
                     <v-list>
@@ -47,7 +47,7 @@ export default {
             customer: '',
             invoiceNumber: '',
             price: '',
-            realisationDate: '',
+            dueDate: '',
             createDate: '',
             status: 'new',   
         }
@@ -70,7 +70,7 @@ export default {
                     customer: this.customer,
                     invoiceNumber: this.invoiceNumber,
                     price: this.price,
-                    realisationDate: this.realisationDate,
+                    dueDate: this.dueDate,
                     status: 'new'
                 };
 

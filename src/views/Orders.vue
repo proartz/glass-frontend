@@ -24,8 +24,8 @@
                         <div>{{ order.price }}</div>
                     </v-flex>
                     <v-flex>
-                        <div class="caption grey--text">Realisation Date</div>
-                        <div>{{ order.realisationDate }}</div>
+                        <div class="caption grey--text">Due Date</div>
+                        <div>{{ order.dueDate }}</div>
                     </v-flex>
                     <v-flex>
                         <div class="caption grey--text">Create Date</div>
@@ -57,7 +57,7 @@ export default {
      methods: {
         fetchOrders() {
             this.loading = true;
-            this.$http.get('http://192.168.1.21:9090/orders').then(response => {
+            this.$http.get('http://localhost:9090/orders').then(response => {
             this.orders = response.body;
             this.loading = false;
         }, response => { 
