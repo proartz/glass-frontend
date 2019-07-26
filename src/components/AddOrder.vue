@@ -18,7 +18,14 @@
                     <AddItem @addItem='addItem' v-bind:materialsItems="materialsItems"/>
                     <v-list>
                         <v-list-tile v-for="item in items" :key="item.id">
-                            <v-list-tile-title>{{ materialsItems[item.materialId - 1] }}</v-list-tile-title>
+                            <v-list-tile-content>
+                                <v-list-tile-title>{{ materialsItems[item.materialId - 1] }}</v-list-tile-title>
+                            </v-list-tile-content>
+                            <v-list-tile-action>
+                                <v-btn @click="deleteItem(`${item.id}`)">
+                                    <v-icon>delete</v-icon>
+                                </v-btn>
+                            </v-list-tile-action>
                         </v-list-tile>
                     </v-list>
                     <v-spacer></v-spacer>
@@ -68,6 +75,13 @@ export default {
         addItem(item) {
             item.id = this.items.length;
             this.items.push(item);
+        },
+        deleteItem(id) {
+            for(var i = 0; i < this.items.length; i++) {
+                if(this.items[i].id == id) {
+                    this.items.splice(i, 1);
+                }
+            }
         },
         submit() {
             if(this.$refs.form.validate()) {
