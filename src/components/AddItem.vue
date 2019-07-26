@@ -15,6 +15,7 @@
                     <v-text-field label="Note" v-model="note"></v-text-field>
                     <v-select v-model="operationsValues" :items="operationsItems" attach chips label="Operations" multiple></v-select>
                     <v-btn @click="addItem">Add Item</v-btn>
+                    <v-btn @click="clearForm">Clear</v-btn>
                 </v-form>
             </v-card-text>
         </v-card>

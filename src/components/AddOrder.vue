@@ -23,6 +23,7 @@
                     </v-list>
                     <v-spacer></v-spacer>
                     <v-btn @click="submit" :loading="loading">Add Order</v-btn>
+                    <v-btn @click="clearForm">Clear</v-btn>
                 </v-form>
             </v-card-text>
         </v-card>
