@@ -65,10 +65,8 @@ export default {
             this.status = '';
         },
         addItem(item) {
-            const clone = JSON.parse(JSON.stringify(item));
-            clone.id = this.items.length;
-            console.log(clone);
-            this.items.push(clone);
+            item.id = this.items.length;
+            this.items.push(item);
         },
         submit() {
             if(this.$refs.form.validate()) {

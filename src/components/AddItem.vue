@@ -8,11 +8,11 @@
             <v-card-text>
                 <v-form ref="form">
                     <v-select v-model="material" :items="materialsItems" label="Material"></v-select>
-                    <v-text-field label="Width" v-model="item.width"></v-text-field>
-                    <v-text-field label="Height" v-model="item.height"></v-text-field>
-                    <v-text-field label="Depth" v-model="item.depth"></v-text-field>
-                    <v-text-field label="Quantity" v-model="item.quantity"></v-text-field>
-                    <v-text-field label="Note" v-model="item.note"></v-text-field>
+                    <v-text-field label="Width" v-model="width"></v-text-field>
+                    <v-text-field label="Height" v-model="height"></v-text-field>
+                    <v-text-field label="Depth" v-model="depth"></v-text-field>
+                    <v-text-field label="Quantity" v-model="quantity"></v-text-field>
+                    <v-text-field label="Note" v-model="note"></v-text-field>
                     <v-select v-model="operationsValues" :items="operationsItems" attach chips label="Operations" multiple></v-select>
                     <v-btn @click="addItem">Add Item</v-btn>
                 </v-form>
@@ -31,42 +31,52 @@ export default {
             operationsItems: ['Drilling', 'Cutting', 'Smoothing', 'CNC'],
             operationsValues: [],
 
-            item: {
-                id: '',
-                materialId: '',
-                operations: [],
-                width: '',
-                height: '',
-                depth: '',
-                quantity: '',
-                note: ''
-            }
+            id: '',
+            materialId: '',
+            operations: [],
+            width: '',
+            height: '',
+            depth: '',
+            quantity: '',
+            note: ''
         }
     },
     methods: {
         clearForm() {
             this.material = '';
             this.operationsValues = [];
-            this.item.id = '';
-            this.item.materialId = '';
-            this.item.operations = [];
-            this.item.width = '';
-            this.item.height = '';
-            this.item.depth = '';
-            this.item.quantity = '';
-            this.item.note = '';
+            this.id = '';
+            this.materialId = '';
+            this.operations = [];
+            this.width = '';
+            this.height = '';
+            this.depth = '';
+            this.quantity = '';
+            this.note = '';
         },
         addItem() {
             this.loading = true;
             if(this.$refs.form.validate()){
-                this.item.materialId = (this.materialsItems.indexOf(this.material) + 1);
+                this.materialId = (this.materialsItems.indexOf(this.material) + 1);
                 this.operationsValues.forEach((value) => {
-                    this.item.operations.push({name: value, status: "new"});
+                    this.operations.push({name: value, status: "new"});
                 })
-                console.log(this.item);
+
+                const item = {
+                    id: this.id,
+                    materialId: this.materialId,
+                    operations: this.operations,
+                    width: this.width,
+                    height: this.height,
+                    depth: this.depth,
+                    quantity: this.quantity,
+                    note: this.note
+                }
+
+                console.log(item);
                 this.loading = false;
                 this.dialog = false;
-                this.$emit('addItem', this.item);
+                this.$emit('addItem', item);
                 this.clearForm();
             }
         },
