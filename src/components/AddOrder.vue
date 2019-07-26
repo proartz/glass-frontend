@@ -17,15 +17,16 @@
                     </v-menu>
                     <AddItem @addItem='addItem' v-bind:materialsItems="materialsItems"/>
                     <v-list>
+                        <v-subheader class="pa-0">ITEMS</v-subheader>
                         <v-list-tile v-for="item in items" :key="item.id">
-                            <v-list-tile-content>
-                                <v-list-tile-title>{{ materialsItems[item.materialId - 1] }}</v-list-tile-title>
-                            </v-list-tile-content>
                             <v-list-tile-action>
-                                <v-btn @click="deleteItem(`${item.id}`)">
+                                <v-btn text icon class="my=2" @click="deleteItem(`${item.id}`)">
                                     <v-icon>delete</v-icon>
                                 </v-btn>
                             </v-list-tile-action>
+                            <v-list-tile-content>
+                                <v-list-tile-title width="0%">{{ materialsItems[item.materialId - 1] }}</v-list-tile-title>
+                            </v-list-tile-content>
                         </v-list-tile>
                     </v-list>
                     <v-spacer></v-spacer>
