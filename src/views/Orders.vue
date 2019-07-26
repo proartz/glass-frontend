@@ -58,12 +58,12 @@ export default {
         fetchOrders() {
             this.loading = true;
             this.$http.get('http://localhost:9090/orders').then(response => {
-            this.orders = response.body;
-            this.loading = false;
-        }, response => { 
-            console.log(response.body);
-        });
-        }
+                this.orders = response.body;
+                this.loading = false;
+            }, response => { 
+                console.log(response.body);
+            });
+        },
     },
     created() {
         this.fetchOrders();

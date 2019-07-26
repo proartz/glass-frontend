@@ -53,6 +53,17 @@ export default {
         }
     },
     methods: {
+        clearForm() {
+            this.items = [];
+            this.attachments = [];
+            this.externalOrderId = '';
+            this.customer = '';
+            this.invoiceNumber = '';
+            this.price = '';
+            this.dueDate = '';
+            this.createDate = '';
+            this.status = '';
+        },
         addItem(item) {
             const clone = JSON.parse(JSON.stringify(item));
             clone.id = this.items.length;
@@ -82,6 +93,7 @@ export default {
                     this.loading = false;
                     this.dialog = false;
                     this.$emit('orderAdded');
+                    this.clearForm();
                 }, response => {
                     console.log(response);
                 });

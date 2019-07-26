@@ -44,6 +44,18 @@ export default {
         }
     },
     methods: {
+        clearForm() {
+            this.material = '';
+            this.operationsValues = [];
+            this.item.id = '';
+            this.item.materialId = '';
+            this.item.operations = [];
+            this.item.width = '';
+            this.item.height = '';
+            this.item.depth = '';
+            this.item.quantity = '';
+            this.item.note = '';
+        },
         addItem() {
             this.loading = true;
             if(this.$refs.form.validate()){
@@ -55,6 +67,7 @@ export default {
                 this.loading = false;
                 this.dialog = false;
                 this.$emit('addItem', this.item);
+                this.clearForm();
             }
         },
     },
