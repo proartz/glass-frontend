@@ -65,13 +65,14 @@ export default {
         clearForm() {
             this.items = [];
             this.attachments = [];
-            this.externalOrderId = '';
-            this.customer = '';
-            this.invoiceNumber = '';
-            this.price = '';
-            this.dueDate = '';
-            this.createDate = '';
-            this.status = '';
+            this.$refs.form.reset();
+            // this.externalOrderId = '';
+            // this.customer = '';
+            // this.invoiceNumber = '';
+            // this.price = '';
+            // this.dueDate = '';
+            // this.createDate = '';
+            // this.status = '';
         },
         addItem(item) {
             item.id = this.items.length;
@@ -101,7 +102,7 @@ export default {
 
                 console.log(order);
 
-                this.$http.post('http://localhost:9090/order', order,
+                this.$http.post('http://192.168.1.21:9090/order', order,
                 {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                     console.log(response.status);
                     this.loading = false;
@@ -115,7 +116,7 @@ export default {
         },
         fetchMaterials() {
             this.loading = true;
-            this.$http.get('http://localhost:9090/materials').then(response => {
+            this.$http.get('http://192.168.1.21:9090/materials').then(response => {
                 this.materials = response.body;
                 console.log(this.materials);
                 this.materials.forEach((material) => {

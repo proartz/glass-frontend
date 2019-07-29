@@ -44,16 +44,17 @@ export default {
     },
     methods: {
         clearForm() {
-            this.material = '';
-            this.operationsValues = [];
-            this.id = '';
-            this.materialId = '';
+            // this.material = '';
+            // this.operationsValues = [];
+            // this.id = '';
+            // this.materialId = '';
+            // this.width = '';
+            // this.height = '';
+            // this.depth = '';
+            // this.quantity = '';
+            // this.note = '';
+            this.$refs.form.reset();
             this.operations = [];
-            this.width = '';
-            this.height = '';
-            this.depth = '';
-            this.quantity = '';
-            this.note = '';
         },
         addItem() {
             this.loading = true;
