@@ -4,8 +4,10 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VueResource from 'vue-resource'
+import VeeValidate from 'vee-validate'
 
 Vue.use(VueResource);
+Vue.use(VeeValidate);
 
 Vue.config.productionTip = false
 
