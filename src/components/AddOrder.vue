@@ -12,10 +12,9 @@
                     <v-text-field v-validate="`max:30`" :counter="30" :error-messages="errors.collect('invoiceNumber')" data-vv-name="invoiceNumber"  label="Invoice Number" v-model="invoiceNumber"></v-text-field>
                     <v-text-field v-validate="`numeric|max_value:999999999999999999`" :error-messages="errors.collect('price')" data-vv-name="price"   label="Price" v-model="price"></v-text-field>
                     <v-menu>
-                        <v-text-field v-validate="`required|date_format:yyyy-mm-dd|after:afterTarget`" :error-messages="errors.collect('dueDate')" data-vv-name="dueDate"  label="Due Date" :value="dueDate" slot="activator"></v-text-field>
-                        <v-date-picker v-model="dueDate"></v-date-picker>
+                        <v-text-field v-validate="`required`" :error-messages="errors.collect('dueDate')" data-vv-name="dueDate" label="Due Date" :value="dueDate" slot="activator"></v-text-field>
+                        <v-date-picker v-model="dueDate" :min="now"></v-date-picker>
                     </v-menu>
-                    <v-text-field v-show="false" ref="afterTarget" :value="now"></v-text-field>
                     <AddItem @addItem='addItem' v-bind:materialsItems="materialsItems"/>
                     <v-list>
                         <v-subheader class="pa-0">ITEMS</v-subheader>
@@ -66,12 +65,11 @@ export default {
     },
     methods: {
         date() {
-            var yestarday = new Date();
-            yestarday.setDate(yestarday.getDate() - 1);
+            var today = new Date();
 
-            var dd = String(yestarday.getDate()).padStart(2, '0');
-            var mm = String(yestarday.getMonth() + 1).padStart(2, '0'); //January is 0!
-            var yyyy = yestarday.getFullYear();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
             this.now = yyyy + '-' + mm + '-' + dd;
             console.log(this.now);
         },
@@ -80,11 +78,11 @@ export default {
             this.attachments = [];
             this.$refs.form.reset();
             this.$validator.reset();
+            this.dueDate = '';
             // this.externalOrderId = '';
             // this.customer = '';
             // this.invoiceNumber = '';
             // this.price = '';
-            // this.dueDate = '';
             // this.createDate = '';
             // this.status = '';
         },
