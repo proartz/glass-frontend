@@ -45,7 +45,28 @@
                     <v-container v-for="item in order.items" :key="item.id">
                         <v-layout row>
                             <v-flex>
-                                <div></div>
+                                <div>Id:</div>
+                                <div>{{ item.id }}</div>
+                            </v-flex>
+                            <v-flex>
+                                <div>width:</div>
+                                <div>{{ item.width }}</div>
+                            </v-flex>
+                            <v-flex>
+                                <div>height:</div>
+                                <div>{{ item.height }}</div>
+                            </v-flex>
+                            <v-flex>
+                                <div>depth:</div>
+                                <div>{{ item.depth }}</div>
+                            </v-flex>
+                            <v-flex>
+                                <div>materialid:</div>
+                                <div>{{ item.materialId }}</div>
+                            </v-flex>
+                            <v-flex>
+                                <div>note:</div>
+                                <div>{{ item.note }}</div>
                             </v-flex>
                         </v-layout>
                     </v-container>
@@ -79,19 +100,20 @@ export default {
         },
         fetchItems(id) {
             console.log("Order with id=" + id + " was selected.");
-            // this.loading = true;
-            // this.$http.get('http://192.168.1.21:9090/items').then(response => {
-            //     this.orders = response.body;
-            //     this.loading = false;
-            //     console.log(this.orders);
-            // }, response => { 
-            //     console.log(response.body);
-            // });
+            this.loading = true;
+            this.$http.get('http://192.168.1.21:9090/items/' + (id + 1)).then(response => {
+                const items = response.body;
+                this.orders[id].items = items;
+                console.log(this.orders[id].items);
+                this.loading = false;
+            }, response => { 
+                console.log(response.body);
+            });
         }
     },
     watch: {
         panel:  function(index) {
-            if(index) {
+            if(index != null) {
                 this.fetchItems(index)
             }
         }
