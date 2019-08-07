@@ -42,13 +42,13 @@
 import AddItem from '@/components/AddItem'
 
 export default {
+    props: [ 'materialsItems' ],
     components: { AddItem },
     data() {
         return {
             now: '',
             loading: false,
             dialog: false,
-            materials: [],
             materialsItems: [],
 
             items: [],
@@ -127,24 +127,9 @@ export default {
                     });
                 }
             });
-        },
-        fetchMaterials() {
-            this.loading = true;
-            this.$http.get('http://192.168.1.21:9090/materials').then(response => {
-                this.materials = response.body;
-                console.log(this.materials);
-                this.materials.forEach((material) => {
-                    this.materialsItems.push(material.name);
-                })
-                console.log(this.materialsItems);
-                this.loading = false;
-            }), response => {
-                console.error(response);
-            }
         }
     },
     created() {
-        this.fetchMaterials();
         this.date();
     }
 }

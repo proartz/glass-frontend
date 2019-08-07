@@ -4,7 +4,7 @@
 
     
         <v-btn @click="fetchOrders" :loading="loading">Refresh</v-btn>
-        <AddOrder @orderAdded="fetchOrders"/>
+        <AddOrder @orderAdded="fetchOrders"  v-bind:materialsItems="materialsItems"/>
         <v-container>
             <v-expansion-panel v-model="panel">
                 <v-expansion-panel-content v-for="order in orders" :key="order.customer">
@@ -45,19 +45,19 @@
                     <v-container v-for="item in order.items" :key="item.id">
                         <v-layout row>
                             <v-flex>
-                                <div>Id:</div>
+                                <div class="caption grey--text">Id:</div>
                                 <div>{{ item.id }}</div>
                             </v-flex>
                             <v-flex>
-                                <div>width:</div>
+                                <div class="caption grey--text">width:</div>
                                 <div>{{ item.width }}</div>
                             </v-flex>
                             <v-flex>
-                                <div>height:</div>
+                                <div class="caption grey--text">height:</div>
                                 <div>{{ item.height }}</div>
                             </v-flex>
                             <v-flex>
-                                <div>depth:</div>
+                                <div class="caption grey--text">depth:</div>
                                 <div>{{ item.depth }}</div>
                             </v-flex>
                             <v-flex>
@@ -82,6 +82,8 @@ export default {
     components: { AddOrder },
     data() {
         return {
+            materials: [],
+            materialsItems: [],
             panel: [],
             loading: false,
             orders: []
@@ -97,6 +99,20 @@ export default {
             }, response => { 
                 console.log(response.body);
             });
+        },
+        fetchMaterials() {
+            this.loading = true;
+            this.$http.get('http://192.168.1.21:9090/materials').then(response => {
+                this.materials = response.body;
+                console.log(this.materials);
+                this.materials.forEach((material) => {
+                    this.materialsItems.push(material.name);
+                })
+                console.log(this.materialsItems);
+                this.loading = false;
+            }), response => {
+                console.error(response);
+            }
         },
         fetchItems(id) {
             console.log("Order with id=" + id + " was selected.");
@@ -120,6 +136,7 @@ export default {
     },
     created() {
         this.fetchOrders();
+        this.fetchMaterials();
     },
 }
 </script>
