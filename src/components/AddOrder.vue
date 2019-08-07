@@ -49,7 +49,6 @@ export default {
             now: '',
             loading: false,
             dialog: false,
-            materialsItems: [],
 
             items: [],
             attachments: [],

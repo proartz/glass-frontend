@@ -42,31 +42,27 @@
                         </v-layout>
                     </template>
                     <v-divider></v-divider>
-                    <v-container v-for="item in order.items" :key="item.id">
-                        <v-layout row>
+                    <v-container class="py-1">
+                        <v-layout row v-for="item in order.items" :key="item.id">
                             <v-flex>
-                                <div class="caption grey--text">Id:</div>
-                                <div>{{ item.id }}</div>
+                                <div class="caption grey--text">Material:</div>
+                                <div>{{ materialsItems[item.materialId - 1] }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">width:</div>
+                                <div class="caption grey--text">Width:</div>
                                 <div>{{ item.width }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">height:</div>
+                                <div class="caption grey--text">Height:</div>
                                 <div>{{ item.height }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">depth:</div>
+                                <div class="caption grey--text">Depth:</div>
                                 <div>{{ item.depth }}</div>
                             </v-flex>
                             <v-flex>
-                                <div>materialid:</div>
-                                <div>{{ item.materialId }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div>note:</div>
-                                <div>{{ item.note }}</div>
+                                <div class="caption grey--text">Quantity:</div>
+                                <div>{{ item.quantity }}</div>
                             </v-flex>
                         </v-layout>
                     </v-container>
