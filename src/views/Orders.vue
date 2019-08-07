@@ -4,15 +4,23 @@
 
     
         <v-btn @click="fetchOrders" :loading="loading">Refresh</v-btn>
-        <AddOrder @orderAdded="fetchOrders"  v-bind:materialsItems="materialsItems"/>
-        <v-container>
-            <v-expansion-panel v-model="panel">
+        <AddOrder @orderAdded="fetchOrders" v-bind:materialsItems="materialsItems"/>
+        <v-container fluid>
+            <v-expansion-panel v-model="panel" >
                 <v-expansion-panel-content v-for="order in orders" :key="order.customer">
                     <template v-slot:header>
                         <v-layout row wrap :class="`pa-3 order ${order.status}`">
                             <v-flex>
                                 <div class="caption grey--text">External Order Id</div>
                                 <div>{{ order.externalOrderId }}</div>
+                            </v-flex>
+                            <v-flex>
+                               <ViewOrder v-bind:materialsItems="materialsItems" v-bind:orderId="order.id"/>
+                            </v-flex>
+                            <v-flex>
+                                <v-btn text icon color="gray">
+                                    <v-icon>edit</v-icon>
+                                </v-btn>
                             </v-flex>
                             <v-flex>
                                 <div class="caption grey--text">Customer</div>
@@ -42,7 +50,7 @@
                         </v-layout>
                     </template>
                     <v-divider></v-divider>
-                    <v-container class="py-1">
+                    <v-container class="py-1 pl-5">
                         <v-layout row v-for="item in order.items" :key="item.id">
                             <v-flex>
                                 <div class="caption grey--text">Material:</div>
@@ -73,9 +81,14 @@
 </template>
 
 <script>
-import AddOrder from '@/components/AddOrder'
+import AddOrder from '@/components/AddOrder';
+import ViewOrder from '@/components/ViewOrder';
+
 export default {
-    components: { AddOrder },
+    components: { 
+        AddOrder,
+        ViewOrder
+    },
     data() {
         return {
             materials: [],
