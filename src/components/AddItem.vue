@@ -2,9 +2,28 @@
     <v-dialog v-model="dialog">
         <v-btn slot="activator">Add New Item</v-btn>
         <v-card>
-            <v-card-title>
-                <h2>Add New Item</h2>
-            </v-card-title>
+            <v-toolbar card dark color="primary">
+                <v-btn icon dark @click="dialog = false">
+                <v-icon>close</v-icon>
+                </v-btn>
+                <v-toolbar-title>Add New Item</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-toolbar-items>
+                <v-btn dark flat @click="dialog = false"></v-btn>
+                </v-toolbar-items>
+                <v-menu bottom right offset-y>
+                <template v-slot:activator="{ on }">
+                    <v-btn dark icon v-on="on">
+                    <v-icon>more_vert</v-icon>
+                    </v-btn>
+                </template>
+                <v-list>
+                    <v-list-tile v-for="(item, i) in toolbarItems" :key="i" @click="">
+                    <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                    </v-list-tile>
+                </v-list>
+                </v-menu>
+            </v-toolbar>
             <v-card-text>
                 <v-form ref="form">
                     <v-select v-model="material" :items="materialsItems" label="Material"></v-select>
@@ -28,9 +47,11 @@ export default {
     data() {
         return {
             dialog: false,
+            toolbarItems: [],
             material: '',
-            operationsItems: ['Drilling', 'Cutting', 'Smoothing', 'CNC'],
+            operationsItems: ['Cutting', 'Sanding', 'Drilling', 'CNC', 'Hardening', 'Enamelling', 'Lamination', 'Release'],
             operationsValues: [],
+            operationStatusItems: ['Unscheduled', 'Scheduled', 'Ready For Realisation', 'Done'],
 
             id: '',
             materialId: '',
@@ -61,7 +82,7 @@ export default {
             if(this.$refs.form.validate()){
                 this.materialId = (this.materialsItems.indexOf(this.material) + 1);
                 this.operationsValues.forEach((value) => {
-                    this.operations.push({name: value, status: "new"});
+                    this.operations.push({name: value, status: this.operationStatusItems[0]});
                 })
 
                 const item = {

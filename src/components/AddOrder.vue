@@ -2,9 +2,28 @@
     <v-dialog v-model="dialog">
         <v-btn slot="activator">Add New Order</v-btn>
         <v-card>
-            <v-card-title>
-                <h2>Add New Order</h2>
-            </v-card-title>
+            <v-toolbar card dark color="primary">
+            <v-btn icon dark @click="dialog = false">
+              <v-icon>close</v-icon>
+            </v-btn>
+            <v-toolbar-title>Add New Order</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+              <v-btn dark flat @click="dialog = false"></v-btn>
+            </v-toolbar-items>
+            <v-menu bottom right offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn dark icon v-on="on">
+                  <v-icon>more_vert</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-tile v-for="(item, i) in toolbarItems" :key="i" @click="">
+                  <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                </v-list-tile>
+              </v-list>
+            </v-menu>
+          </v-toolbar>
             <v-card-text>
                 <v-form ref="form">
                     <v-text-field v-validate="`required|max:30`" :counter="30" :error-messages="errors.collect('customer')" data-vv-name="customer" label="Customer" v-model="customer"></v-text-field>
@@ -49,6 +68,7 @@ export default {
             now: '',
             loading: false,
             dialog: false,
+            toolbarItems: [],
 
             items: [],
             attachments: [],

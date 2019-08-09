@@ -4,7 +4,7 @@
             <span>New order added.</span>
             <v-btn @click="snackbar = false">Close</v-btn>
         </v-snackbar>
-        <v-toolbar app>
+        <v-toolbar card dark color="primary" app>
             <v-toolbar-side-icon></v-toolbar-side-icon>
             <v-toolbar-title>glass</v-toolbar-title>
             <v-spacer></v-spacer>
