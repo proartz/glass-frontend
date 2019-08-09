@@ -98,10 +98,10 @@ export default {
             orders: []
         }
     },
-     methods: {
+    methods: {
         fetchOrders() {
             this.loading = true;
-            this.$http.get('http://192.168.1.21:9090/orders').then(response => {
+            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/orders').then(response => {
                 this.orders = response.body;
                 this.loading = false;
                 console.log(this.orders);
@@ -111,7 +111,7 @@ export default {
         },
         fetchMaterials() {
             this.loading = true;
-            this.$http.get('http://192.168.1.21:9090/materials').then(response => {
+            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/materials').then(response => {
                 this.materials = response.body;
                 console.log(this.materials);
                 this.materials.forEach((material) => {
@@ -126,7 +126,7 @@ export default {
         fetchItems(id) {
             console.log("Order with id=" + id + " was selected.");
             this.loading = true;
-            this.$http.get('http://192.168.1.21:9090/items/' + (id + 1)).then(response => {
+            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/items/' + (id + 1)).then(response => {
                 const items = response.body;
                 this.orders[id].items = items;
                 console.log(this.orders[id].items);

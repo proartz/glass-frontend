@@ -134,7 +134,7 @@ export default {
 
                     console.log(order);
 
-                    this.$http.post('http://192.168.1.21:9090/order', order,
+                    this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/order', order,
                     {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                         console.log(response.status);
                         this.loading = false;

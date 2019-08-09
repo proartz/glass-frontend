@@ -145,7 +145,7 @@ export default {
     methods: {
         fetchOrder() {
             this.loading = true;
-            this.$http.get('http://192.168.1.21:9090/order/' + this.orderId).then(response => {
+            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/order/' + this.orderId).then(response => {
                 this.order = response.body;
                 this.loading = false;
                 console.log(this.order);

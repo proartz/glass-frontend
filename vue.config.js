@@ -1,7 +1,7 @@
 module.exports = {
     devServer: {
-        host: '192.168.1.23',
-        port: 8080,
+        host: process.env.VUE_APP_HOST,
+        port: process.env.VUE_APP_PORT,
         // headers: {
         //     "Access-Control-Allow-Origin": "*",
         //     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
