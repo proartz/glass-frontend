@@ -43,7 +43,10 @@
 
 <script>
 export default {
-    props: [ 'materialsItems' ],
+    props: [
+        'materialsItems',
+        'operationStatusItems'
+        ],
     data() {
         return {
             dialog: false,
@@ -51,7 +54,6 @@ export default {
             material: '',
             operationsItems: ['Cutting', 'Sanding', 'Drilling', 'CNC', 'Hardening', 'Enamelling', 'Lamination', 'Release'],
             operationsValues: [],
-            operationStatusItems: ['Unscheduled', 'Scheduled', 'Ready For Realisation', 'Done'],
 
             id: '',
             materialId: '',
@@ -60,6 +62,7 @@ export default {
             height: '',
             depth: '',
             quantity: '',
+            status: '',
             note: ''
         }
     },
@@ -93,6 +96,7 @@ export default {
                     height: this.height,
                     depth: this.depth,
                     quantity: this.quantity,
+                    status: this.operationStatusItems[0],
                     note: this.note
                 }
 

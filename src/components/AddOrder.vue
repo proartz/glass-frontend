@@ -34,7 +34,7 @@
                         <v-text-field v-validate="`required`" :error-messages="errors.collect('dueDate')" data-vv-name="dueDate" label="Due Date" :value="dueDate" slot="activator"></v-text-field>
                         <v-date-picker v-model="dueDate" :min="now"></v-date-picker>
                     </v-menu>
-                    <AddItem @addItem='addItem' v-bind:materialsItems="materialsItems"/>
+                    <AddItem @addItem='addItem' v-bind:materialsItems="materialsItems" v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
                     <v-list>
                         <v-subheader class="pa-0">ITEMS</v-subheader>
                         <v-list-tile v-for="item in items" :key="item.id">
@@ -61,7 +61,11 @@
 import AddItem from '@/components/AddItem'
 
 export default {
-    props: [ 'materialsItems' ],
+    props: [
+        'materialsItems',
+        'orderStatusItems',
+        'operationStatusItems'
+    ],
     components: { AddItem },
     data() {
         return {
@@ -78,7 +82,7 @@ export default {
             price: '',
             dueDate: '',
             createDate: '',
-            status: 'new',
+            status: '',
 
         }
     },
@@ -90,7 +94,6 @@ export default {
             var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = today.getFullYear();
             this.now = yyyy + '-' + mm + '-' + dd;
-            console.log(this.now);
         },
         clearForm() {
             this.items = [];
@@ -129,7 +132,7 @@ export default {
                         invoiceNumber: this.invoiceNumber,
                         price: this.price,
                         dueDate: this.dueDate,
-                        status: 'new'
+                        status: this.orderStatusItems[0]
                     };
 
                     console.log(order);

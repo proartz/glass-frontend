@@ -4,7 +4,7 @@
 
     
         <v-btn @click="fetchOrders" :loading="loading">Refresh</v-btn>
-        <AddOrder @orderAdded="fetchOrders" v-bind:materialsItems="materialsItems"/>
+        <AddOrder @orderAdded="fetchOrders" v-bind:materialsItems="materialsItems" v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
         <v-container fluid>
             <v-expansion-panel v-model="panel" >
                 <v-expansion-panel-content v-for="order in orders" :key="order.customer">
@@ -15,7 +15,8 @@
                                 <div>{{ order.externalOrderId }}</div>
                             </v-flex>
                             <v-flex>
-                               <ViewOrder v-bind:materialsItems="materialsItems" v-bind:orderId="order.id"/>
+                               <ViewOrder v-bind:materialsItems="materialsItems" v-bind:orderId="order.id" v-bind:orderStatusValues="orderStatusValues"
+                                          v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
                             </v-flex>
                             <v-flex>
                                 <v-btn text icon color="gray">
@@ -44,7 +45,7 @@
                             </v-flex>
                             <v-flex>
                                 <div class="right">
-                                    <v-chip small :class="`${order.status} white--text caption my-2`">{{ order.status }}</v-chip>
+                                    <v-chip small :class="`${orderStatusValues[orderStatusItems.indexOf(order.status)]} white--text caption my-2`">{{ order.status }}</v-chip>
                                 </div>
                             </v-flex>
                         </v-layout>
@@ -93,6 +94,9 @@ export default {
         return {
             materials: [],
             materialsItems: [],
+            orderStatusItems: ['Received', 'In Realisation', 'Ready', 'Dispended', 'Paid'],
+            orderStatusValues: ['Received', 'InRealisation', 'Ready', 'Dispended', 'Paid'],
+            operationStatusItems: ['Ready For Realisation', 'In Realisation', 'Done'],
             panel: [],
             loading: false,
             orders: []
@@ -104,7 +108,6 @@ export default {
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/orders').then(response => {
                 this.orders = response.body;
                 this.loading = false;
-                console.log(this.orders);
             }, response => { 
                 console.log(response.body);
             });
@@ -113,11 +116,9 @@ export default {
             this.loading = true;
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/materials').then(response => {
                 this.materials = response.body;
-                console.log(this.materials);
                 this.materials.forEach((material) => {
                     this.materialsItems.push(material.name);
                 })
-                console.log(this.materialsItems);
                 this.loading = false;
             }), response => {
                 console.error(response);
@@ -152,12 +153,36 @@ export default {
 
 <style>
 
-.order.new{
+.order.Received{
     border-left: 4px solid blue;
 }
+.order.InRealisation{
+    border-left: 4px solid yellow;
+}
+.order.Ready{
+    border-left: 4px solid green;
+}
+.order.Dispensed{
+    border-left: 4px solid orange;
+}
+.order.Paid{
+    border-left: 4px solid red;
+}
 
-.v-chip.new{
+.v-chip.Received{
     background: blue;
+}
+.v-chip.InRealisation{
+    background: yellow;
+}
+.v-chip.Ready{
+    background: green;
+}
+.v-chip.Dispensed{
+    background: orange;
+}
+.v-chip.Paid{
+    background: red;
 }
 
 </style>

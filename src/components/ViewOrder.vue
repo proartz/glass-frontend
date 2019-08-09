@@ -77,7 +77,7 @@
             <v-expansion-panel v-model="panel" expand>
                 <v-expansion-panel-content v-for="item in order.items" :key="item.id">
                     <template v-slot:header>
-                        <v-layout row wrap class="py-0 order">
+                        <v-layout row wrap :class="`py-0 item ${operationStatusValues[operationStatusItems.indexOf(item.status)]}`">
                             <v-flex>
                                 <div class="caption grey--text">Material</div>
                                 <div>{{ materialsItems[item.materialId - 1] }}</div>
@@ -100,7 +100,7 @@
                             </v-flex>
                             <v-flex>
                                 <div class="right">
-                                    <v-chip small class="new white--text caption my-2">new</v-chip>
+                                    <v-chip small :class="`${operationStatusValues[operationStatusItems.indexOf(item.status)]} white--text caption my-2`">{{ item.status }}</v-chip>
                                 </div>
                             </v-flex>
                         </v-layout>
@@ -114,7 +114,7 @@
                             </v-flex>
                             <v-flex>
                                 <div>
-                                    <v-chip small :class="`${operation.status} white--text caption my-2`">{{ operation.status }}</v-chip>
+                                    <v-chip small :class="`${operationStatusValues[operationStatusItems.indexOf(operation.status)]} white--text caption my-2`">{{ operation.status }}</v-chip>
                                 </div>
                             </v-flex>
                         </v-layout>
@@ -131,13 +131,17 @@
 export default {
     props: [
         'materialsItems',
-        'orderId'
+        'orderId',
+        'orderStatusItems',
+        'orderStatusValues',
+        'operationStatusItems'
      ],
     data() {
         return {
             dialog: false,
             panel: [],
             items: [],
+            operationStatusValues: ['ReadyForRealisation', 'InRealisation', 'Done'],
 
             order: {}
         }
@@ -148,7 +152,7 @@ export default {
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/order/' + this.orderId).then(response => {
                 this.order = response.body;
                 this.loading = false;
-                console.log(this.order);
+                this.order.items[0].operations[0]
             }, response => { 
                 console.log(response.body);
             });
@@ -159,4 +163,25 @@ export default {
     // }
 }
 </script>
+<style>
 
+  .v-chip.ReadyForRealisation{
+      background: blue;
+  }
+  .v-chip.InRealisation{
+      background: yellow;
+  }
+  .v-chip.Done{
+      background: green;
+  }
+  .item.ReadyForRealisation{
+      border-left: 4px solid blue;
+  }
+  .item.InRealisation{
+      border-left: 4px solid yellow;
+  }
+  .item.Done{
+      border-left: 4px solid green;
+  }
+
+</style>
