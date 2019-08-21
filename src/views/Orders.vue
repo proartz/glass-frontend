@@ -173,7 +173,7 @@ export default {
     background: blue;
 }
 .v-chip.InRealisation{
-    background: yellow;
+    background: red;
 }
 .v-chip.Ready{
     background: green;

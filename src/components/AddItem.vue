@@ -12,16 +12,16 @@
                 <v-btn dark flat @click="dialog = false"></v-btn>
                 </v-toolbar-items>
                 <v-menu bottom right offset-y>
-                <template v-slot:activator="{ on }">
-                    <v-btn dark icon v-on="on">
-                    <v-icon>more_vert</v-icon>
-                    </v-btn>
-                </template>
-                <v-list>
-                    <v-list-tile v-for="(item, i) in toolbarItems" :key="i" @click="">
-                    <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                    </v-list-tile>
-                </v-list>
+                    <template v-slot:activator="{ on }">
+                        <v-btn dark icon v-on="on">
+                        <v-icon>more_vert</v-icon>
+                        </v-btn>
+                    </template>
+                    <v-list>
+                        <v-list-tile v-for="(item, i) in toolbarItems" :key="i" @click="">
+                        <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                        </v-list-tile>
+                    </v-list>
                 </v-menu>
             </v-toolbar>
             <v-card-text>
@@ -32,7 +32,10 @@
                     <v-text-field label="Depth" v-model="depth"></v-text-field>
                     <v-text-field label="Quantity" v-model="quantity"></v-text-field>
                     <v-text-field label="Note" v-model="note"></v-text-field>
-                    <v-select v-model="operationsValues" :items="operationsItems" attach chips label="Operations" multiple></v-select>
+                    <div class=" grey--text">Operations</div>
+                    <v-container>
+                            <v-checkbox v-for="(operation, i) in operationsItems" :key="i" v-model="operationsSelected[operationsItems.indexOf(operation)]" :label="`${operation}`"></v-checkbox>
+                    </v-container>
                     <v-btn @click="addItem">Add Item</v-btn>
                     <v-btn @click="clearForm">Clear</v-btn>
                 </v-form>
@@ -46,13 +49,14 @@ export default {
     props: [
         'materialsItems',
         'operationStatusItems'
-        ],
+    ],
     data() {
         return {
             dialog: false,
             toolbarItems: [],
             material: '',
-            operationsItems: ['Cutting', 'Sanding', 'Drilling', 'CNC', 'Hardening', 'Enamelling', 'Lamination', 'Release'],
+            operationsItems: ['Cutting', 'Sanding', 'Drilling', 'CNC', 'Hardening', 'Enamelling', 'Lamination'],
+            operationsSelected: [false, false, false, false, false, false, false],
             operationsValues: [],
 
             id: '',
@@ -84,9 +88,12 @@ export default {
             this.loading = true;
             if(this.$refs.form.validate()){
                 this.materialId = (this.materialsItems.indexOf(this.material) + 1);
-                this.operationsValues.forEach((value) => {
-                    this.operations.push({name: value, status: this.operationStatusItems[0]});
-                })
+                var i;
+                for( i = 0; i < this.operationsSelected.length; i++) {
+                    if(this.operationsSelected[i] == true) {
+                        this.operations.push({name: this.operationsItems[i], status: this.operationStatusItems[0]});
+                    }
+                }
 
                 const item = {
                     id: this.id,

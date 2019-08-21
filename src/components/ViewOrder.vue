@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="dialog" lazy>
-         <v-btn slot="activator" @click="fetchOrder" text icon color="gray">
+         <v-btn slot="activator" @click="loadOrder" text icon color="gray">
             <v-icon>remove_red_eye</v-icon>
         </v-btn>
          <v-card tile>
@@ -100,7 +100,7 @@
                             </v-flex>
                             <v-flex>
                                 <div class="right">
-                                    <v-chip small :class="`${operationStatusValues[operationStatusItems.indexOf(item.status)]} white--text caption my-2`">{{ item.status }}</v-chip>
+                                    <v-chip small :class="`status ${operationStatusValues[operationStatusItems.indexOf(item.status)]} white--text caption my-2`">{{ item.status }}</v-chip>
                                 </div>
                             </v-flex>
                         </v-layout>
@@ -109,12 +109,27 @@
                     <v-container class="py-1 pl-5">
                         <v-layout row v-for="operation in item.operations" :key="operation.id">
                             <v-flex>
+                                <div class="caption grey--text">Id:</div>
+                                <div>{{ operation.id }}</div>
+                            </v-flex>
+                            <v-flex>
                                 <div class="caption grey--text">Name:</div>
                                 <div>{{ operation.name }}</div>
                             </v-flex>
                             <v-flex>
                                 <div>
-                                    <v-chip small :class="`${operationStatusValues[operationStatusItems.indexOf(operation.status)]} white--text caption my-2`">{{ operation.status }}</v-chip>
+                                  <v-menu offset-y>
+                                    <template v-slot:activator="{ on }">
+                                      <v-chip v-on="on" :class="`status ${operationStatusValues[operationStatusItems.indexOf(operation.status)]} white--text caption my-2`">
+                                        {{ operation.status }}
+                                      </v-chip>
+                                    </template>
+                                    <v-list>
+                                      <v-list-tile v-for="(status, index) in operationStatusItems" :key="index" @click="operation.status = status">
+                                        <v-list-tile-title>{{ status }}</v-list-tile-title>
+                                      </v-list-tile>
+                                    </v-list>
+                                  </v-menu>
                                 </div>
                             </v-flex>
                         </v-layout>
@@ -129,7 +144,7 @@
 <script>
 
 export default {
-    props: [
+    props: [ 
         'materialsItems',
         'orderId',
         'orderStatusItems',
@@ -147,17 +162,25 @@ export default {
         }
     },
     methods: {
+        loadOrder() {
+          this.fetchOrder();
+        },
         fetchOrder() {
             this.loading = true;
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/order/' + this.orderId).then(response => {
                 this.order = response.body;
+                console.log(this.order);
                 this.loading = false;
-                this.order.items[0].operations[0]
             }, response => { 
                 console.log(response.body);
             });
         },
     },
+    computed: {
+      sortedOperations(item) {
+        
+      }
+    }
     // created() {
     //     this.fetchOrder();
     // }
@@ -165,20 +188,20 @@ export default {
 </script>
 <style>
 
-  .v-chip.ReadyForRealisation{
+  .status.ReadyForRealisation{
       background: blue;
   }
-  .v-chip.InRealisation{
-      background: yellow;
+  .status.InRealisation{
+      background: red;
   }
-  .v-chip.Done{
+  .status.Done{
       background: green;
   }
   .item.ReadyForRealisation{
       border-left: 4px solid blue;
   }
   .item.InRealisation{
-      border-left: 4px solid yellow;
+      border-left: 4px solid red;
   }
   .item.Done{
       border-left: 4px solid green;
