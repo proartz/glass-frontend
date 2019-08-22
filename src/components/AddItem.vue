@@ -57,7 +57,8 @@ export default {
             material: '',
             operationsItems: ['Cutting', 'Sanding', 'Drilling', 'CNC', 'Hardening', 'Enamelling', 'Lamination'],
             operationsSelected: [false, false, false, false, false, false, false],
-            operationsValues: [],
+            stageOneOperations: ['Cutting', 'Sanding', 'Drilling', 'CNC'],
+            stageTwoOperations: ['Hardening', 'Enamelling', 'Lamination'],
 
             id: '',
             materialId: '',
@@ -91,9 +92,11 @@ export default {
                 var i;
                 for( i = 0; i < this.operationsSelected.length; i++) {
                     if(this.operationsSelected[i] == true) {
-                        this.operations.push({name: this.operationsItems[i], status: this.operationStatusItems[0]});
+                        this.operations.push({name: this.operationsItems[i], status: this.operationStatusItems[1]});
                     }
                 }
+
+                this.prepareStatuses();
 
                 const item = {
                     id: this.id,
@@ -103,7 +106,7 @@ export default {
                     height: this.height,
                     depth: this.depth,
                     quantity: this.quantity,
-                    status: this.operationStatusItems[0],
+                    status: this.operationStatusItems[1],
                     note: this.note
                 }
 
@@ -114,6 +117,32 @@ export default {
                 this.clearForm();
             }
         },
+        prepareStatuses() {
+            // check if there is any operation from stage one and count them
+            var stageOneCounter = 0;
+            var operation;
+            for(operation of this.operations) {
+                if(this.stageOneOperations.includes(operation.name)) {
+                    stageOneCounter++;
+                }
+            }
+
+            // if there are operations in stageone, disable every operation that is in stage two
+            if(stageOneCounter > 0 ){
+                this.disableStageTwoOperations();
+            }
+        },
+        disableStageTwoOperations() {
+            var operation;
+            for(operation of this.operations) {
+                if(this.stageTwoOperations.includes(operation.name)) {
+                    this.disableOperation(operation);
+                }
+            }
+        },
+        disableOperation(operation) {
+            operation.status = this.operationStatusItems[0];
+        }
     },
 }
 </script>

@@ -156,7 +156,15 @@ export default {
             dialog: false,
             panel: [],
             items: [],
-            operationStatusValues: ['ReadyForRealisation', 'InRealisation', 'Done'],
+            operationStatusValues: ['Disabled', 'ReadyForRealisation', 'InRealisation', 'Done'],
+
+            stageOneOperations: ['Cutting', 'Sanding', 'Drilling', 'CNC'],
+            stageTwoOperations: ['Hardening', 'Enamelling', 'Lamination'],
+            stageOneCounter: [],
+            disabledOperations: [
+              [false, true, true, true],
+              [false, false, false, true]
+            ],
 
             order: {}
         }
@@ -164,6 +172,7 @@ export default {
     methods: {
         loadOrder() {
           this.fetchOrder();
+          this.prepareStatuses();
         },
         fetchOrder() {
             this.loading = true;
@@ -175,6 +184,36 @@ export default {
                 console.log(response.body);
             });
         },
+        prepareStatuses() {
+          
+          var i = 0;
+          this.order.items.forEach(item => {
+
+            // check if there is any operation from stage one and count them
+            this.stageOneCounter.push(0);
+            for(operation in item.operations) {
+              if(this.stageOneOperations.includes(operation)) {
+                this.stageOneCounter[i]++;
+              }
+            }
+
+            // if there are operations in stageone, disable every operation that is in stage two
+            if(this.stageOneCounter[i] > 0 ){
+              this.disableStageTwoOperations(i);
+            }
+            i++;
+          });
+        },
+        disableStageTwoOperations(item) {
+          for(operation in this.order.items[item]) {
+            if(this.stageTwoOperations.includes(operation)) {
+              this.disableOperation(operation);
+            }
+          }
+        },
+        disableOperation(operation) {
+
+        }
     },
     computed: {
       sortedOperations(item) {
