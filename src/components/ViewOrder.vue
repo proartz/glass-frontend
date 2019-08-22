@@ -77,7 +77,7 @@
             <v-expansion-panel v-model="panel" expand>
                 <v-expansion-panel-content v-for="item in order.items" :key="item.id">
                     <template v-slot:header>
-                        <v-layout row wrap :class="`py-0 item ${operationStatusValues[operationStatusItems.indexOf(item.status)]}`">
+                        <v-layout row wrap :class="`py-0 item ${item.status}`">
                             <v-flex>
                                 <div class="caption grey--text">Material</div>
                                 <div>{{ materialsItems[item.materialId - 1] }}</div>
@@ -100,7 +100,7 @@
                             </v-flex>
                             <v-flex>
                                 <div class="right">
-                                    <v-chip small :class="`status ${operationStatusValues[operationStatusItems.indexOf(item.status)]} white--text caption my-2`">{{ item.status }}</v-chip>
+                                    <v-chip small :class="`status ${item.status} white--text caption my-2`">{{ item.status }}</v-chip>
                                 </div>
                             </v-flex>
                         </v-layout>
@@ -118,9 +118,9 @@
                             </v-flex>
                             <v-flex>
                                 <div>
-                                  <v-menu offset-y>
+                                  <v-menu offset-y :disabled="`${operation.status}` == operationStatusItems[0]">
                                     <template v-slot:activator="{ on }">
-                                      <v-chip v-on="on" :class="`status ${operationStatusValues[operationStatusItems.indexOf(operation.status)]} white--text caption my-2`">
+                                      <v-chip v-on="on" :class="`status ${operation.status} white--text caption my-2`">
                                         {{ operation.status }}
                                       </v-chip>
                                     </template>
@@ -161,10 +161,6 @@ export default {
             stageOneOperations: ['Cutting', 'Sanding', 'Drilling', 'CNC'],
             stageTwoOperations: ['Hardening', 'Enamelling', 'Lamination'],
             stageOneCounter: [],
-            disabledOperations: [
-              [false, true, true, true],
-              [false, false, false, true]
-            ],
 
             order: {}
         }
@@ -172,13 +168,13 @@ export default {
     methods: {
         loadOrder() {
           this.fetchOrder();
-          this.prepareStatuses();
         },
         fetchOrder() {
             this.loading = true;
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/order/' + this.orderId).then(response => {
                 this.order = response.body;
                 console.log(this.order);
+                this.prepareStatuses();
                 this.loading = false;
             }, response => { 
                 console.log(response.body);
@@ -187,42 +183,24 @@ export default {
         prepareStatuses() {
           
           var i = 0;
-          this.order.items.forEach(item => {
+          var item;
+          for(item of this.order.items){
 
             // check if there is any operation from stage one and count them
             this.stageOneCounter.push(0);
-            for(operation in item.operations) {
-              if(this.stageOneOperations.includes(operation)) {
+            var operation;
+            for(operation of item.operations) {
+              if(this.stageOneOperations.includes(operation.name)) {
                 this.stageOneCounter[i]++;
               }
             }
+          };
+        },
 
-            // if there are operations in stageone, disable every operation that is in stage two
-            if(this.stageOneCounter[i] > 0 ){
-              this.disableStageTwoOperations(i);
-            }
-            i++;
-          });
-        },
-        disableStageTwoOperations(item) {
-          for(operation in this.order.items[item]) {
-            if(this.stageTwoOperations.includes(operation)) {
-              this.disableOperation(operation);
-            }
-          }
-        },
         disableOperation(operation) {
-
+            operation.status = this.operationStatusItems[0];
         }
     },
-    computed: {
-      sortedOperations(item) {
-        
-      }
-    }
-    // created() {
-    //     this.fetchOrder();
-    // }
 }
 </script>
 <style>
