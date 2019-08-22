@@ -100,7 +100,7 @@
                             </v-flex>
                             <v-flex>
                                 <div class="right">
-                                    <v-chip small :class="`status ${item.status} white--text caption my-2`">{{ item.status }}</v-chip>
+                                    <v-chip small :class="`status ${operationStatusValues[operationStatusItems.indexOf(item.status)]} white--text caption my-2`">{{ item.status }}</v-chip>
                                 </div>
                             </v-flex>
                         </v-layout>
@@ -118,14 +118,14 @@
                             </v-flex>
                             <v-flex>
                                 <div>
-                                  <v-menu offset-y :disabled="`${operation.status}` == operationStatusItems[0]">
+                                  <v-menu offset-y :disabled="`${operation.status}` == operationStatusItems[0] || `${operation.status}` == operationStatusItems[3]">
                                     <template v-slot:activator="{ on }">
-                                      <v-chip v-on="on" :class="`status ${operation.status} white--text caption my-2`">
+                                      <v-chip v-on="on" :class="`status ${operationStatusValues[operationStatusItems.indexOf(operation.status)]} white--text caption my-2`">
                                         {{ operation.status }}
                                       </v-chip>
                                     </template>
                                     <v-list>
-                                      <v-list-tile v-for="(status, index) in operationStatusItems" :key="index" @click="operation.status = status">
+                                      <v-list-tile v-for="(status, index) in operationStatusItems" :key="index" @click="changeStatus(item, operation, status)">
                                         <v-list-tile-title>{{ status }}</v-list-tile-title>
                                       </v-list-tile>
                                     </v-list>
@@ -196,22 +196,81 @@ export default {
             }
           };
         },
-
+        changeStatus(item, operation, newStatus) {
+          operation.status = newStatus;
+          if(newStatus == "In Realisation") {
+            this.disableOtherOperationsInStage(item, operation);
+          } else if(newStatus == "Done") {
+              if(this.stageOneOperations.includes(operation.name)) {
+                this.stageOneCounter[this.order.items.indexOf(item)]--;
+                if(this.stageOneCounter[this.order.items.indexOf(item)] > 0) {
+                  this.enableOtherOperationsInStage(item, operation);
+                } else {
+                  this.enableStageTwoOperations(item);
+                }
+              } else {
+                this.enableOtherOperationsInStage(item, operation);
+              }
+          }
+        },
+        disableOtherOperationsInStage(item, operation) {
+          var otherOperation;
+          if(this.stageOneOperations.includes(operation.name)) {
+            for(otherOperation of item.operations) {
+              if(this.stageOneOperations.includes(otherOperation.name) && otherOperation != operation && otherOperation.status != "Done") {
+                this.disableOperation(otherOperation);
+              }
+            }  
+          } else {
+            for(otherOperation of item.operations) {
+              if(this.stageTwoOperations.includes(otherOperation.name) && otherOperation != operation && otherOperation.status != "Done") {
+                this.disableOperation(otherOperation);
+              }
+            }  
+          }
+        },
+        enableOtherOperationsInStage(item, operation) {
+          var otherOperation;
+          if(this.stageOneOperations.includes(operation.name)) {
+            for(otherOperation of item.operations) {
+              if(this.stageOneOperations.includes(otherOperation.name) && otherOperation != operation && otherOperation.status == "Disabled") {
+                this.enableOperation(otherOperation);
+              }
+            }  
+          } else {
+            for(otherOperation of item.operations) {
+              if(this.stageTwoOperations.includes(otherOperation.name) && otherOperation != operation && otherOperation.status == "Disabled") {
+                this.enableOperation(otherOperation);
+              }
+            }  
+          }
+        },
+        enableStageTwoOperations(item) {
+          var otherOperation;
+          for(otherOperation of item.operations) {
+            if(this.stageTwoOperations.includes(otherOperation.name)) {
+              this.enableOperation(otherOperation);
+            }
+          }  
+        },
         disableOperation(operation) {
             operation.status = this.operationStatusItems[0];
+        },
+        enableOperation(operation) {
+            operation.status = this.operationStatusItems[1];
         }
     },
 }
 </script>
 <style>
 
-  .status.ReadyForRealisation{
+  .v-chip.ReadyForRealisation{
       background: blue;
   }
-  .status.InRealisation{
+  .v-chip.InRealisation{
       background: red;
   }
-  .status.Done{
+  .v-chip.Done{
       background: green;
   }
   .item.ReadyForRealisation{
