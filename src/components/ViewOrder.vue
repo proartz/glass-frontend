@@ -194,11 +194,35 @@ export default {
                 this.stageOneCounter[i]++;
               }
             }
-          };
+          }
         },
         changeStatus(item, operation, newStatus) {
+          this.loading = true;
+
+          const changeStatusDto = {
+              orderId: this.orderId,
+              itemId: item.id,
+              operationId: operation.id,
+              newStatus: newStatus
+          };
+
+          console.log(changeStatusDto);
+
+          this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
+          {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
+              this.order = response.body;
+              console.log(response.status);
+              this.loading = false;
+          }, response => {
+              console.log(response);
+          });
+        },
+        changeStatusOld(item, operation, newStatus) {
           operation.status = newStatus;
           if(newStatus == "In Realisation") {
+            if(item.status != "In Realisation") {
+              item.status = "In Realisation";
+            }
             this.disableOtherOperationsInStage(item, operation);
           } else if(newStatus == "Done") {
               if(this.stageOneOperations.includes(operation.name)) {
