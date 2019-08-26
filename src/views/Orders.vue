@@ -96,7 +96,7 @@ export default {
             materialsItems: [],
             orderStatusItems: ['Received', 'In Realisation', 'Ready', 'Dispended', 'Paid'],
             orderStatusValues: ['Received', 'InRealisation', 'Ready', 'Dispended', 'Paid'],
-            operationStatusItems: ['Disabled', 'Ready For Realisation', 'In Realisation', 'Done'],
+            operationStatusItems: ['DISABLED', 'READY_FOR_REALISATION' , 'IN_REALISATION', 'DONE'],
             panel: [],
             loading: false,
             orders: []

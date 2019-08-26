@@ -96,7 +96,7 @@ export default {
                     }
                 }
 
-                this.prepareStatuses();
+                // this.prepareStatuses();
 
                 const item = {
                     id: this.id,

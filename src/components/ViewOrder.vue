@@ -100,7 +100,7 @@
                             </v-flex>
                             <v-flex>
                                 <div class="right">
-                                    <v-chip small :class="`status ${operationStatusValues[operationStatusItems.indexOf(item.status)]} white--text caption my-2`">{{ item.status }}</v-chip>
+                                    <v-chip small :class="`status ${item.status} white--text caption my-2`">{{ item.status }}</v-chip>
                                 </div>
                             </v-flex>
                         </v-layout>
@@ -120,7 +120,7 @@
                                 <div>
                                   <v-menu offset-y :disabled="`${operation.status}` == operationStatusItems[0] || `${operation.status}` == operationStatusItems[3]">
                                     <template v-slot:activator="{ on }">
-                                      <v-chip v-on="on" :class="`status ${operationStatusValues[operationStatusItems.indexOf(operation.status)]} white--text caption my-2`">
+                                      <v-chip v-on="on" :class="`status ${operation.status} white--text caption my-2`">
                                         {{ operation.status }}
                                       </v-chip>
                                     </template>
@@ -156,7 +156,6 @@ export default {
             dialog: false,
             panel: [],
             items: [],
-            operationStatusValues: ['Disabled', 'ReadyForRealisation', 'InRealisation', 'Done'],
 
             stageOneOperations: ['Cutting', 'Sanding', 'Drilling', 'CNC'],
             stageTwoOperations: ['Hardening', 'Enamelling', 'Lamination'],
@@ -288,13 +287,13 @@ export default {
 </script>
 <style>
 
-  .v-chip.ReadyForRealisation{
+  .v-chip.READY_FOR_REALISATION{
       background: blue;
   }
-  .v-chip.InRealisation{
+  .v-chip.IN_REALISATION{
       background: red;
   }
-  .v-chip.Done{
+  .v-chip.DONE{
       background: green;
   }
   .item.ReadyForRealisation{
