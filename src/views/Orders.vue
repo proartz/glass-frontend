@@ -4,7 +4,7 @@
 
     
         <v-btn @click="fetchOrders" :loading="loading">Refresh</v-btn>
-        <AddOrder @orderAdded="fetchOrders" v-bind:materialsItems="materialsItems" v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
+        <AddOrder @orderAdded="fetchOrders" v-bind:materialsItems="materialsItems" v-bind:operationStatusItems="operationStatusItems"/>
         <v-container fluid>
             <v-expansion-panel v-model="panel" >
                 <v-expansion-panel-content v-for="order in orders" :key="order.customer">
@@ -45,7 +45,7 @@
                             </v-flex>
                             <v-flex>
                                 <div class="right">
-                                    <v-chip small :class="`${orderStatusValues[orderStatusItems.indexOf(order.status)]} white--text caption my-2`">{{ order.status }}</v-chip>
+                                    <v-chip small :class="`${order.status} white--text caption my-2`">{{ order.status }}</v-chip>
                                 </div>
                             </v-flex>
                         </v-layout>
@@ -94,8 +94,7 @@ export default {
         return {
             materials: [],
             materialsItems: [],
-            orderStatusItems: ['Received', 'In Realisation', 'Ready', 'Dispended', 'Paid'],
-            orderStatusValues: ['Received', 'InRealisation', 'Ready', 'Dispended', 'Paid'],
+            orderStatusItems: ['RECEIVED', 'IN_REALISATION', 'READY', 'DELIVERED', 'PAID'],
             operationStatusItems: ['DISABLED', 'READY_FOR_REALISATION' , 'IN_REALISATION', 'DONE'],
             panel: [],
             loading: false,
@@ -153,35 +152,35 @@ export default {
 
 <style>
 
-.order.Received{
+.order.RECEIVED{
     border-left: 4px solid blue;
 }
-.order.InRealisation{
+.order.IN_REALISATION{
     border-left: 4px solid yellow;
 }
-.order.Ready{
+.order.READY{
     border-left: 4px solid green;
 }
-.order.Dispensed{
+.order.DELIVERED{
     border-left: 4px solid orange;
 }
-.order.Paid{
+.order.PAID{
     border-left: 4px solid red;
 }
 
-.v-chip.Received{
+.v-chip.RECEIVED{
     background: blue;
 }
-.v-chip.InRealisation{
+.v-chip.IN_REALISATION{
     background: red;
 }
-.v-chip.Ready{
+.v-chip.READY{
     background: green;
 }
-.v-chip.Dispensed{
+.v-chip.DELIVERED{
     background: orange;
 }
-.v-chip.Paid{
+.v-chip.PAID{
     background: red;
 }
 

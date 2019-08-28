@@ -34,7 +34,7 @@
                         <v-text-field v-validate="`required`" :error-messages="errors.collect('dueDate')" data-vv-name="dueDate" label="Due Date" :value="dueDate" slot="activator"></v-text-field>
                         <v-date-picker v-model="dueDate" :min="now"></v-date-picker>
                     </v-menu>
-                    <AddItem @addItem='addItem' v-bind:materialsItems="materialsItems" v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
+                    <AddItem @addItem='addItem' v-bind:materialsItems="materialsItems" v-bind:operationStatusItems="operationStatusItems"/>
                     <v-list>
                         <v-subheader class="pa-0">ITEMS</v-subheader>
                         <v-list-tile v-for="item in items" :key="item.id">
@@ -63,7 +63,6 @@ import AddItem from '@/components/AddItem'
 export default {
     props: [
         'materialsItems',
-        'orderStatusItems',
         'operationStatusItems'
     ],
     components: { AddItem },
@@ -101,12 +100,6 @@ export default {
             this.$refs.form.reset();
             this.$validator.reset();
             this.dueDate = '';
-            // this.externalOrderId = '';
-            // this.customer = '';
-            // this.invoiceNumber = '';
-            // this.price = '';
-            // this.createDate = '';
-            // this.status = '';
         },
         addItem(item) {
             item.id = this.items.length;
@@ -132,7 +125,7 @@ export default {
                         invoiceNumber: this.invoiceNumber,
                         price: this.price,
                         dueDate: this.dueDate,
-                        status: this.orderStatusItems[0]
+                        status: ''
                     };
 
                     console.log(order);

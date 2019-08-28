@@ -73,15 +73,6 @@ export default {
     },
     methods: {
         clearForm() {
-            // this.material = '';
-            // this.operationsValues = [];
-            // this.id = '';
-            // this.materialId = '';
-            // this.width = '';
-            // this.height = '';
-            // this.depth = '';
-            // this.quantity = '';
-            // this.note = '';
             this.$refs.form.reset();
             this.operations = [];
         },
@@ -92,7 +83,7 @@ export default {
                 var i;
                 for( i = 0; i < this.operationsSelected.length; i++) {
                     if(this.operationsSelected[i] == true) {
-                        this.operations.push({name: this.operationsItems[i], status: this.operationStatusItems[1]});
+                        this.operations.push({name: this.operationsItems[i], status: ''});
                     }
                 }
 

@@ -147,8 +147,6 @@ export default {
     props: [ 
         'materialsItems',
         'orderId',
-        'orderStatusItems',
-        'orderStatusValues',
         'operationStatusItems'
      ],
     data() {
