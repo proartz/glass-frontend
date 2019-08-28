@@ -108,32 +108,6 @@ export default {
                 this.clearForm();
             }
         },
-        prepareStatuses() {
-            // check if there is any operation from stage one and count them
-            var stageOneCounter = 0;
-            var operation;
-            for(operation of this.operations) {
-                if(this.stageOneOperations.includes(operation.name)) {
-                    stageOneCounter++;
-                }
-            }
-
-            // if there are operations in stageone, disable every operation that is in stage two
-            if(stageOneCounter > 0 ){
-                this.disableStageTwoOperations();
-            }
-        },
-        disableStageTwoOperations() {
-            var operation;
-            for(operation of this.operations) {
-                if(this.stageTwoOperations.includes(operation.name)) {
-                    this.disableOperation(operation);
-                }
-            }
-        },
-        disableOperation(operation) {
-            operation.status = this.operationStatusItems[0];
-        }
     },
 }
 </script>
