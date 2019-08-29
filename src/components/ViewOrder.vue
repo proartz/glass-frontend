@@ -191,6 +191,7 @@ export default {
           {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
               this.order = response.body;
               console.log(response.status);
+              this.$emit('refresh');
               this.loading = false;
           }, response => {
               console.log(response);

@@ -15,7 +15,7 @@
                                 <div>{{ order.externalOrderId }}</div>
                             </v-flex>
                             <v-flex>
-                               <ViewOrder v-bind:materialsItems="materialsItems" v-bind:orderId="order.id" v-bind:orderStatusValues="orderStatusValues"
+                               <ViewOrder @refresh='fetchOrders' v-bind:materialsItems="materialsItems" v-bind:orderId="order.id" v-bind:orderStatusValues="orderStatusValues"
                                           v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
                             </v-flex>
                             <v-flex>
