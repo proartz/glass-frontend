@@ -156,16 +156,16 @@ export default {
     border-left: 4px solid blue;
 }
 .order.IN_REALISATION{
-    border-left: 4px solid yellow;
+    border-left: 4px solid red;
 }
 .order.READY{
     border-left: 4px solid green;
 }
 .order.DELIVERED{
-    border-left: 4px solid orange;
+    border-left: 4px solid yellow;
 }
 .order.PAID{
-    border-left: 4px solid red;
+    border-left: 4px solid orange;
 }
 
 .v-chip.RECEIVED{
