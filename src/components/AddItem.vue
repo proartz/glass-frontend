@@ -34,6 +34,7 @@
                     <v-text-field label="Note" v-model="note"></v-text-field>
                     <div class=" grey--text">Operations</div>
                     <v-container>
+                            <v-checkbox v-model="selectAllOperations" label="Select All"></v-checkbox>
                             <v-checkbox v-for="(operation, i) in operationsItems" :key="i" v-model="operationsSelected[operationsItems.indexOf(operation)]" :label="`${operation}`"></v-checkbox>
                     </v-container>
                     <v-btn @click="addItem">Add Item</v-btn>
@@ -57,6 +58,7 @@ export default {
             material: '',
             operationsItems: ['Cutting', 'Sanding', 'Drilling', 'CNC', 'Hardening', 'Enamelling', 'Lamination'],
             operationsSelected: [false, false, false, false, false, false, false],
+            selectAllOperations: false,
             stageOneOperations: ['Cutting', 'Sanding', 'Drilling', 'CNC'],
             stageTwoOperations: ['Hardening', 'Enamelling', 'Lamination'],
 
@@ -108,6 +110,17 @@ export default {
                 this.clearForm();
             }
         },
+    },
+    watch: {
+        selectAllOperations:  function(selected) {
+            if(selected) {
+                var index;
+                for(index = 0; index < this.operationsSelected.length; index++) {
+                    this.operationsSelected[index] = true;
+                }
+            }
+            console.log(this.operationsSelected);
+        }
     },
 }
 </script>

@@ -157,7 +157,6 @@ export default {
 
             stageOneOperations: ['Cutting', 'Sanding', 'Drilling', 'CNC'],
             stageTwoOperations: ['Hardening', 'Enamelling', 'Lamination'],
-            stageOneCounter: [],
 
             order: {}
         }
