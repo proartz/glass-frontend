@@ -120,6 +120,7 @@ export default {
               operationId: operation.id,
               newStatus: newStatus
           };
+          console.log(operation);
           console.log(changeStatusDto);
           console.log(item.indexOf);
 
