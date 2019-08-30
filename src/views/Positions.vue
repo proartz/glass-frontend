@@ -14,7 +14,7 @@
                                 <div>{{ item.id }}</div>
                             </v-flex>
                             <v-flex>
-                               <ViewOrder @refresh='fetchItems' v-bind:materialsItems="materialsItems" v-bind:orderId="order.id"
+                               <ViewOrder @refresh='fetchItems' v-bind:materialsItems="materialsItems" v-bind:orderId="item.order.id"
                                           v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
                             </v-flex>
                             <v-flex>
@@ -69,7 +69,7 @@
                                       </v-chip>
                                     </template>
                                     <v-list>
-                                      <v-list-tile v-for="(status, index) in operationStatusItems" :key="index" @click="changeStatus(operation, status)">
+                                      <v-list-tile v-for="(status, index) in operationStatusItems" :key="index" @click="changeStatus(item, operation, status)">
                                         <v-list-tile-title>{{ status }}</v-list-tile-title>
                                       </v-list-tile>
                                     </v-list>
@@ -85,8 +85,12 @@
 </template>
 
 <script>
+import ViewOrder from '@/components/ViewOrder';
 
 export default {
+    components: {
+      ViewOrder
+    },
     data() {
         return {
             materials: [],
@@ -103,33 +107,44 @@ export default {
             this.loading = true;
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/items').then(response => {
                 this.items = response.body;
+                console.log(this.items);
                 this.loading = false;
             }, response => { 
                 console.log(response.body);
             });
         },
-        changeStatus(operation, newStatus) {
+        changeStatus(item, operation, newStatus) {
           this.loading = true;
 
           const changeStatusDto = {
               operationId: operation.id,
               newStatus: newStatus
           };
-
           console.log(changeStatusDto);
+          console.log(item.indexOf);
 
           this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
           {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
-              this.order = response.body;
+              const order = response.body;
+              console.log(order);
+              var index;
+              for(index = 0; index < order.items.length; index++) {
+                  if(order.items[index].id == item.id) {
+                      const itemId = this.items.indexOf(item);
+                      this.items[itemId].operations = order.items[index].operations;
+                      this.items[itemId].status = order.items[index].status;
+                      console.log(order.items[index]);
+                  }
+              }
+              
               console.log(response.status);
-              this.$emit('refresh');
               this.loading = false;
           }, response => {
               console.log(response);
           });
         },
         fetchOperations(itemId) {
-            console.log("Order with id=" + itemId + " was selected.");
+            console.log("Item with id=" + itemId + " was selected.");
             this.loading = true;
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/operations/' + (itemId + 1)).then(response => {
                 const operations = response.body;
@@ -169,7 +184,7 @@ export default {
 
 <style>
 
-.item.RECEIVED{
+.item.READY_FOR_REALISATION{
     border-left: 4px solid blue;
 }
 .item.IN_REALISATION{

@@ -170,7 +170,6 @@ export default {
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/order/' + this.orderId).then(response => {
                 this.order = response.body;
                 console.log(this.order);
-                this.prepareStatuses();
                 this.loading = false;
             }, response => { 
                 console.log(response.body);
