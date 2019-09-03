@@ -1,6 +1,8 @@
 <template>
     <v-dialog v-model="dialog">
-        <v-btn slot="activator">Add New Order</v-btn>
+        <v-btn icon slot="activator">
+            <v-icon>add</v-icon>
+        </v-btn>
         <v-card>
             <v-toolbar card dark color="primary">
             <v-btn icon dark @click="dialog = false">

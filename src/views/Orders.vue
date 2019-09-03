@@ -3,7 +3,9 @@
         <h1 class="subheading grey--text">Orders</h1>
 
     
-        <v-btn @click="fetchOrders" :loading="loading">Refresh</v-btn>
+        <v-btn icon @click="fetchOrders" :loading="loading">
+            <v-icon>refresh</v-icon>
+        </v-btn>
         <AddOrder @orderAdded="fetchOrders" v-bind:materialsItems="materialsItems" v-bind:operationStatusItems="operationStatusItems"/>
         <v-container fluid>
             <v-expansion-panel v-model="panel" >
@@ -17,11 +19,6 @@
                             <v-flex>
                                <ViewOrder @refresh='fetchOrders' v-bind:materialsItems="materialsItems" v-bind:orderId="order.id"
                                           v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
-                            </v-flex>
-                            <v-flex>
-                                <v-btn text icon color="gray">
-                                    <v-icon>edit</v-icon>
-                                </v-btn>
                             </v-flex>
                             <v-flex>
                                 <div class="caption grey--text">Customer</div>
@@ -96,6 +93,7 @@ export default {
             materialsItems: [],
             orderStatusItems: ['RECEIVED', 'IN_REALISATION', 'READY', 'DELIVERED', 'PAID'],
             operationStatusItems: ['DISABLED', 'READY_FOR_REALISATION' , 'IN_REALISATION', 'DONE'],
+            editMode: false,
             panel: [],
             loading: false,
             orders: []
@@ -134,7 +132,7 @@ export default {
             }, response => { 
                 console.log(response.body);
             });
-        }
+        },
     },
     watch: {
         panel:  function(index) {

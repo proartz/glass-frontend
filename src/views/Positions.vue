@@ -18,11 +18,6 @@
                                           v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
                             </v-flex>
                             <v-flex>
-                                <v-btn text icon color="gray">
-                                    <v-icon>edit</v-icon>
-                                </v-btn>
-                            </v-flex>
-                            <v-flex>
                                 <div class="caption grey--text">Material:</div>
                                 <div>{{ materialsItems[item.materialId - 1] }}</div>
                             </v-flex>

@@ -20,11 +20,6 @@
                                     v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
                     </v-flex>
                     <v-flex>
-                        <v-btn text icon color="gray">
-                            <v-icon>edit</v-icon>
-                        </v-btn>
-                    </v-flex>
-                    <v-flex>
                         <div>
                             <v-menu offset-y :disabled="`${operation.status}` == operationStatusItems[0] || `${operation.status}` == operationStatusItems[3]">
                             <template v-slot:activator="{ on }">

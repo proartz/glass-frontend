@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" lazy>
+    <v-dialog ref="showDialog" v-model="dialog" lazy>
          <v-btn slot="activator" @click="loadOrder" text icon color="gray">
             <v-icon>remove_red_eye</v-icon>
         </v-btn>
@@ -11,7 +11,8 @@
             <v-toolbar-title>Order</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
-              <v-btn dark flat @click="dialog = false">Edit</v-btn>
+              <v-btn dark flat @click="submit" :disabled = "!editMode" :loading="loading">Save</v-btn>
+              <v-btn dark flat @click="editMode = !editMode">Edit</v-btn>
             </v-toolbar-items>
             <v-menu bottom right offset-y>
               <template v-slot:activator="{ on }">
@@ -27,53 +28,56 @@
             </v-menu>
           </v-toolbar>
           <v-card-text>
-            <v-list two-line>
-              <v-list-tile>
-                <v-list-tile-content>
-                  <v-list-tile-sub-title>Customer</v-list-tile-sub-title>
-                  <v-list-tile-title>{{ order.customer }}</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>
-                  <v-list-tile-sub-title>External Order Id</v-list-tile-sub-title>
-                  <v-list-tile-title>{{ order.externalOrderId }}</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>
-                  <v-list-tile-sub-title>Invoice Number</v-list-tile-sub-title>
-                  <v-list-tile-title>{{ order.invoiceNumber }}</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>
-                  <v-list-tile-sub-title>Price</v-list-tile-sub-title>
-                  <v-list-tile-title>{{ order.price }}</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>
-                  <v-list-tile-sub-title>Create Date</v-list-tile-sub-title>
-                  <v-list-tile-title>{{ order.createDate }}</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>
-                  <v-list-tile-sub-title>Due Date</v-list-tile-sub-title>
-                  <v-list-tile-title>{{ order.dueDate }}</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>
-                  <v-list-tile-sub-title>Status</v-list-tile-sub-title>
-                  <v-list-tile-title>
-                      <v-chip small :class="`${order.status} white--text caption my-2`">{{ order.status }}</v-chip>
-                  </v-list-tile-title> 
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
+            <v-form ref="form">
+                <v-text-field v-validate="`required|max:30`"
+                              :counter="30"
+                              :error-messages="errors.collect('customer')"
+                              data-vv-name="customer"
+                              label="Customer"
+                              v-model="order.customer"
+                              :readonly="!editMode">
+                </v-text-field>
+                <v-text-field v-validate="`max:30`"
+                              :counter="30"
+                              :error-messages="errors.collect('externalOrderId')"
+                              data-vv-name="externalOrderId"
+                              label="External Order Id"
+                              v-model="order.externalOrderId"
+                              :readonly="!editMode">
+                </v-text-field>
+                <v-text-field v-validate="`max:30`"
+                              :counter="30"
+                              :error-messages="errors.collect('invoiceNumber')"
+                              data-vv-name="invoiceNumber"
+                              label="Invoice Number"
+                              v-model="order.invoiceNumber"
+                              :readonly="!editMode">
+                </v-text-field>
+                <v-text-field v-validate="`numeric|max_value:999999999999999999`"
+                              :error-messages="errors.collect('price')"
+                              data-vv-name="price"
+                              label="Price"
+                              v-model="order.price"
+                              :readonly="!editMode">
+                </v-text-field>
+                <v-menu>
+                    <v-text-field v-validate="`required`"
+                                  :error-messages="errors.collect('dueDate')"
+                                  data-vv-name="dueDate"
+                                  label="Due Date"
+                                  :value="order.dueDate"
+                                  slot="activator">
+                    </v-text-field>
+                    <v-date-picker :disabled="!editMode" v-model="order.dueDate"
+                                  :min="now">
+                    </v-date-picker>
+                </v-menu>
+                <v-spacer></v-spacer>
+            </v-form>
             <v-divider></v-divider>
+            <v-subheader class="pa-0">ITEMS
+              <AddItem v-if="editMode" @addItem='addItem' v-bind:materialsItems="materialsItems" v-bind:operationStatusItems="operationStatusItems"/>
+            </v-subheader>
             <v-expansion-panel v-model="panel" expand>
                 <v-expansion-panel-content v-for="item in order.items" :key="item.id">
                     <template v-slot:header>
@@ -142,8 +146,12 @@
 </template>
 
 <script>
+import AddItem from '@/components/AddItem'
 
 export default {
+    components: {
+      AddItem
+    },
     props: [ 
         'materialsItems',
         'orderId',
@@ -151,9 +159,12 @@ export default {
      ],
     data() {
         return {
+            now: '',
             dialog: false,
             panel: [],
             items: [],
+            editMode: false,
+            loading: false,
 
             stageOneOperations: ['Cutting', 'Sanding', 'Drilling', 'CNC'],
             stageTwoOperations: ['Hardening', 'Enamelling', 'Lamination'],
@@ -175,6 +186,37 @@ export default {
                 console.log(response.body);
             });
         },
+        open() {
+            this.$refs.showDialog.value = true;
+            console.log("DUPA");
+        },
+        date() {
+            var today = new Date();
+
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+            this.now = yyyy + '-' + mm + '-' + dd;
+        },
+        addItem(item) {
+            item.id = this.newId();
+            console.log(item.id);
+            this.order.items.push(item);
+        },
+        newId() {
+            var index;
+            var newId = 0;
+            for(index = 0; index < this.order.items.length; index++) {
+                console.log("this.items[index].id=" + this.order.items[index].id);
+                if(newId < this.order.items[index].id) {
+                    newId = this.order.items[index].id;
+                }
+            }
+            console.log("newId=" + newId);
+            newId++;
+            console.log("newID++=" + newId);
+            return newId;
+        },
         changeStatus(operation, newStatus) {
           this.loading = true;
 
@@ -195,7 +237,41 @@ export default {
               console.log(response);
           });
         },
+        submit() {
+            this.$validator.validate().then(valid => {
+                if(valid){
+                    this.loading = true;
+
+                    const order = {
+                        id: this.orderId,
+                        items: this.order.items,
+                        attachments: [],
+                        externalOrderId: this.order.externalOrderId,
+                        customer: this.order.customer,
+                        invoiceNumber: this.order.invoiceNumber,
+                        price: this.order.price,
+                        dueDate: this.order.dueDate,
+                        status: ''
+                    };
+
+                    console.log(order);
+
+                    this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/updateOrder', order,
+                    {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
+                        console.log(response.status);
+                        this.loading = false;
+                        this.dialog = false;
+                        this.$emit('refresh');
+                    }, response => {
+                        console.log(response);
+                    });
+                }
+            });
+        },
     },
+    created() {
+        this.date();
+    }
 }
 </script>
 <style>

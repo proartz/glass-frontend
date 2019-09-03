@@ -1,6 +1,8 @@
 <template>
     <v-dialog v-model="dialog">
-        <v-btn slot="activator">Add New Item</v-btn>
+        <v-btn icon slot="activator">
+            <v-icon>add</v-icon>
+        </v-btn>
         <v-card>
             <v-toolbar card dark color="primary">
                 <v-btn icon dark @click="dialog = false">
@@ -62,7 +64,6 @@ export default {
             stageOneOperations: ['Cutting', 'Sanding', 'Drilling', 'CNC'],
             stageTwoOperations: ['Hardening', 'Enamelling', 'Lamination'],
 
-            id: '',
             materialId: '',
             operations: [],
             width: '',
@@ -89,10 +90,8 @@ export default {
                     }
                 }
 
-                // this.prepareStatuses();
-
                 const item = {
-                    id: this.id,
+                    id: '',
                     materialId: this.materialId,
                     operations: this.operations,
                     width: this.width,
