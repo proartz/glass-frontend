@@ -86,7 +86,7 @@ export default {
                 var i;
                 for( i = 0; i < this.operationsSelected.length; i++) {
                     if(this.operationsSelected[i] == true) {
-                        this.operations.push({name: this.operationsItems[i], status: ''});
+                        this.operations.push({name: this.operationsItems[i], status: this.operationStatusItems[0]});
                     }
                 }
 

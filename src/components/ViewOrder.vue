@@ -199,7 +199,7 @@ export default {
             this.now = yyyy + '-' + mm + '-' + dd;
         },
         addItem(item) {
-            item.id = this.newId();
+            // item.id = this.newId();
             console.log(item.id);
             this.order.items.push(item);
         },
@@ -258,9 +258,10 @@ export default {
 
                     this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/updateOrder', order,
                     {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
-                        console.log(response.status);
+                        this.order = response.body;
+                        console.log(response.body);
+                        this.editMode = false;
                         this.loading = false;
-                        this.dialog = false;
                         this.$emit('refresh');
                     }, response => {
                         console.log(response);
@@ -268,6 +269,14 @@ export default {
                 }
             });
         },
+    },
+    watch: {
+        dialog:  function() {
+            if(!this.dialog) {
+                this.editMode = false;
+                console.log(this.editMode);
+            }
+        }
     },
     created() {
         this.date();
