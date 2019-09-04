@@ -75,10 +75,10 @@
                             <v-text-field v-show="false"
                                             v-validate="'min_value:1'"
                                             data-vv-name="itemsCounter"
-                                            disabled="true"
+                                            :disabled="true"
                                             v-model="items.length">
                             </v-text-field>
-                            <subheading class="red--text caption">{{ errors.first('itemsCounter') }}</subheading>
+                            <span class="red--text caption">{{ errors.first('itemsCounter') }}</span>
                         </v-subheader>
                         <v-list-tile v-for="item in items" :key="item.id">
                             <v-list-tile-action>

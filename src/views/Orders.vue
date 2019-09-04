@@ -7,9 +7,42 @@
             <v-icon>refresh</v-icon>
         </v-btn>
         <AddOrder @orderAdded="fetchOrders" v-bind:materialsItems="materialsItems" v-bind:operationStatusItems="operationStatusItems"/>
+        <v-text-field prepend-icon="search"
+                v-model="searchText"
+                solo append-icon="cancel" hide-details single-line></v-text-field>
         <v-container fluid>
+            <v-layout row justify-start class="mb-3">
+                <v-btn small flat color="grey" @click="sortBy('externalOrderId')">
+                    <v-icon small left>folder</v-icon>
+                    <span class="caption text-lowercase">By External Order Id</span>
+                </v-btn>
+                <v-btn small flat color="grey" @click="sortBy('customer')">
+                    <v-icon small left>person</v-icon>
+                    <span class="caption text-lowercase">By Customer</span>
+                </v-btn>
+                <v-btn small flat color="grey" @click="sortBy('invoiceNumber')">
+                    <v-icon small left>person</v-icon>
+                    <span class="caption text-lowercase">By Invoice Number</span>
+                </v-btn>
+                <v-btn small flat color="grey" @click="sortBy('price')">
+                    <v-icon small left>person</v-icon>
+                    <span class="caption text-lowercase">By Price</span>
+                </v-btn>
+                <v-btn small flat color="grey" @click="sortBy('dueDate')">
+                    <v-icon small left>person</v-icon>
+                    <span class="caption text-lowercase">By Due Date</span>
+                </v-btn>
+                <v-btn small flat color="grey" @click="sortBy('createDate')">
+                    <v-icon small left>person</v-icon>
+                    <span class="caption text-lowercase">By Create Date</span>
+                </v-btn>
+                <v-btn small flat color="grey" @click="sortBy('status')">
+                    <v-icon small left>person</v-icon>
+                    <span class="caption text-lowercase">By Status</span>
+                </v-btn>
+            </v-layout>
             <v-expansion-panel v-model="panel" >
-                <v-expansion-panel-content v-for="order in orders" :key="order.customer">
+                <v-expansion-panel-content v-for="order in filteredOrders" :key="order.customer">
                     <template v-slot:header>
                         <v-layout row wrap :class="`pa-3 order ${order.status}`">
                             <v-flex>
@@ -92,6 +125,7 @@ export default {
     },
     data() {
         return {
+            searchText: '',
             materials: [],
             materialsItems: [],
             orderStatusItems: ['RECEIVED', 'IN_REALISATION', 'READY', 'DELIVERED', 'PAID'],
@@ -136,6 +170,17 @@ export default {
                 console.log(response.body);
             });
         },
+        sortBy(prop) {
+            this.orders.sort((a, b) => a[prop] < b[prop] ? -1: 1)
+        },
+        includes(order) {
+            return order.customer.toLowerCase().includes(this.searchText)
+        }
+    },
+    computed: {
+        filteredOrders() {
+            return this.orders.filter(this.includes);
+        }
     },
     watch: {
         panel:  function(index) {
