@@ -72,6 +72,7 @@
                                   :min="now">
                     </v-date-picker>
                 </v-menu>
+                <v-chip :class="`${order.status} white--text caption my-2`">{{ order.status }}</v-chip>
                 <v-spacer></v-spacer>
             </v-form>
             <v-divider></v-divider>
@@ -199,23 +200,7 @@ export default {
             this.now = yyyy + '-' + mm + '-' + dd;
         },
         addItem(item) {
-            // item.id = this.newId();
-            console.log(item.id);
             this.order.items.push(item);
-        },
-        newId() {
-            var index;
-            var newId = 0;
-            for(index = 0; index < this.order.items.length; index++) {
-                console.log("this.items[index].id=" + this.order.items[index].id);
-                if(newId < this.order.items[index].id) {
-                    newId = this.order.items[index].id;
-                }
-            }
-            console.log("newId=" + newId);
-            newId++;
-            console.log("newID++=" + newId);
-            return newId;
         },
         changeStatus(operation, newStatus) {
           this.loading = true;
@@ -285,23 +270,35 @@ export default {
 </script>
 <style>
 
-  .v-chip.READY_FOR_REALISATION{
-      background: blue;
-  }
-  .v-chip.IN_REALISATION{
-      background: red;
-  }
-  .v-chip.DONE{
-      background: green;
-  }
-  .item.ReadyForRealisation{
-      border-left: 4px solid blue;
-  }
-  .item.InRealisation{
-      border-left: 4px solid red;
-  }
-  .item.Done{
-      border-left: 4px solid green;
-  }
+    .v-chip.READY_FOR_REALISATION{
+        background: blue;
+    }
+    .v-chip.IN_REALISATION{
+        background: red;
+    }
+    .v-chip.DONE{
+        background: green;
+    }
+    .v-chip.RECEIVED{
+        background: blue;
+    }
+    .v-chip.READY{
+        background: green;
+    }
+    .v-chip.DELIVERED{
+        background: orange;
+    }
+    .v-chip.PAID{
+        background: red;
+    }
+    .item.ReadyForRealisation{
+        border-left: 4px solid blue;
+    }
+    .item.InRealisation{
+        border-left: 4px solid red;
+    }
+    .item.Done{
+        border-left: 4px solid green;
+    }
 
 </style>

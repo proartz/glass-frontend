@@ -70,6 +70,9 @@
                                 <div class="caption grey--text">Quantity:</div>
                                 <div>{{ item.quantity }}</div>
                             </v-flex>
+                            <v-flex>
+                                <v-chip :class="`${item.status} white--text caption my-2`">{{ item.status }}</v-chip>
+                            </v-flex>
                         </v-layout>
                     </v-container>
                 </v-expansion-panel-content>

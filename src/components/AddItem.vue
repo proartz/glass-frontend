@@ -21,24 +21,54 @@
                     </template>
                     <v-list>
                         <v-list-tile v-for="(item, i) in toolbarItems" :key="i" @click="">
-                        <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                         </v-list-tile>
                     </v-list>
                 </v-menu>
             </v-toolbar>
             <v-card-text>
                 <v-form ref="form">
-                    <v-select v-model="material" :items="materialsItems" label="Material"></v-select>
-                    <v-text-field label="Width" v-model="width"></v-text-field>
-                    <v-text-field label="Height" v-model="height"></v-text-field>
-                    <v-text-field label="Depth" v-model="depth"></v-text-field>
-                    <v-text-field label="Quantity" v-model="quantity"></v-text-field>
+                    <v-select v-validate="`required`"
+                                :error-messages="errors.collect('Material')"
+                                data-vv-name="Material"
+                                v-model="material"
+                                :items="materialsItems"
+                                label="Material">
+                    </v-select>
+                    <v-text-field v-validate="`required|numeric|min_value:1`"
+                                    :error-messages="errors.collect('Width')"
+                                    data-vv-name="Width"
+                                    label="Width"
+                                    v-model="width">
+                    </v-text-field>
+                    <v-text-field v-validate="`required|numeric|min_value:1`"
+                                    :error-messages="errors.collect('Height')"
+                                    data-vv-name="Height"
+                                    label="Height"
+                                    v-model="height">
+                    </v-text-field>
+                    <v-text-field v-validate="`required|numeric|min_value:1`"
+                                    :error-messages="errors.collect('Depth')"
+                                    data-vv-name="Depth"
+                                    label="Depth" v-model="depth">
+                    </v-text-field>
+                    <v-text-field v-validate="`required|numeric|min_value:1`"
+                                    :error-messages="errors.collect('Quantity')"
+                                    data-vv-name="Quantity"
+                                    label="Quantity"
+                                    v-model="quantity">
+                    </v-text-field>
                     <v-text-field label="Note" v-model="note"></v-text-field>
                     <div class=" grey--text">Operations</div>
                     <v-container>
                             <v-checkbox v-model="selectAllOperations" label="Select All"></v-checkbox>
                             <v-checkbox v-for="(operation, i) in operationsItems" :key="i" v-model="operationsSelected[operationsItems.indexOf(operation)]" :label="`${operation}`"></v-checkbox>
                     </v-container>
+                    <v-list>
+                        <v-list-tile v-for="(error, i) in errors.all()" :key="i">
+                            <v-list-tile-title class="red--text caption">{{ error }}</v-list-tile-title>
+                        </v-list-tile>
+                    </v-list>
                     <v-btn @click="addItem">Add Item</v-btn>
                     <v-btn @click="clearForm">Clear</v-btn>
                 </v-form>
@@ -81,33 +111,35 @@ export default {
         },
         addItem() {
             this.loading = true;
-            if(this.$refs.form.validate()){
-                this.materialId = (this.materialsItems.indexOf(this.material) + 1);
-                var i;
-                for( i = 0; i < this.operationsSelected.length; i++) {
-                    if(this.operationsSelected[i] == true) {
-                        this.operations.push({name: this.operationsItems[i], status: this.operationStatusItems[0]});
+            this.$validator.validate().then(valid => {
+                if(valid){
+                    this.materialId = (this.materialsItems.indexOf(this.material) + 1);
+                    var i;
+                    for( i = 0; i < this.operationsSelected.length; i++) {
+                        if(this.operationsSelected[i] == true) {
+                            this.operations.push({name: this.operationsItems[i], status: this.operationStatusItems[0]});
+                        }
                     }
-                }
 
-                const item = {
-                    id: '',
-                    materialId: this.materialId,
-                    operations: this.operations,
-                    width: this.width,
-                    height: this.height,
-                    depth: this.depth,
-                    quantity: this.quantity,
-                    status: this.operationStatusItems[1],
-                    note: this.note
-                }
+                    const item = {
+                        id: '',
+                        materialId: this.materialId,
+                        operations: this.operations,
+                        width: this.width,
+                        height: this.height,
+                        depth: this.depth,
+                        quantity: this.quantity,
+                        status: this.operationStatusItems[1],
+                        note: this.note
+                    }
 
-                console.log(item);
-                this.loading = false;
-                this.dialog = false;
-                this.$emit('addItem', item);
-                this.clearForm();
-            }
+                    console.log(item);
+                    this.loading = false;
+                    this.dialog = false;
+                    this.$emit('addItem', item);
+                    this.clearForm();
+                }
+            })
         },
     },
     watch: {

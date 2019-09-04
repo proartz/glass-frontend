@@ -28,17 +28,58 @@
           </v-toolbar>
             <v-card-text>
                 <v-form ref="form">
-                    <v-text-field v-validate="`required|max:30`" :counter="30" :error-messages="errors.collect('customer')" data-vv-name="customer" label="Customer" v-model="customer"></v-text-field>
-                    <v-text-field v-validate="`max:30`" :counter="30" :error-messages="errors.collect('externalOrderId')" data-vv-name="externalOrderId"  label="External Order Id" v-model="externalOrderId"></v-text-field>
-                    <v-text-field v-validate="`max:30`" :counter="30" :error-messages="errors.collect('invoiceNumber')" data-vv-name="invoiceNumber"  label="Invoice Number" v-model="invoiceNumber"></v-text-field>
-                    <v-text-field v-validate="`numeric|max_value:999999999999999999`" :error-messages="errors.collect('price')" data-vv-name="price"   label="Price" v-model="price"></v-text-field>
+                    <v-text-field v-validate="`required|max:30`"
+                                    :counter="30"
+                                    :error-messages="errors.collect('customer')"
+                                    data-vv-name="customer" label="Customer"
+                                    v-model="customer">
+                    </v-text-field>
+                    <v-text-field v-validate="`max:30`"
+                                    :counter="30"
+                                    :error-messages="errors.collect('externalOrderId')"
+                                    data-vv-name="externalOrderId"
+                                    label="External Order Id"
+                                    v-model="externalOrderId">
+                    </v-text-field>
+                    <v-text-field v-validate="`max:30`"
+                                    :counter="30"
+                                    :error-messages="errors.collect('invoiceNumber')"
+                                    data-vv-name="invoiceNumber"
+                                    label="Invoice Number"
+                                    v-model="invoiceNumber">
+                    </v-text-field>
+                    <v-text-field v-validate="`numeric|max_value:999999999999999999`"
+                                    :error-messages="errors.collect('price')"
+                                    data-vv-name="price"
+                                    label="Price"
+                                    v-model="price">
+                    </v-text-field>
                     <v-menu>
-                        <v-text-field v-validate="`required`" :error-messages="errors.collect('dueDate')" data-vv-name="dueDate" label="Due Date" :value="dueDate" slot="activator"></v-text-field>
-                        <v-date-picker v-model="dueDate" :min="now"></v-date-picker>
+                        <v-text-field v-validate="`required`"
+                                        :error-messages="errors.collect('dueDate')"
+                                        data-vv-name="dueDate"
+                                        label="Due Date"
+                                        :value="dueDate"
+                                        slot="activator">
+                        </v-text-field>
+                        <v-date-picker v-model="dueDate"
+                                        :min="now">
+                                        </v-date-picker>
                     </v-menu>
-                    <AddItem @addItem='addItem' v-bind:materialsItems="materialsItems" v-bind:operationStatusItems="operationStatusItems"/>
                     <v-list>
-                        <v-subheader class="pa-0">ITEMS</v-subheader>
+                        <v-subheader class="pa-0">
+                            ITEMS
+                            <AddItem @addItem='addItem'
+                                        v-bind:materialsItems="materialsItems"
+                                        v-bind:operationStatusItems="operationStatusItems"/>
+                            <v-text-field v-show="false"
+                                            v-validate="'min_value:1'"
+                                            data-vv-name="itemsCounter"
+                                            disabled="true"
+                                            v-model="items.length">
+                            </v-text-field>
+                            <subheading class="red--text caption">{{ errors.first('itemsCounter') }}</subheading>
+                        </v-subheader>
                         <v-list-tile v-for="item in items" :key="item.id">
                             <v-list-tile-action>
                                 <v-btn text icon class="my=2" @click="deleteItem(`${item.id}`)">
