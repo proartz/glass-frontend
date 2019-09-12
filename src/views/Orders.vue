@@ -174,11 +174,17 @@ export default {
             this.orders.sort((a, b) => a[prop] < b[prop] ? -1: 1)
         },
         includes(order) {
-            return order.customer.toLowerCase().includes(this.searchText)
+            return order.customer.toLowerCase().includes(this.searchText) &&
+                    order.externalOrderId.toLowerCase().includes(this.searchText) &&
+                    order.invoiceNumber.toLowerCase().includes(this.searchText) &&
+                    order.externalOrderId.toLowerCase().includes(this.searchText) &&
+                    order.externalOrderId.toLowerCase().includes(this.searchText) &&
+                    order.externalOrderId.toLowerCase().includes(this.searchText);
         }
     },
     computed: {
         filteredOrders() {
+            this.searchText = this.searchText.toLowerCase();
             return this.orders.filter(this.includes);
         }
     },

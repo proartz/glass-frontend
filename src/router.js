@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 import Orders from './views/Orders.vue'
 import Positions from './views/Positions.vue'
 import Operations from './views/Operations.vue'
+import Materials from './views/Materials.vue'
 
 Vue.use(Router)
 
@@ -30,6 +31,11 @@ export default new Router({
       path: '/operations',
       name: 'operations',
       component: Operations
+    },
+    {
+      path: '/materials',
+      name: 'materials',
+      component: Materials
     }
   ]
 })

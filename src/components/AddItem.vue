@@ -20,7 +20,7 @@
                         </v-btn>
                     </template>
                     <v-list>
-                        <v-list-tile v-for="(item, i) in toolbarItems" :key="i" @click="">
+                        <v-list-tile v-for="(item, i) in toolbarItems" :key="i">
                             <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                         </v-list-tile>
                     </v-list>

@@ -24,6 +24,7 @@ export default {
                 {icon: 'dashboard', text: 'Orders', route: '/orders'},
                 {icon: 'folder', text: 'Positions', route: '/positions'},
                 {icon: 'person', text: 'Operations', route: '/operations'},
+                {icon: 'person', text: 'Materials', route: '/materials'}
             ]
         }
     }
