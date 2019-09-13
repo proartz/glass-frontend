@@ -1,6 +1,6 @@
 <template>
     <v-dialog ref="showDialog" v-model="dialog" lazy>
-         <v-btn slot="activator" @click="loadOrder" text icon color="gray">
+         <v-btn slot="activator" text icon color="gray">
             <v-icon>remove_red_eye</v-icon>
         </v-btn>
          <v-card tile>
@@ -8,11 +8,34 @@
             <v-btn icon dark @click="dialog = false">
               <v-icon>close</v-icon>
             </v-btn>
-            <v-toolbar-title>Order</v-toolbar-title>
+            <v-toolbar-title>Material</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
-              <v-btn dark flat @click="submit" :disabled = "!editMode" :loading="loading">Save</v-btn>
-              <v-btn dark flat @click="editMode = !editMode">Edit</v-btn>
+                <v-dialog v-model="deleteDialog" width="500">
+                    <template v-slot:activator="{ on }">
+                        <v-btn dark flat v-on="on" :disabled = "!editMode">delete</v-btn>
+                    </template>
+                    <v-card>
+                        <v-card-title class="headline grey lighten-2" primary-title>
+                            Delete Material
+                        </v-card-title>
+                        <v-card-text>
+                            Are You sure You want to delete {{ material.name }}?
+                        </v-card-text>
+                        <v-divider></v-divider>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn flat @click="deleteMaterial">
+                                ok
+                            </v-btn>
+                            <v-btn flat @click="deleteDialog = false">
+                                cancel
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-btn dark flat @click="saveMaterial" :disabled = "!editMode" :loading="loading">Save</v-btn>
+                <v-btn dark flat @click="editMode = !editMode">Edit</v-btn>
             </v-toolbar-items>
             <v-menu bottom right offset-y>
               <template v-slot:activator="{ on }">
@@ -67,28 +90,29 @@ export default {
     data() {
         return {
             dialog: false,
+            deleteDialog: false,
             items: [],
             editMode: false,
             loading: false,
         }
     },
     methods: {
-        submit() {
+        saveMaterial() {
             this.$validator.validate().then(valid => {
                 if(valid){
                     this.loading = true;
 
                     const material = {
-                        name: this.name,
-                        description: this.description
+                        id: this.material.id,
+                        name: this.material.name,
+                        description: this.material.description
                     };
 
-                    console.log(order);
+                    console.log(material);
 
-                    this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/updateMaterial', order,
+                    this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/updateMaterial', material,
                     {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
-                        this.material = response.body;
-                        console.log(response.body);
+                        console.log(response);
                         this.editMode = false;
                         this.loading = false;
                         this.$emit('refresh');
@@ -98,12 +122,37 @@ export default {
                 }
             });
         },
+        deleteMaterial() {
+            this.$validator.validate().then(valid => {
+                if(valid){
+                    this.loading = true;
+
+                    const material = {
+                        id: this.material.id
+                    };
+
+                    console.log(material);
+
+                    this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/deleteMaterial', material,
+                    {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
+                        console.log(response);
+                        this.editMode = false;
+                        this.loading = false;
+                        this.$emit('refresh');
+                    }, response => {
+                        console.log(response);
+                    });
+                }
+            });
+
+            console.log("Deleting material: " + this.material.name);
+            this.deleteDialog = false;
+        }
     },
     watch: {
         dialog:  function() {
             if(!this.dialog) {
                 this.editMode = false;
-                console.log(this.editMode);
             }
         }
     },

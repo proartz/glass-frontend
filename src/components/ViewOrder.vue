@@ -259,7 +259,6 @@ export default {
         dialog:  function() {
             if(!this.dialog) {
                 this.editMode = false;
-                console.log(this.editMode);
             }
         }
     },
