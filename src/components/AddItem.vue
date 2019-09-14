@@ -31,7 +31,7 @@
                     <v-select v-validate="`required`"
                                 :error-messages="errors.collect('Material')"
                                 data-vv-name="Material"
-                                v-model="material"
+                                v-model="materialSelected"
                                 :items="materialsItems"
                                 label="Material">
                     </v-select>
@@ -80,6 +80,7 @@
 <script>
 export default {
     props: [
+        'materials',
         'materialsItems',
         'operationStatusItems'
     ],
@@ -87,14 +88,14 @@ export default {
         return {
             dialog: false,
             toolbarItems: [],
-            material: '',
+            materialSelected: '',
             operationsItems: ['Cutting', 'Sanding', 'Drilling', 'CNC', 'Hardening', 'Enamelling', 'Lamination'],
             operationsSelected: [false, false, false, false, false, false, false],
             selectAllOperations: false,
             stageOneOperations: ['Cutting', 'Sanding', 'Drilling', 'CNC'],
             stageTwoOperations: ['Hardening', 'Enamelling', 'Lamination'],
 
-            materialId: '',
+            material: '',
             operations: [],
             width: '',
             height: '',
@@ -113,9 +114,19 @@ export default {
             this.loading = true;
             this.$validator.validate().then(valid => {
                 if(valid){
-                    this.materialId = (this.materialsItems.indexOf(this.material) + 1);
+                    // this.materialId = (this.materialsItems.indexOf(this.materialSelected) + 1);
+
+                    //find material in materials with the same name
+                    console.log(this.materialSelected);
+                    var index;
+                    for(index = 0; index < this.materials.length; index++) {
+                        if(this.materials[index].name == this.materialSelected) {
+                            this.material = this.materials[index];
+                        }
+                    }
+
                     var i;
-                    for( i = 0; i < this.operationsSelected.length; i++) {
+                    for(i = 0; i < this.operationsSelected.length; i++) {
                         if(this.operationsSelected[i] == true) {
                             this.operations.push({name: this.operationsItems[i], status: this.operationStatusItems[0]});
                         }
@@ -123,7 +134,7 @@ export default {
 
                     const item = {
                         id: '',
-                        materialId: this.materialId,
+                        material: this.material,
                         operations: this.operations,
                         width: this.width,
                         height: this.height,

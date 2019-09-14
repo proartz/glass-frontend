@@ -20,7 +20,7 @@
                 </v-btn>
               </template>
               <v-list>
-                <v-list-tile v-for="(item, i) in toolbarItems" :key="i" @click="">
+                <v-list-tile v-for="(item, i) in toolbarItems" :key="i">
                   <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                 </v-list-tile>
               </v-list>
@@ -64,13 +64,14 @@
                         </v-text-field>
                         <v-date-picker v-model="dueDate"
                                         :min="now">
-                                        </v-date-picker>
+                        </v-date-picker>
                     </v-menu>
                     <v-list>
                         <v-subheader class="pa-0">
                             ITEMS
                             <AddItem @addItem='addItem'
                                         v-bind:materialsItems="materialsItems"
+                                        v-bind:materials="materials"
                                         v-bind:operationStatusItems="operationStatusItems"/>
                             <v-text-field v-show="false"
                                             v-validate="'min_value:1'"
@@ -87,7 +88,7 @@
                                 </v-btn>
                             </v-list-tile-action>
                             <v-list-tile-content>
-                                <v-list-tile-title width="0%">{{ materialsItems[item.materialId - 1] }}</v-list-tile-title>
+                                <v-list-tile-title width="0%">{{ item.material.name }}</v-list-tile-title>
                             </v-list-tile-content>
                         </v-list-tile>
                     </v-list>
@@ -106,6 +107,7 @@ import AddItem from '@/components/AddItem'
 export default {
     props: [
         'materialsItems',
+        'materials',
         'operationStatusItems'
     ],
     components: { AddItem },

@@ -85,7 +85,7 @@
                         <v-layout row wrap :class="`py-0 item ${item.status}`">
                             <v-flex>
                                 <div class="caption grey--text">Material</div>
-                                <div>{{ materialsItems[item.materialId - 1] }}</div>
+                                <div>{{ item.material.name }}</div>
                             </v-flex>
                             <v-flex>
                                 <div class="caption grey--text">Width</div>

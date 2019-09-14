@@ -3,10 +3,10 @@
         <h1 class="subheading grey--text">Orders</h1>
 
     
-        <v-btn icon @click="fetchOrders" :loading="loading">
+        <v-btn icon @click="refresh" :loading="loading">
             <v-icon>refresh</v-icon>
         </v-btn>
-        <AddOrder @orderAdded="fetchOrders" v-bind:materialsItems="materialsItems" v-bind:operationStatusItems="operationStatusItems"/>
+        <AddOrder @orderAdded="refresh" v-bind:materialsItems="materialsItems" v-bind:materials="materials" v-bind:operationStatusItems="operationStatusItems"/>
         <v-text-field prepend-icon="search"
                 v-model="searchText"
                 solo append-icon="cancel" hide-details single-line></v-text-field>
@@ -50,7 +50,7 @@
                                 <div>{{ order.externalOrderId }}</div>
                             </v-flex>
                             <v-flex>
-                               <ViewOrder @refresh='fetchOrders' v-bind:materialsItems="materialsItems" v-bind:orderId="order.id"
+                               <ViewOrder @refresh='refresh' v-bind:materialsItems="materialsItems" v-bind:orderId="order.id"
                                           v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
                             </v-flex>
                             <v-flex>
@@ -85,7 +85,7 @@
                         <v-layout row v-for="item in order.items" :key="item.id">
                             <v-flex>
                                 <div class="caption grey--text">Material:</div>
-                                <div>{{ materialsItems[item.materialId - 1] }}</div>
+                                <div>{{ item.material.name }}</div>
                             </v-flex>
                             <v-flex>
                                 <div class="caption grey--text">Width:</div>
@@ -137,6 +137,13 @@ export default {
         }
     },
     methods: {
+        refresh() {
+            this.loadData();
+        },
+        loadData() {
+            this.fetchOrders();
+            this.fetchMaterials();
+        },
         fetchOrders() {
             this.loading = true;
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/orders').then(response => {
@@ -196,8 +203,7 @@ export default {
         }
     },
     created() {
-        this.fetchOrders();
-        this.fetchMaterials();
+        this.loadData();
     },
 }
 </script>
