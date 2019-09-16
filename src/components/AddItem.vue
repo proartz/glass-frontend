@@ -108,6 +108,7 @@ export default {
     methods: {
         clearForm() {
             this.$refs.form.reset();
+            this.$validator.reset();
             this.operations = [];
         },
         addItem() {

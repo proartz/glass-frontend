@@ -77,7 +77,7 @@
                                             v-validate="'min_value:1'"
                                             data-vv-name="itemsCounter"
                                             :disabled="true"
-                                            v-model="items.length">
+                                            v-model="itemsLength">
                             </v-text-field>
                             <span class="red--text caption">{{ errors.first('itemsCounter') }}</span>
                         </v-subheader>
@@ -119,6 +119,7 @@ export default {
             toolbarItems: [],
 
             items: [],
+            itemsLength: 0,
             attachments: [],
             externalOrderId: '',
             customer: '',
@@ -144,11 +145,13 @@ export default {
             this.attachments = [];
             this.$refs.form.reset();
             this.$validator.reset();
+            this.itemsLength = 0;
             this.dueDate = '';
         },
         addItem(item) {
             item.id = this.items.length;
             this.items.push(item);
+            this.itemsLength++;
         },
         deleteItem(id) {
             for(var i = 0; i < this.items.length; i++) {
@@ -177,7 +180,6 @@ export default {
 
                     this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/order', order,
                     {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
-                        console.log(response.status);
                         this.loading = false;
                         this.dialog = false;
                         this.$emit('orderAdded');

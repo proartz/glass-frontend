@@ -42,7 +42,7 @@
                 </v-btn>
             </v-layout>
             <v-expansion-panel v-model="panel" >
-                <v-expansion-panel-content v-for="order in filteredOrders" :key="order.customer">
+                <v-expansion-panel-content v-for="order in filteredOrders" :key="order.id">
                     <template v-slot:header>
                         <v-layout row wrap :class="`pa-3 order ${order.status}`">
                             <v-flex>
@@ -157,6 +157,7 @@ export default {
             this.loading = true;
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/materials').then(response => {
                 this.materials = response.body;
+                this.materialsItems = [];
                 this.materials.forEach((material) => {
                     this.materialsItems.push(material.name);
                 })
@@ -166,7 +167,6 @@ export default {
             }
         },
         fetchItems(id) {
-            console.log("Order with id=" + id + " was selected.");
             this.loading = true;
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/items/' + (id + 1)).then(response => {
                 const items = response.body;
@@ -181,11 +181,11 @@ export default {
             this.orders.sort((a, b) => a[prop] < b[prop] ? -1: 1)
         },
         includes(order) {
-            return order.customer.toLowerCase().includes(this.searchText) &&
-                    order.externalOrderId.toLowerCase().includes(this.searchText) &&
-                    order.invoiceNumber.toLowerCase().includes(this.searchText) &&
-                    order.externalOrderId.toLowerCase().includes(this.searchText) &&
-                    order.externalOrderId.toLowerCase().includes(this.searchText) &&
+            return order.customer.toLowerCase().includes(this.searchText) ||
+                    order.externalOrderId.toLowerCase().includes(this.searchText) ||
+                    order.invoiceNumber.toLowerCase().includes(this.searchText) ||
+                    order.externalOrderId.toLowerCase().includes(this.searchText) ||
+                    order.externalOrderId.toLowerCase().includes(this.searchText) ||
                     order.externalOrderId.toLowerCase().includes(this.searchText);
         }
     },

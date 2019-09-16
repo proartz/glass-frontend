@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <Navbar />
+    <Navbar v-bind:snackbarText="snackbarText" v-bind:snackbarWatch="snackbarWatch"/>
     <v-content class="mx-4 my-4">
-      <router-view></router-view>
+      <router-view @showSnackbar='showSnackbar'></router-view>
     </v-content>
   </v-app>
 </template>
@@ -15,8 +15,16 @@ export default {
   components: { Navbar },
   data () {
     return {
-      //
+      snackbarText: '',
+      snackbarWatch: false,
     }
+  },
+  methods: {
+    showSnackbar(message) {
+      console.log("showSnackbar() invoked");
+      this.snackbarText = message;
+      this.snackbarWatch = !this.snackbarWatch;
+    },
   }
 }
 </script>

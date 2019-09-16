@@ -1,8 +1,8 @@
 <template>
     <nav>
         <v-snackbar v-model="snackbar" :timeout="4000" top>
-            <span>New order added.</span>
-            <v-btn @click="snackbar = false">Close</v-btn>
+            <span>{{ snackbarText }}</span>
+            <v-btn dark @click="snackbar = false">Close</v-btn>
         </v-snackbar>
         <v-toolbar card dark color="primary" app>
             <v-toolbar-side-icon></v-toolbar-side-icon>
@@ -17,6 +17,10 @@
 
 <script>
 export default {
+    props: [
+        'snackbarText',
+        'snackbarWatch'
+    ],
     data() {
         return {
             snackbar: false,
@@ -26,6 +30,14 @@ export default {
                 {icon: 'person', text: 'Operations', route: '/operations'},
                 {icon: 'person', text: 'Materials', route: '/materials'}
             ]
+        }
+    },
+    methods: {
+        
+    },
+    watch: {
+        snackbarWatch: function() {
+            this.snackbar = true;
         }
     }
 }

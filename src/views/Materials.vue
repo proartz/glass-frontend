@@ -30,7 +30,7 @@
                                 <div>{{ material.id }}</div>
                             </v-flex>
                             <v-flex>
-                               <ViewMaterial @refresh='fetchMaterials' v-bind:material="material"/>
+                               <ViewMaterial @showSnackbar='showSnackbar' @refresh='fetchMaterials' v-bind:material="material"/>
                             </v-flex>
                             <v-flex>
                                 <div class="caption grey--text">Name</div>
@@ -85,6 +85,9 @@ export default {
         },
         includes(material) {
             return material.name.toLowerCase().includes(this.searchText.toLowerCase())
+        },
+        showSnackbar(message) {
+            this.$emit('showSnackbar', message);
         }
     },
     computed: {

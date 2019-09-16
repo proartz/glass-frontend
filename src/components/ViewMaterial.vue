@@ -113,12 +113,14 @@ export default {
                     this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/updateMaterial', material,
                     {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                         console.log(response);
-                        this.editMode = false;
-                        this.loading = false;
+                        this.$emit('showSnackbar', "Material " + material.name + " updated.");
                         this.$emit('refresh');
                     }, response => {
                         console.log(response);
                     });
+
+                    this.editMode = false;
+                    this.loading = false;
                 }
             });
         },
@@ -136,12 +138,14 @@ export default {
                     this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/deleteMaterial', material,
                     {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                         console.log(response);
-                        this.editMode = false;
-                        this.loading = false;
+                        this.$emit('showSnackbar', "Material " + material.name + " deleted.");
                         this.$emit('refresh');
                     }, response => {
                         console.log(response);
+                        this.$emit('showSnackbar', "Can't delete material. It's used by another order.");
                     });
+                    this.editMode = false;
+                    this.loading = false;
                 }
             });
 

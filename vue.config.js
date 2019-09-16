@@ -1,4 +1,7 @@
 module.exports = {
+    configureWebpack: {
+        devtool: 'source-map'
+    },
     devServer: {
         host: process.env.VUE_APP_HOST,
         port: process.env.VUE_APP_PORT,
