@@ -2,11 +2,19 @@
     <div>
         <h1 class="subheading grey--text">Positions</h1>
 
-    
-        <v-btn @click="fetchItems" :loading="loading">Refresh</v-btn>
+        <v-layout row justify-start class="mb-3">
+            <v-flex>
+                <v-btn icon @click="refresh" :loading="loading">
+                    <v-icon>refresh</v-icon>
+                </v-btn>
+            </v-flex>
+            <v-flex>
+                <v-checkbox v-model="readyForHardening" label="Ready for hardening"></v-checkbox>
+            </v-flex>
+        </v-layout>
         <v-container fluid>
             <v-expansion-panel v-model="panel" >
-                <v-expansion-panel-content v-for="item in items" :key="item.id">
+                <v-expansion-panel-content v-for="item in filteredItems" :key="item.id">
                     <template v-slot:header>
                         <v-layout row wrap :class="`pa-3 item ${item.status}`">
                             <v-flex>
@@ -88,16 +96,21 @@ export default {
     },
     data() {
         return {
+            readyForHardening: false,
             materials: [],
             materialsItems: [],
             orderStatusItems: ['RECEIVED', 'IN_REALISATION', 'READY', 'DELIVERED', 'PAID'],
             operationStatusItems: ['DISABLED', 'READY_FOR_REALISATION' , 'IN_REALISATION', 'DONE'],
+            allOperationFetched: false,
             panel: [],
             loading: false,
             items: []
         }
     },
     methods: {
+        refresh() {
+            this.fetchItems();
+        },
         fetchItems() {
             this.loading = true;
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/items').then(response => {
@@ -139,18 +152,6 @@ export default {
               console.log(response);
           });
         },
-        fetchOperations(itemId) {
-            console.log("Item with id=" + itemId + " was selected.");
-            this.loading = true;
-            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/operations/' + (itemId + 1)).then(response => {
-                const operations = response.body;
-                this.items[itemId].operations = operations;
-                console.log(this.items[itemId].operations);
-                this.loading = false;
-            }, response => { 
-                console.log(response.body);
-            });
-        },
         fetchMaterials() {
             this.loading = true;
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/materials').then(response => {
@@ -163,12 +164,34 @@ export default {
                 console.error(response);
             }
         },
-    },
-    watch: {
-        panel:  function(index) {
-            if(index != null) {
-                this.fetchOperations(index)
+        includes(item) {
+            console.log("includes(" + item.id + ")");
+            var result = true;
+            if(this.readyForHardening) {
+                console.log("includes: " + this.isReadyForHardening(item));
+                result = result && this.isReadyForHardening(item);
             }
+            console.log(result);
+            return result;
+        },
+        isReadyForHardening(item) {
+            console.log("isReadyForHardening(" + item.id + ")");
+            console.log(item);
+            var i;
+            for(i = 0; i < item.operations.length; i++) {
+                if(item.operations[i].name == "Hardening") {
+                    var result = item.operations[i].status == this.operationStatusItems[1];
+                    console.log("isReadyForHardening: " + result);
+                    return result;
+                }
+            }
+            return false;
+        }
+    },
+    computed: {
+        filteredItems() {
+            console.log("filteredItems");
+            return this.items.filter(this.includes);
         }
     },
     created() {

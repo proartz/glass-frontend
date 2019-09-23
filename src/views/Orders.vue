@@ -50,7 +50,7 @@
                                 <div>{{ order.externalOrderId }}</div>
                             </v-flex>
                             <v-flex>
-                               <ViewOrder @refresh='refresh' v-bind:materialsItems="materialsItems" v-bind:orderId="order.id"
+                               <ViewOrder @refresh='refresh' v-bind:materialsItems="materialsItems" v-bind:materials="materials" v-bind:orderId="order.id"
                                           v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
                             </v-flex>
                             <v-flex>
@@ -166,12 +166,13 @@ export default {
                 console.error(response);
             }
         },
-        fetchItems(id) {
+        fetchItems(orderIndex) {
             this.loading = true;
-            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/items/' + (id + 1)).then(response => {
+            var orderId = this.orders[orderIndex].id;
+            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/items/' + orderId).then(response => {
                 const items = response.body;
-                this.orders[id].items = items;
-                console.log(this.orders[id].items);
+                this.orders[orderIndex].items = items;
+                console.log(this.orders[orderIndex].items);
                 this.loading = false;
             }, response => { 
                 console.log(response.body);

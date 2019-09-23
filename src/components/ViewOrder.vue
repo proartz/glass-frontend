@@ -77,7 +77,7 @@
             </v-form>
             <v-divider></v-divider>
             <v-subheader class="pa-0">ITEMS
-              <AddItem v-if="editMode" @addItem='addItem' v-bind:materialsItems="materialsItems" v-bind:operationStatusItems="operationStatusItems"/>
+              <AddItem v-if="editMode" @addItem='addItem' v-bind:materialsItems="materialsItems" v-bind:materials="materials" v-bind:operationStatusItems="operationStatusItems"/>
             </v-subheader>
             <v-expansion-panel v-model="panel" expand>
                 <v-expansion-panel-content v-for="item in order.items" :key="item.id">
@@ -155,6 +155,7 @@ export default {
     },
     props: [ 
         'materialsItems',
+        'materials',
         'orderId',
         'operationStatusItems'
      ],
