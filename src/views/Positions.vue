@@ -13,21 +13,30 @@
             </v-flex>
         </v-layout>
         <v-container fluid>
-            <v-expansion-panel v-model="panel" >
-                <v-expansion-panel-content v-for="item in filteredItems" :key="item.id">
-                    <template v-slot:header>
-                        <v-layout row wrap :class="`pa-3 item ${item.status}`">
+            <v-expansion-panel v-model="panel" expand>
+                <v-expansion-panel-content expand v-for="order in filteredOrders" :key="order.id">
+                    <template v-slot:header class="pa-0 ma-0">
+                        <v-layout row wrap :class="`pa-0 ma-0 order ${order.status}`">
+                            <v-flex>
+                                <div class="caption grey--text">External Order Id</div>
+                                <div class="slim">{{ order.externalOrderId }}</div>
+                            </v-flex>
+                            <v-flex>
+                               <ViewOrder @refresh='refresh' v-bind:materialsItems="materialsItems" v-bind:materials="materials" v-bind:orderId="order.id"
+                                          v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
+                            </v-flex>
+                        </v-layout>
+                    </template>
+                    <v-divider></v-divider>
+                    <v-container class="py-1 pl-5">
+                        <v-layout row wrap v-for="item in getFilteredItems(order.items)" :key="item.id" :class="`pa-3 item ${item.status}`">
                             <v-flex>
                                 <div class="caption grey--text">Id</div>
                                 <div>{{ item.id }}</div>
                             </v-flex>
                             <v-flex>
-                               <ViewOrder @refresh='fetchItems' v-bind:materialsItems="materialsItems" v-bind:orderId="item.order.id"
-                                          v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
-                            </v-flex>
-                            <v-flex>
                                 <div class="caption grey--text">Material:</div>
-                                <div>{{ materialsItems[item.materialId - 1] }}</div>
+                                <div>{{ item.material.name }}</div>
                             </v-flex>
                             <v-flex>
                                 <div class="caption grey--text">Width:</div>
@@ -48,35 +57,6 @@
                             <v-flex>
                                 <div class="right">
                                     <v-chip small :class="`${item.status} white--text caption my-2`">{{ item.status }}</v-chip>
-                                </div>
-                            </v-flex>
-                        </v-layout>
-                    </template>
-                    <v-divider></v-divider>
-                    <v-container class="py-1 pl-5">
-                       <v-layout row v-for="operation in item.operations" :key="operation.id">
-                            <v-flex>
-                                <div class="caption grey--text">Id:</div>
-                                <div>{{ operation.id }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Name:</div>
-                                <div>{{ operation.name }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div>
-                                  <v-menu offset-y :disabled="`${operation.status}` == operationStatusItems[0] || `${operation.status}` == operationStatusItems[3]">
-                                    <template v-slot:activator="{ on }">
-                                      <v-chip v-on="on" :class="`status ${operation.status} white--text caption my-2`">
-                                        {{ operation.status }}
-                                      </v-chip>
-                                    </template>
-                                    <v-list>
-                                      <v-list-tile v-for="(status, index) in operationStatusItems" :key="index" @click="changeStatus(item, operation, status)">
-                                        <v-list-tile-title>{{ status }}</v-list-tile-title>
-                                      </v-list-tile>
-                                    </v-list>
-                                  </v-menu>
                                 </div>
                             </v-flex>
                         </v-layout>
@@ -101,57 +81,59 @@ export default {
             materialsItems: [],
             orderStatusItems: ['RECEIVED', 'IN_REALISATION', 'READY', 'DELIVERED', 'PAID'],
             operationStatusItems: ['DISABLED', 'READY_FOR_REALISATION' , 'IN_REALISATION', 'DONE'],
-            allOperationFetched: false,
             panel: [],
             loading: false,
-            items: []
+            orders: [],
+            ordersFetched: false,
         }
     },
     methods: {
         refresh() {
-            this.fetchItems();
+            this.loadData();
         },
-        fetchItems() {
+        loadData() {
+            this.fetchOrders();
+            this.fetchMaterials();
+        },
+        fetchOrders() {
             this.loading = true;
-            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/items').then(response => {
-                this.items = response.body;
-                console.log(this.items);
+            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/orders').then(response => {
+                this.orders = response.body;
+                this.ordersFetched = true;
+                this.expandAll();
                 this.loading = false;
             }, response => { 
                 console.log(response.body);
             });
         },
-        changeStatus(item, operation, newStatus) {
-          this.loading = true;
-
-          const changeStatusDto = {
-              operationId: operation.id,
-              newStatus: newStatus
-          };
-          console.log(operation);
-          console.log(changeStatusDto);
-          console.log(item.indexOf);
-
-          this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
-          {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
-              const order = response.body;
-              console.log(order);
-              var index;
-              for(index = 0; index < order.items.length; index++) {
-                  if(order.items[index].id == item.id) {
-                      const itemId = this.items.indexOf(item);
-                      this.items[itemId].operations = order.items[index].operations;
-                      this.items[itemId].status = order.items[index].status;
-                      console.log(order.items[index]);
-                  }
-              }
-              
-              console.log(response.status);
-              this.loading = false;
-          }, response => {
-              console.log(response);
-          });
+        getFilteredItems(items) {
+            return items.filter(this.includes);
         },
+        // changeStatus(item, operation, newStatus) {
+        //   this.loading = true;
+
+        //   const changeStatusDto = {
+        //       operationId: operation.id,
+        //       newStatus: newStatus
+        //   };
+
+        //   this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
+        //   {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
+        //       const order = response.body;
+        //       var index;
+        //       for(index = 0; index < order.items.length; index++) {
+        //           if(order.items[index].id == item.id) {
+        //               const itemId = this.items.indexOf(item);
+        //               this.items[itemId].operations = order.items[index].operations;
+        //               this.items[itemId].status = order.items[index].status;
+        //           }
+        //       }
+              
+        //       this.loading = false;
+        //   }, response => {
+        //       console.log(response);
+        //   });
+        // },
         fetchMaterials() {
             this.loading = true;
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/materials').then(response => {
@@ -164,44 +146,63 @@ export default {
                 console.error(response);
             }
         },
-        includes(item) {
-            console.log("includes(" + item.id + ")");
+        includesOrder(order) {
             var result = true;
             if(this.readyForHardening) {
-                console.log("includes: " + this.isReadyForHardening(item));
-                result = result && this.isReadyForHardening(item);
+                result = result && this.isOrderReadyForHardening(order);
             }
-            console.log(result);
             return result;
         },
+        includes(item) {
+            var result = true;
+            if(this.readyForHardening) {
+                result = result && this.isReadyForHardening(item);
+            }
+            return result;
+        },
+        isOrderReadyForHardening(order) {
+            var i;
+            for(i = 0; i < order.items.length; i++) {
+                if(this.isReadyForHardening(order.items[i])) {
+                    return true;
+                }
+            }
+            return false;
+        },
         isReadyForHardening(item) {
-            console.log("isReadyForHardening(" + item.id + ")");
-            console.log(item);
             var i;
             for(i = 0; i < item.operations.length; i++) {
                 if(item.operations[i].name == "Hardening") {
                     var result = item.operations[i].status == this.operationStatusItems[1];
-                    console.log("isReadyForHardening: " + result);
                     return result;
                 }
             }
             return false;
+        },
+        expandAll() {
+            // expands all items in orders
+            this.panel = [...Array(this.orders.length).keys()].map(_ => true);
         }
     },
     computed: {
-        filteredItems() {
-            console.log("filteredItems");
-            return this.items.filter(this.includes);
+        filteredOrders() {
+            return this.orders.filter(this.includesOrder);
         }
     },
     created() {
-        this.fetchItems();
-        this.fetchMaterials();
+        this.loadData();
     },
 }
 </script>
 
-<style>
+<style scoped>
+.v-expansion-panel__header{
+    padding: 0px 0px;
+
+}
+.slim{
+    margin: auto;
+}
 
 .item.READY_FOR_REALISATION{
     border-left: 4px solid blue;

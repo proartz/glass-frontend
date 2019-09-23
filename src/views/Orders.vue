@@ -172,7 +172,6 @@ export default {
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/items/' + orderId).then(response => {
                 const items = response.body;
                 this.orders[orderIndex].items = items;
-                console.log(this.orders[orderIndex].items);
                 this.loading = false;
             }, response => { 
                 console.log(response.body);
@@ -196,13 +195,13 @@ export default {
             return this.orders.filter(this.includes);
         }
     },
-    watch: {
-        panel:  function(index) {
-            if(index != null) {
-                this.fetchItems(index)
-            }
-        }
-    },
+    // watch: {
+    //     panel:  function(index) {
+    //         if(index != null) {
+    //             this.fetchItems(index)
+    //         }
+    //     }
+    // },
     created() {
         this.loadData();
     },
