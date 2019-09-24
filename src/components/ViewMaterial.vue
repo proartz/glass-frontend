@@ -8,19 +8,19 @@
             <v-btn icon dark @click="dialog = false">
               <v-icon>close</v-icon>
             </v-btn>
-            <v-toolbar-title>Material</v-toolbar-title>
+            <v-toolbar-title>Materiał</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
                 <v-dialog v-model="deleteDialog" width="500">
                     <template v-slot:activator="{ on }">
-                        <v-btn dark flat v-on="on" :disabled = "!editMode">delete</v-btn>
+                        <v-btn dark flat v-on="on" :disabled = "!editMode">Usuń</v-btn>
                     </template>
                     <v-card>
                         <v-card-title class="headline grey lighten-2" primary-title>
-                            Delete Material
+                            Usuń Materiał
                         </v-card-title>
                         <v-card-text>
-                            Are You sure You want to delete {{ material.name }}?
+                            Czy na pewno chcesz usunąć materiał {{ material.name }}?
                         </v-card-text>
                         <v-divider></v-divider>
                         <v-card-actions>
@@ -29,13 +29,13 @@
                                 ok
                             </v-btn>
                             <v-btn flat @click="deleteDialog = false">
-                                cancel
+                                anuluj
                             </v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
-                <v-btn dark flat @click="saveMaterial" :disabled = "!editMode" :loading="loading">Save</v-btn>
-                <v-btn dark flat @click="editMode = !editMode">Edit</v-btn>
+                <v-btn dark flat @click="saveMaterial" :disabled = "!editMode" :loading="loading">Zapisz</v-btn>
+                <v-btn dark flat @click="editMode = !editMode">Edytuj</v-btn>
             </v-toolbar-items>
             <v-menu bottom right offset-y>
               <template v-slot:activator="{ on }">
@@ -62,7 +62,7 @@
                     <v-text-field v-validate="`required|max:30`"
                                     :counter="30"
                                     :error-messages="errors.collect('name')"
-                                    data-vv-name="name" label="Name"
+                                    data-vv-name="name" label="Nazwa"
                                     v-model="material.name"
                                     :readonly="!editMode">
                     </v-text-field>
@@ -70,7 +70,7 @@
                                     :counter="100"
                                     :error-messages="errors.collect('description')"
                                     data-vv-name="description"
-                                    label="Description"
+                                    label="Opis"
                                     v-model="material.description"
                                     :readonly="!editMode">
                     </v-text-field>
@@ -113,7 +113,7 @@ export default {
                     this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/updateMaterial', material,
                     {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                         console.log(response);
-                        this.$emit('showSnackbar', "Material " + material.name + " updated.");
+                        this.$emit('showSnackbar', "Materiał " + this.material.name + " zaaktualizowany.");
                         this.$emit('refresh');
                     }, response => {
                         console.log(response);
@@ -138,11 +138,11 @@ export default {
                     this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/deleteMaterial', material,
                     {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                         console.log(response);
-                        this.$emit('showSnackbar', "Material " + material.name + " deleted.");
+                        this.$emit('showSnackbar', "Materiał " + this.material.name + " usunięty.");
                         this.$emit('refresh');
                     }, response => {
                         console.log(response);
-                        this.$emit('showSnackbar', "Can't delete material. It's used by another order.");
+                        this.$emit('showSnackbar', "Nie można usunąć materiału. Jest on używany przez inne zlecenie.");
                     });
                     this.editMode = false;
                     this.loading = false;

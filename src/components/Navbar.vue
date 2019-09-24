@@ -25,10 +25,10 @@ export default {
         return {
             snackbar: false,
             links: [
-                {icon: 'dashboard', text: 'Orders', route: '/orders'},
-                {icon: 'folder', text: 'Positions', route: '/positions'},
-                {icon: 'person', text: 'Operations', route: '/operations'},
-                {icon: 'person', text: 'Materials', route: '/materials'}
+                {icon: 'dashboard', text: 'Zlecenia', route: '/orders'},
+                {icon: 'folder', text: 'Pozycje', route: '/positions'},
+                {icon: 'person', text: 'Operacje', route: '/operations'},
+                {icon: 'person', text: 'Materiały', route: '/materials'}
             ]
         }
     },

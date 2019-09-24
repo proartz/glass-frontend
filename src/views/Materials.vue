@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 class="subheading grey--text">Materials</h1>
+        <h1 class="subheading grey--text">Materiały</h1>
 
     
         <v-btn icon @click="fetchMaterials" :loading="loading">
@@ -12,13 +12,14 @@
                 solo append-icon="cancel" hide-details single-line></v-text-field>
         <v-container fluid>
             <v-layout row justify-start class="mb-3">
+                <v-subheader class="gray--text font-weight-light caption">Sortuj po:</v-subheader>
                 <v-btn small flat color="grey" @click="sortBy('id')">
                     <v-icon small left>folder</v-icon>
-                    <span class="caption text-lowercase">By Id</span>
+                    <span class="caption text-lowercase">Id</span>
                 </v-btn>
                 <v-btn small flat color="grey" @click="sortBy('name')">
                     <v-icon small left>person</v-icon>
-                    <span class="caption text-lowercase">By Name</span>
+                    <span class="caption text-lowercase">nazwa</span>
                 </v-btn>
             </v-layout>
             <v-expansion-panel>
@@ -33,7 +34,7 @@
                                <ViewMaterial @showSnackbar='showSnackbar' @refresh='fetchMaterials' v-bind:material="material"/>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Name</div>
+                                <div class="caption grey--text">Nazwa</div>
                                 <div>{{ material.name }}</div>
                             </v-flex>
                         </v-layout>
@@ -42,7 +43,7 @@
                     <v-container class="py-1 pl-5">
                         <v-layout row>
                             <v-flex>
-                                <div class="caption grey--text">Description:</div>
+                                <div class="caption grey--text">Opis:</div>
                                 <div>{{ material.description }}</div>
                             </v-flex>
                         </v-layout>

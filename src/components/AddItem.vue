@@ -8,7 +8,7 @@
                 <v-btn icon dark @click="dialog = false">
                 <v-icon>close</v-icon>
                 </v-btn>
-                <v-toolbar-title>Add New Item</v-toolbar-title>
+                <v-toolbar-title>Dodaj Nową Pozycję</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-toolbar-items>
                 <v-btn dark flat @click="dialog = false"></v-btn>
@@ -33,35 +33,35 @@
                                 data-vv-name="Material"
                                 v-model="materialSelected"
                                 :items="materialsItems"
-                                label="Material">
+                                label="Materiał">
                     </v-select>
                     <v-text-field v-validate="`required|numeric|min_value:1`"
                                     :error-messages="errors.collect('Width')"
                                     data-vv-name="Width"
-                                    label="Width"
+                                    label="Szerokość"
                                     v-model="width">
                     </v-text-field>
                     <v-text-field v-validate="`required|numeric|min_value:1`"
                                     :error-messages="errors.collect('Height')"
                                     data-vv-name="Height"
-                                    label="Height"
+                                    label="Wysokość"
                                     v-model="height">
                     </v-text-field>
                     <v-text-field v-validate="`required|numeric|min_value:1`"
                                     :error-messages="errors.collect('Depth')"
                                     data-vv-name="Depth"
-                                    label="Depth" v-model="depth">
+                                    label="Grubość" v-model="depth">
                     </v-text-field>
                     <v-text-field v-validate="`required|numeric|min_value:1`"
                                     :error-messages="errors.collect('Quantity')"
                                     data-vv-name="Quantity"
-                                    label="Quantity"
+                                    label="Ilość"
                                     v-model="quantity">
                     </v-text-field>
-                    <v-text-field label="Note" v-model="note"></v-text-field>
-                    <div class=" grey--text">Operations</div>
+                    <v-text-field label="Uwagi" v-model="note"></v-text-field>
+                    <div class=" grey--text">Operacje</div>
                     <v-container>
-                            <v-checkbox v-model="selectAllOperations" label="Select All"></v-checkbox>
+                            <v-checkbox v-model="selectAllOperations" label="Wybierz Wszystko"></v-checkbox>
                             <v-checkbox v-for="(operation, i) in operationsItems" :key="i" v-model="operationsSelected[operationsItems.indexOf(operation)]" :label="`${operation}`"></v-checkbox>
                     </v-container>
                     <v-list>
@@ -69,8 +69,8 @@
                             <v-list-tile-title class="red--text caption">{{ error }}</v-list-tile-title>
                         </v-list-tile>
                     </v-list>
-                    <v-btn @click="addItem">Add Item</v-btn>
-                    <v-btn @click="clearForm">Clear</v-btn>
+                    <v-btn @click="addItem">Dodaj Pozycję</v-btn>
+                    <v-btn @click="clearForm">Wyczyść</v-btn>
                 </v-form>
             </v-card-text>
         </v-card>
@@ -89,11 +89,11 @@ export default {
             dialog: false,
             toolbarItems: [],
             materialSelected: '',
-            operationsItems: ['Cutting', 'Sanding', 'Drilling', 'CNC', 'Hardening', 'Enamelling', 'Lamination'],
+            operationsItems: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC', 'Hartowanie', 'Emaliowanie', 'Laminowanie'],
             operationsSelected: [false, false, false, false, false, false, false],
             selectAllOperations: false,
-            stageOneOperations: ['Cutting', 'Sanding', 'Drilling', 'CNC'],
-            stageTwoOperations: ['Hardening', 'Enamelling', 'Lamination'],
+            stageOneOperations: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC'],
+            stageTwoOperations: ['Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
 
             material: '',
             operations: [],

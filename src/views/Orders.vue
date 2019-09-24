@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 class="subheading grey--text">Orders</h1>
+        <h1 class="subheading grey--text">Zlecenia</h1>
 
     
         <v-btn icon @click="refresh" :loading="loading">
@@ -12,33 +12,34 @@
                 solo append-icon="cancel" hide-details single-line></v-text-field>
         <v-container fluid>
             <v-layout row justify-start class="mb-3">
+                <v-subheader class="gray--text font-weight-light caption">Sortuj po:</v-subheader>
                 <v-btn small flat color="grey" @click="sortBy('externalOrderId')">
                     <v-icon small left>folder</v-icon>
-                    <span class="caption text-lowercase">By External Order Id</span>
+                    <span class="caption text-lowercase">Zewnętrzny Numer Zlecenia</span>
                 </v-btn>
                 <v-btn small flat color="grey" @click="sortBy('customer')">
                     <v-icon small left>person</v-icon>
-                    <span class="caption text-lowercase">By Customer</span>
+                    <span class="caption text-lowercase">Klient</span>
                 </v-btn>
                 <v-btn small flat color="grey" @click="sortBy('invoiceNumber')">
                     <v-icon small left>person</v-icon>
-                    <span class="caption text-lowercase">By Invoice Number</span>
+                    <span class="caption text-lowercase">Numer Faktury</span>
                 </v-btn>
                 <v-btn small flat color="grey" @click="sortBy('price')">
                     <v-icon small left>person</v-icon>
-                    <span class="caption text-lowercase">By Price</span>
+                    <span class="caption text-lowercase">Cena</span>
                 </v-btn>
                 <v-btn small flat color="grey" @click="sortBy('dueDate')">
                     <v-icon small left>person</v-icon>
-                    <span class="caption text-lowercase">By Due Date</span>
+                    <span class="caption text-lowercase">Termin Realizacji</span>
                 </v-btn>
                 <v-btn small flat color="grey" @click="sortBy('createDate')">
                     <v-icon small left>person</v-icon>
-                    <span class="caption text-lowercase">By Create Date</span>
+                    <span class="caption text-lowercase">Data Przyjęcia</span>
                 </v-btn>
                 <v-btn small flat color="grey" @click="sortBy('status')">
                     <v-icon small left>person</v-icon>
-                    <span class="caption text-lowercase">By Status</span>
+                    <span class="caption text-lowercase">Status</span>
                 </v-btn>
             </v-layout>
             <v-expansion-panel v-model="panel" >
@@ -46,7 +47,7 @@
                     <template v-slot:header>
                         <v-layout row wrap :class="`pa-3 order ${order.status}`">
                             <v-flex>
-                                <div class="caption grey--text">External Order Id</div>
+                                <div class="caption grey--text">Zewnętrzny Numer Zlecenia</div>
                                 <div>{{ order.externalOrderId }}</div>
                             </v-flex>
                             <v-flex>
@@ -54,23 +55,23 @@
                                           v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Customer</div>
+                                <div class="caption grey--text">Klient</div>
                                 <div>{{ order.customer }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Invoice Number</div>
+                                <div class="caption grey--text">Numer Faktury</div>
                                 <div>{{ order.invoiceNumber }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Price</div>
+                                <div class="caption grey--text">Cena</div>
                                 <div>{{ order.price }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Due Date</div>
+                                <div class="caption grey--text">Termin Realizacji</div>
                                 <div>{{ order.dueDate }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Create Date</div>
+                                <div class="caption grey--text">Data Przyjęcia</div>
                                 <div>{{ order.createDate }}</div>
                             </v-flex>
                             <v-flex>
@@ -84,23 +85,23 @@
                     <v-container class="py-1 pl-5">
                         <v-layout row v-for="item in order.items" :key="item.id">
                             <v-flex>
-                                <div class="caption grey--text">Material:</div>
+                                <div class="caption grey--text">Materiał:</div>
                                 <div>{{ item.material.name }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Width:</div>
+                                <div class="caption grey--text">Szerokość:</div>
                                 <div>{{ item.width }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Height:</div>
+                                <div class="caption grey--text">Wysokość:</div>
                                 <div>{{ item.height }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Depth:</div>
+                                <div class="caption grey--text">Grubość:</div>
                                 <div>{{ item.depth }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Quantity:</div>
+                                <div class="caption grey--text">Ilość:</div>
                                 <div>{{ item.quantity }}</div>
                             </v-flex>
                             <v-flex>
@@ -128,8 +129,8 @@ export default {
             searchText: '',
             materials: [],
             materialsItems: [],
-            orderStatusItems: ['RECEIVED', 'IN_REALISATION', 'READY', 'DELIVERED', 'PAID'],
-            operationStatusItems: ['DISABLED', 'READY_FOR_REALISATION' , 'IN_REALISATION', 'DONE'],
+            orderStatusItems: ['PRZYJĘTO', 'W_REALIZACJI', 'GOTOWE', 'WYDANE', 'ROZLICZONE'],
+            operationStatusItems: ['ZABLOKOWANE', 'GOTOWE_DO_REALIZACJI' , 'W_REALIZACJI', 'ZROBIONE'],
             editMode: false,
             panel: [],
             loading: false,
@@ -210,35 +211,35 @@ export default {
 
 <style>
 
-.order.RECEIVED{
+.order.PRZYJĘTO{
     border-left: 4px solid blue;
 }
-.order.IN_REALISATION{
+.order.W_REALIZACJI{
     border-left: 4px solid red;
 }
-.order.READY{
+.order.GOTOWE{
     border-left: 4px solid green;
 }
-.order.DELIVERED{
+.order.WYDANE{
     border-left: 4px solid yellow;
 }
-.order.PAID{
+.order.ROZLICZONE{
     border-left: 4px solid orange;
 }
 
-.v-chip.RECEIVED{
+.v-chip.PRZYJĘTO{
     background: blue;
 }
-.v-chip.IN_REALISATION{
+.v-chip.W_REALIZACJI{
     background: red;
 }
-.v-chip.READY{
+.v-chip.GOTOWE{
     background: green;
 }
-.v-chip.DELIVERED{
+.v-chip.WYDANE{
     background: orange;
 }
-.v-chip.PAID{
+.v-chip.ROZLICZONE{
     background: red;
 }
 

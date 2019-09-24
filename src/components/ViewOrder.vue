@@ -8,11 +8,11 @@
             <v-btn icon dark @click="dialog = false">
               <v-icon>close</v-icon>
             </v-btn>
-            <v-toolbar-title>Order</v-toolbar-title>
+            <v-toolbar-title>Zlecenie</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
-              <v-btn dark flat @click="submit" :disabled = "!editMode" :loading="loading">Save</v-btn>
-              <v-btn dark flat @click="editMode = !editMode">Edit</v-btn>
+              <v-btn dark flat @click="submit" :disabled = "!editMode" :loading="loading">Zapisz</v-btn>
+              <v-btn dark flat @click="editMode = !editMode">Edytuj</v-btn>
             </v-toolbar-items>
             <v-menu bottom right offset-y>
               <template v-slot:activator="{ on }">
@@ -21,7 +21,7 @@
                 </v-btn>
               </template>
               <v-list>
-                <v-list-tile v-for="(item, i) in items" :key="i" @click="">
+                <v-list-tile v-for="(item, i) in items" :key="i">
                   <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                 </v-list-tile>
               </v-list>
@@ -33,7 +33,7 @@
                               :counter="30"
                               :error-messages="errors.collect('customer')"
                               data-vv-name="customer"
-                              label="Customer"
+                              label="Klient"
                               v-model="order.customer"
                               :readonly="!editMode">
                 </v-text-field>
@@ -41,7 +41,7 @@
                               :counter="30"
                               :error-messages="errors.collect('externalOrderId')"
                               data-vv-name="externalOrderId"
-                              label="External Order Id"
+                              label="Zewnętrzny Numer Zlecenia"
                               v-model="order.externalOrderId"
                               :readonly="!editMode">
                 </v-text-field>
@@ -49,14 +49,14 @@
                               :counter="30"
                               :error-messages="errors.collect('invoiceNumber')"
                               data-vv-name="invoiceNumber"
-                              label="Invoice Number"
+                              label="Numer Faktury"
                               v-model="order.invoiceNumber"
                               :readonly="!editMode">
                 </v-text-field>
                 <v-text-field v-validate="`numeric|max_value:999999999999999999`"
                               :error-messages="errors.collect('price')"
                               data-vv-name="price"
-                              label="Price"
+                              label="Cena"
                               v-model="order.price"
                               :readonly="!editMode">
                 </v-text-field>
@@ -64,7 +64,7 @@
                     <v-text-field v-validate="`required`"
                                   :error-messages="errors.collect('dueDate')"
                                   data-vv-name="dueDate"
-                                  label="Due Date"
+                                  label="Termin Realizacji"
                                   :value="order.dueDate"
                                   slot="activator">
                     </v-text-field>
@@ -76,7 +76,7 @@
                 <v-spacer></v-spacer>
             </v-form>
             <v-divider></v-divider>
-            <v-subheader class="pa-0">ITEMS
+            <v-subheader class="pa-0">POZYCJE
               <AddItem v-if="editMode" @addItem='addItem' v-bind:materialsItems="materialsItems" v-bind:materials="materials" v-bind:operationStatusItems="operationStatusItems"/>
             </v-subheader>
             <v-expansion-panel v-model="panel" expand>
@@ -84,23 +84,23 @@
                     <template v-slot:header>
                         <v-layout row wrap :class="`py-0 item ${item.status}`">
                             <v-flex>
-                                <div class="caption grey--text">Material</div>
+                                <div class="caption grey--text">Materiał</div>
                                 <div>{{ item.material.name }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Width</div>
+                                <div class="caption grey--text">Szerokość</div>
                                 <div>{{ item.width }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Height</div>
+                                <div class="caption grey--text">Wysokość</div>
                                 <div>{{ item.height }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Depth</div>
+                                <div class="caption grey--text">Grubość</div>
                                 <div>{{ item.depth }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Quantity</div>
+                                <div class="caption grey--text">Ilość</div>
                                 <div>{{ item.quantity }}</div>
                             </v-flex>
                             <v-flex>
@@ -118,7 +118,7 @@
                                 <div>{{ operation.id }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Name:</div>
+                                <div class="caption grey--text">Nazwa:</div>
                                 <div>{{ operation.name }}</div>
                             </v-flex>
                             <v-flex>
@@ -168,8 +168,8 @@ export default {
             editMode: false,
             loading: false,
 
-            stageOneOperations: ['Cutting', 'Sanding', 'Drilling', 'CNC'],
-            stageTwoOperations: ['Hardening', 'Enamelling', 'Lamination'],
+            stageOneOperations: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC'],
+            stageTwoOperations: ['Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
 
             order: {}
         }
@@ -270,35 +270,26 @@ export default {
 </script>
 <style>
 
-    .v-chip.READY_FOR_REALISATION{
+    .v-chip.PRZYJĘTO{
         background: blue;
     }
-    .v-chip.IN_REALISATION{
+    .v-chip.W_REALIZACJI{
         background: red;
     }
-    .v-chip.DONE{
+    .v-chip.GOTOWE{
         background: green;
     }
-    .v-chip.RECEIVED{
-        background: blue;
-    }
-    .v-chip.READY{
-        background: green;
-    }
-    .v-chip.DELIVERED{
+    .v-chip.WYDANE{
         background: orange;
     }
-    .v-chip.PAID{
+    .v-chip.ROZLICZONE{
         background: red;
     }
-    .item.ReadyForRealisation{
-        border-left: 4px solid blue;
+    
+    .v-chip.GOTOWE_DO_REALIZACJI{
+        background: blue;
     }
-    .item.InRealisation{
-        border-left: 4px solid red;
+    .v-chip.ZROBIONE{
+        background: green;
     }
-    .item.Done{
-        border-left: 4px solid green;
-    }
-
 </style>

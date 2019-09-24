@@ -1,9 +1,11 @@
 <template>
     <div>
-        <h1 class="subheading grey--text">Operations</h1>
+        <h1 class="subheading grey--text">Operacje</h1>
 
     
-        <v-btn @click="fetchOperations" :loading="loading">Refresh</v-btn>
+        <v-btn icon @click="fetchOperations" :loading="loading">
+            <v-icon>refresh</v-icon>
+        </v-btn>
         <v-container fluid>
             <v-card v-for="operation in operations" :key="operation.id">
                 <v-layout row wrap :class="`pa-3 item ${operation.status}`">
@@ -12,7 +14,7 @@
                         <div>{{ operation.id }}</div>
                     </v-flex>
                     <v-flex>
-                        <div class="caption grey--text">Name:</div>
+                        <div class="caption grey--text">Nazwa:</div>
                         <div>{{ operation.name }}</div>
                     </v-flex>
                     <v-flex>
@@ -52,8 +54,8 @@ export default {
         return {
             materials: [],
             materialsItems: [],
-            orderStatusItems: ['RECEIVED', 'IN_REALISATION', 'READY', 'DELIVERED', 'PAID'],
-            operationStatusItems: ['DISABLED', 'READY_FOR_REALISATION' , 'IN_REALISATION', 'DONE'],
+            orderStatusItems: ['PRZYJĘTO', 'W_REALIZACJI', 'GOTOWE', 'WYDANE', 'ROZLICZONE'],
+            operationStatusItems: ['ZABLOKOWANE', 'GOTOWE_DO_REALIZACJI' , 'W_REALIZACJI', 'ZROBIONE'],
             panel: [],
             loading: false,
             operations: []
@@ -129,23 +131,23 @@ export default {
 
 <style>
 
-.operation.READY_FOR_REALISATION{
+.operation.GOTOWE_DO_REALIZACJI{
     border-left: 4px solid blue;
 }
-.operation.IN_REALISATION{
+.operation.W_REALIZACJI{
     border-left: 4px solid red;
 }
-.operation.DONE{
+.operation.ZROBIONE{
     border-left: 4px solid green;
 }
 
-.v-chip.RECEIVED{
+.v-chip.PRZYJĘTO{
     background: blue;
 }
-.v-chip.IN_REALISATION{
+.v-chip.W_REALIZACJI{
     background: red;
 }
-.v-chip.DONE{
+.v-chip.ZROBIONE{
     background: green;
 }</style>
 

@@ -9,7 +9,7 @@
                 </v-btn>
             </v-flex>
             <v-flex>
-                <v-checkbox v-model="readyForHardening" label="Ready for hardening"></v-checkbox>
+                <v-checkbox v-model="readyForHardening" label="Gotowe do Hartowania"></v-checkbox>
             </v-flex>
         </v-layout>
         <v-container fluid>
@@ -18,7 +18,7 @@
                     <template v-slot:header class="pa-0 ma-0">
                         <v-layout row wrap :class="`pa-0 ma-0 order ${order.status}`">
                             <v-flex>
-                                <div class="caption grey--text">External Order Id</div>
+                                <div class="caption grey--text">Zewnętrzny Numer Zlecenia</div>
                                 <div class="slim">{{ order.externalOrderId }}</div>
                             </v-flex>
                             <v-flex>
@@ -35,23 +35,23 @@
                                 <div>{{ item.id }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Material:</div>
+                                <div class="caption grey--text">Materiał:</div>
                                 <div>{{ item.material.name }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Width:</div>
+                                <div class="caption grey--text">Szerokość:</div>
                                 <div>{{ item.width }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Height:</div>
+                                <div class="caption grey--text">Wysokość:</div>
                                 <div>{{ item.height }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Depth:</div>
+                                <div class="caption grey--text">Grubość:</div>
                                 <div>{{ item.depth }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="caption grey--text">Quantity:</div>
+                                <div class="caption grey--text">Ilość:</div>
                                 <div>{{ item.quantity }}</div>
                             </v-flex>
                             <v-flex>
@@ -79,8 +79,8 @@ export default {
             readyForHardening: false,
             materials: [],
             materialsItems: [],
-            orderStatusItems: ['RECEIVED', 'IN_REALISATION', 'READY', 'DELIVERED', 'PAID'],
-            operationStatusItems: ['DISABLED', 'READY_FOR_REALISATION' , 'IN_REALISATION', 'DONE'],
+            orderStatusItems: ['PRZYJĘTO', 'W_REALIZACJI', 'GOTOWE', 'WYDANE', 'ROZLICZONE'],
+            operationStatusItems: ['ZABLOKOWANE', 'GOTOWE_DO_REALIZACJI' , 'W_REALIZACJI', 'ZROBIONE'],
             panel: [],
             loading: false,
             orders: [],
@@ -209,23 +209,23 @@ export default {
     margin: auto;
 }
 
-.item.READY_FOR_REALISATION{
+.item.GOTOWE_DO_REALIZACJI{
     border-left: 4px solid blue;
 }
-.item.IN_REALISATION{
+.item.W_REALIZACJI{
     border-left: 4px solid red;
 }
-.item.DONE{
+.item.ZROBIONE{
     border-left: 4px solid green;
 }
 
-.v-chip.RECEIVED{
+.v-chip.PRZYJĘTO{
     background: blue;
 }
-.v-chip.IN_REALISATION{
+.v-chip.W_REALIZACJI{
     background: red;
 }
-.v-chip.DONE{
+.v-chip.GOTOWE{
     background: green;
 }</style>
 

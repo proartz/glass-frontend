@@ -8,7 +8,7 @@
             <v-btn icon dark @click="dialog = false">
               <v-icon>close</v-icon>
             </v-btn>
-            <v-toolbar-title>Add New Order</v-toolbar-title>
+            <v-toolbar-title>Dodaj Nowe Zlecenie</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
               <v-btn dark flat @click="dialog = false"></v-btn>
@@ -31,34 +31,34 @@
                     <v-text-field v-validate="`required|max:30`"
                                     :counter="30"
                                     :error-messages="errors.collect('customer')"
-                                    data-vv-name="customer" label="Customer"
+                                    data-vv-name="customer" label="Klient"
                                     v-model="customer">
                     </v-text-field>
                     <v-text-field v-validate="`max:30`"
                                     :counter="30"
                                     :error-messages="errors.collect('externalOrderId')"
                                     data-vv-name="externalOrderId"
-                                    label="External Order Id"
+                                    label="Zewnętrzny Numer Zlecenia"
                                     v-model="externalOrderId">
                     </v-text-field>
                     <v-text-field v-validate="`max:30`"
                                     :counter="30"
                                     :error-messages="errors.collect('invoiceNumber')"
                                     data-vv-name="invoiceNumber"
-                                    label="Invoice Number"
+                                    label="Numer Faktury"
                                     v-model="invoiceNumber">
                     </v-text-field>
                     <v-text-field v-validate="`numeric|max_value:999999999999999999`"
                                     :error-messages="errors.collect('price')"
                                     data-vv-name="price"
-                                    label="Price"
+                                    label="Cena"
                                     v-model="price">
                     </v-text-field>
                     <v-menu>
                         <v-text-field v-validate="`required`"
                                         :error-messages="errors.collect('dueDate')"
                                         data-vv-name="dueDate"
-                                        label="Due Date"
+                                        label="Termin Realizacji"
                                         :value="dueDate"
                                         slot="activator">
                         </v-text-field>
@@ -68,7 +68,7 @@
                     </v-menu>
                     <v-list>
                         <v-subheader class="pa-0">
-                            ITEMS
+                            POZYCJE
                             <AddItem @addItem='addItem'
                                         v-bind:materialsItems="materialsItems"
                                         v-bind:materials="materials"
@@ -93,8 +93,8 @@
                         </v-list-tile>
                     </v-list>
                     <v-spacer></v-spacer>
-                    <v-btn @click="submit" :loading="loading">Add Order</v-btn>
-                    <v-btn @click="clearForm">Clear</v-btn>
+                    <v-btn @click="submit" :loading="loading">Dodaj Zlecenie</v-btn>
+                    <v-btn @click="clearForm">Wyczyść</v-btn>
                 </v-form>
             </v-card-text>
         </v-card>
