@@ -56,7 +56,7 @@
                                     :counter="30"
                                     :error-messages="errors.collect('id')"
                                     data-vv-name="id" label="id"
-                                    v-model="material.id">
+                                    v-model="material.id"
                                     readonly="true">
                     </v-text-field>
                     <v-text-field v-validate="`required|max:30`"

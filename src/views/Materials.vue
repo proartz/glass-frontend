@@ -6,7 +6,7 @@
         <v-btn icon @click="fetchMaterials" :loading="loading">
             <v-icon>refresh</v-icon>
         </v-btn>
-        <AddMaterial @materialAdded="fetchMaterials"/>
+        <AddMaterial @showSnackbar='showSnackbar' @materialAdded="fetchMaterials"/>
         <v-text-field prepend-icon="search"
                 v-model="searchText"
                 solo append-icon="cancel" hide-details single-line></v-text-field>

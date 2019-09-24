@@ -84,6 +84,7 @@ export default {
                         console.log(response.status);
                         this.loading = false;
                         this.dialog = false;
+                        this.$emit('showSnackbar', "Material " + material.name + " added.");
                         this.$emit('materialAdded');
                         this.clearForm();
                     }, response => {
