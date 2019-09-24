@@ -100,7 +100,7 @@ export default {
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/orders').then(response => {
                 this.orders = response.body;
                 this.ordersFetched = true;
-                this.expandAll();
+                // this.expandAll();
                 this.loading = false;
             }, response => { 
                 console.log(response.body);
@@ -187,6 +187,11 @@ export default {
     computed: {
         filteredOrders() {
             return this.orders.filter(this.includesOrder);
+        }
+    },
+    watch: {
+        filteredOrders: function() {
+            this.expandAll();
         }
     },
     created() {
