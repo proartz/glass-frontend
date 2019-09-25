@@ -9,7 +9,7 @@
                 </v-btn>
             </v-flex>
             <v-flex>
-                <v-checkbox v-model="readyForHardening" label="Gotowe do Hartowania"></v-checkbox>
+                <v-select :items="operationsItems" v-model="operationsFilter" label="Filtruj gotowe do:"></v-select>
             </v-flex>
         </v-layout>
         <v-container fluid>
@@ -76,11 +76,30 @@ export default {
     },
     data() {
         return {
-            readyForHardening: false,
+            readyForOperation: false,
+            operationsFilter: 'Wszystkie',
+            operationsEnum: {
+                WSZYSTKIE: 'Wszystkie',
+                CIĘCIE: 'Cięcie',
+                SZLIFOWANIE: 'Szlifowanie',
+                WIERCENIE: 'Wiercenie',
+                CNC: 'CNC',
+                HARTOWANIE: 'Hartowanie',
+                EMALIOWANIE: 'Emaliowanie',
+                LAMINOWANIE: 'Laminowanie',
+                WYDANIE: 'Wydanie'
+            },
+            operationsItems: ['Wszystkie', 'Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC', 'Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
             materials: [],
             materialsItems: [],
             orderStatusItems: ['PRZYJĘTO', 'W_REALIZACJI', 'GOTOWE', 'WYDANE', 'ROZLICZONE'],
             operationStatusItems: ['ZABLOKOWANE', 'GOTOWE_DO_REALIZACJI' , 'W_REALIZACJI', 'ZROBIONE'],
+            operationStatusEnum: {
+                ZABLOKOWANE: 'ZABLOKOWANE',
+                GOTOWE_DO_REALIZACJI: 'GOTOWE_DO_REALIZACJI',
+                W_REALIZACJI: 'W_REALIZACJI',
+                ZROBIONE: 'ZROBIONE'
+            },
             panel: [],
             loading: false,
             orders: [],
@@ -148,32 +167,32 @@ export default {
         },
         includesOrder(order) {
             var result = true;
-            if(this.readyForHardening) {
-                result = result && this.isOrderReadyForHardening(order);
+            if(this.operationsFilter != this.operationsEnum.WSZYSTKIE) {
+                result = result && this.isOrderReadyForOperation(order);
             }
             return result;
         },
         includes(item) {
             var result = true;
-            if(this.readyForHardening) {
-                result = result && this.isReadyForHardening(item);
+            if(this.operationsFilter != this.operationsEnum.WSZYSTKIE) {
+                result = result && this.isReadyForOperation(item);
             }
             return result;
         },
-        isOrderReadyForHardening(order) {
+        isOrderReadyForOperation(order) {
             var i;
             for(i = 0; i < order.items.length; i++) {
-                if(this.isReadyForHardening(order.items[i])) {
+                if(this.isReadyForOperation(order.items[i])) {
                     return true;
                 }
             }
             return false;
         },
-        isReadyForHardening(item) {
+        isReadyForOperation(item) {
             var i;
             for(i = 0; i < item.operations.length; i++) {
-                if(item.operations[i].name == "Hardening") {
-                    var result = item.operations[i].status == this.operationStatusItems[1];
+                if(item.operations[i].name == this.operationsFilter) {
+                    var result = item.operations[i].status == this.operationStatusEnum.GOTOWE_DO_REALIZACJI;
                     return result;
                 }
             }
