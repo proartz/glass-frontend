@@ -66,6 +66,13 @@
                                         :min="now">
                         </v-date-picker>
                     </v-menu>
+                    <v-text-field v-validate="`max:100`"
+                                    counter="100"
+                                    :error-messages="errors.collect('description')"
+                                    data-vv-name="description"
+                                    label="Opis"
+                                    v-model="description">
+                    </v-text-field>
                     <v-list>
                         <v-subheader class="pa-0">
                             POZYCJE
@@ -126,6 +133,7 @@ export default {
             invoiceNumber: '',
             price: '',
             dueDate: '',
+            description: '',
             createDate: '',
             status: '',
 
@@ -173,6 +181,7 @@ export default {
                         invoiceNumber: this.invoiceNumber,
                         price: this.price,
                         dueDate: this.dueDate,
+                        description: this.description,
                         status: ''
                     };
 

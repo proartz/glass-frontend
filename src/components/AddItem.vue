@@ -58,7 +58,11 @@
                                     label="Ilość"
                                     v-model="quantity">
                     </v-text-field>
-                    <v-text-field label="Uwagi" v-model="note"></v-text-field>
+                    <v-text-field v-validate="`max:100`"
+                                    counter="100"
+                                    :error-messages="errors.collect('Note')"
+                                    data-vv-name="Note"
+                                    label="Uwagi" v-model="note"></v-text-field>
                     <div class=" grey--text">Operacje</div>
                     <v-container>
                             <v-checkbox v-model="selectAllOperations" label="Wybierz Wszystko"></v-checkbox>
@@ -85,7 +89,8 @@ export default {
         'operationStatusItems'
     ],
     data() {
-        return {
+        return {stageOneOperations: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC'],
+            stageTwoOperations: ['Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
             dialog: false,
             toolbarItems: [],
             materialSelected: '',

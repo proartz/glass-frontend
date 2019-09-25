@@ -72,6 +72,13 @@
                                   :min="now">
                     </v-date-picker>
                 </v-menu>
+                <v-text-field v-validate="`max:100`"
+                                    counter="100"
+                                    :error-messages="errors.collect('description')"
+                                    data-vv-name="description"
+                                    label="Opis"
+                                    v-model="order.description">
+                </v-text-field>
                 <v-chip :class="`${order.status} white--text caption my-2`">{{ order.status }}</v-chip>
                 <v-spacer></v-spacer>
             </v-form>
