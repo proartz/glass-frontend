@@ -91,6 +91,33 @@
                     <template v-slot:header>
                         <v-layout row wrap :class="`py-0 item ${item.status}`">
                             <v-flex>
+                                 <v-dialog v-model="deleteDialog" width="500">
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn v-on="on" v-if="item.id != ''" text icon class="my-2">
+                                            <v-icon>delete</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <v-card>
+                                        <v-card-title class="headline grey lighten-2" primary-title>
+                                            Usuń Pozycję
+                                        </v-card-title>
+                                        <v-card-text>
+                                            Czy na pewno chcesz usunąć pozycję {{ item.material.name }}?
+                                        </v-card-text>
+                                        <v-divider></v-divider>
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn flat @click="deleteItem(item)">
+                                                ok
+                                            </v-btn>
+                                            <v-btn flat @click="deleteDialog = false">
+                                                anuluj
+                                            </v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
+                            </v-flex>
+                            <v-flex>
                                 <div class="caption grey--text">Materiał</div>
                                 <div>{{ item.material.name }}</div>
                             </v-flex>
@@ -174,6 +201,7 @@ export default {
             items: [],
             editMode: false,
             loading: false,
+            deleteDialog: false,
 
             stageOneOperations: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC'],
             stageTwoOperations: ['Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
@@ -209,6 +237,28 @@ export default {
         },
         addItem(item) {
             this.order.items.push(item);
+        },
+        deleteItem(item) {
+            console.log(item);
+
+            this.loading = true;
+
+            const deleteItemDto = {
+                id: item.id
+            }
+
+          console.log(item.id);
+
+          this.$http.delete('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/item', {body: deleteItemDto}).then(response => {
+              this.showSnackbar("Pozycja " + item.material.name + " została usunięta.");
+              // remove the item from the order in viewOrder
+              this.order.items.splice(this.items.indexOf(item), 1);
+              console.log(response.status);
+              this.$emit('refresh');
+              this.loading = false;
+          }, response => {
+              console.log(response);
+          });
         },
         changeStatus(operation, newStatus) {
           this.loading = true;
@@ -262,6 +312,9 @@ export default {
                 }
             });
         },
+        showSnackbar(message) {
+            this.$emit('showSnackbar', message);
+        }
     },
     watch: {
         dialog:  function() {

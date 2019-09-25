@@ -90,7 +90,7 @@
                         </v-subheader>
                         <v-list-tile v-for="item in items" :key="item.id">
                             <v-list-tile-action>
-                                <v-btn text icon class="my=2" @click="deleteItem(`${item.id}`)">
+                                <v-btn text icon class="my-2" @click="deleteItem(`${item.id}`)">
                                     <v-icon>delete</v-icon>
                                 </v-btn>
                             </v-list-tile-action>

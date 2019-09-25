@@ -51,7 +51,7 @@
                                 <div>{{ order.externalOrderId }}</div>
                             </v-flex>
                             <v-flex>
-                               <ViewOrder @refresh='refresh' v-bind:materialsItems="materialsItems" v-bind:materials="materials" v-bind:orderId="order.id"
+                               <ViewOrder @refresh='refresh' @showSnackbar='showSnackbar' v-bind:materialsItems="materialsItems" v-bind:materials="materials" v-bind:orderId="order.id"
                                           v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
                             </v-flex>
                             <v-flex>
@@ -188,7 +188,10 @@ export default {
                     order.externalOrderId.toLowerCase().includes(this.searchText) ||
                     order.externalOrderId.toLowerCase().includes(this.searchText) ||
                     order.externalOrderId.toLowerCase().includes(this.searchText);
-        }
+        },
+        showSnackbar(message) {
+            this.$emit('showSnackbar', message);
+        },
     },
     computed: {
         filteredOrders() {
