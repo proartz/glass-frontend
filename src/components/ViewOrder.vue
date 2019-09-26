@@ -86,36 +86,34 @@
             <v-subheader class="pa-0">POZYCJE
               <AddItem v-if="editMode" @addItem='addItem' v-bind:materialsItems="materialsItems" v-bind:materials="materials" v-bind:operationStatusItems="operationStatusItems"/>
             </v-subheader>
+            <v-dialog  v-if="itemToDelete" v-model="deleteDialog" width="500">
+                <v-card>
+                    <v-card-title class="headline grey lighten-2" primary-title>
+                        Usuń Pozycję
+                    </v-card-title>
+                    <v-card-text>
+                        Czy na pewno chcesz usunąć pozycję {{ itemToDelete.material.name }} ?
+                    </v-card-text>
+                    <v-divider></v-divider>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn flat @click="deleteItem(itemToDelete)">
+                            ok
+                        </v-btn>
+                        <v-btn flat @click="deleteDialog = false">
+                            anuluj
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
             <v-expansion-panel v-model="panel" expand>
-                <v-expansion-panel-content v-for="item in order.items" :key="item.id">
+                <v-expansion-panel-content v-for="(item, i) in order.items" :key="i">
                     <template v-slot:header>
                         <v-layout row wrap :class="`py-0 item ${item.status}`">
                             <v-flex>
-                                 <v-dialog v-model="deleteDialog" width="500">
-                                    <template v-slot:activator="{ on }">
-                                        <v-btn v-on="on" v-if="item.id != ''" text icon class="my-2">
-                                            <v-icon>delete</v-icon>
-                                        </v-btn>
-                                    </template>
-                                    <v-card>
-                                        <v-card-title class="headline grey lighten-2" primary-title>
-                                            Usuń Pozycję
-                                        </v-card-title>
-                                        <v-card-text>
-                                            Czy na pewno chcesz usunąć pozycję {{ item.material.name }}?
-                                        </v-card-text>
-                                        <v-divider></v-divider>
-                                        <v-card-actions>
-                                            <v-spacer></v-spacer>
-                                            <v-btn flat @click="deleteItem(item)">
-                                                ok
-                                            </v-btn>
-                                            <v-btn flat @click="deleteDialog = false">
-                                                anuluj
-                                            </v-btn>
-                                        </v-card-actions>
-                                    </v-card>
-                                </v-dialog>
+                                <v-btn v-if="item.id" icon @click.stop="openDeleteDialog(item)">
+                                    <v-icon>delete</v-icon>
+                                </v-btn>
                             </v-flex>
                             <v-flex>
                                 <div class="caption grey--text">Materiał</div>
@@ -202,6 +200,7 @@ export default {
             editMode: false,
             loading: false,
             deleteDialog: false,
+            itemToDelete: '',
 
             stageOneOperations: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC'],
             stageTwoOperations: ['Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
@@ -238,6 +237,10 @@ export default {
         addItem(item) {
             this.order.items.push(item);
         },
+        openDeleteDialog(item) {
+            this.itemToDelete = item;
+            this.deleteDialog = true;
+        },
         deleteItem(item) {
             console.log(item);
 
@@ -255,6 +258,8 @@ export default {
               this.order.items.splice(this.items.indexOf(item), 1);
               console.log(response.status);
               this.$emit('refresh');
+              this.itemToDelete = '';
+              this.deleteDialog = false;
               this.loading = false;
           }, response => {
               console.log(response);
