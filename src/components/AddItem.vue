@@ -89,16 +89,21 @@ export default {
         'operationStatusItems'
     ],
     data() {
-        return {stageOneOperations: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC'],
-            stageTwoOperations: ['Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
+        return {
             dialog: false,
             toolbarItems: [],
             materialSelected: '',
-            operationsItems: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC', 'Hartowanie', 'Emaliowanie', 'Laminowanie'],
-            operationsSelected: [false, false, false, false, false, false, false],
+            operationsItems: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC', 'Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
+            operationsSelected: [false, false, false, false, false, false, false, false],
             selectAllOperations: false,
             stageOneOperations: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC'],
             stageTwoOperations: ['Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
+            operationStatusEnum: {
+                NIEROBIONE: 'NIEROBIONE',
+                ZAPLANOWANE: 'ZAPLANOWANE',
+                GOTOWE_DO_REALIZACJI: 'GOTOWE_DO_REALIZACJI',
+                ZROBIONE: 'ZROBIONE'
+            },
 
             material: '',
             operations: [],
@@ -134,7 +139,7 @@ export default {
                     var i;
                     for(i = 0; i < this.operationsSelected.length; i++) {
                         if(this.operationsSelected[i] == true) {
-                            this.operations.push({name: this.operationsItems[i], status: this.operationStatusItems[0]});
+                            this.operations.push({name: this.operationsItems[i], status: this.operationStatusEnum.ZAPLANOWANE});
                         }
                     }
 

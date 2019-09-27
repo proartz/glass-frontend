@@ -82,7 +82,7 @@
                         </v-layout>
                     </template>
                     <v-divider></v-divider>
-                    <v-container class="py-1 pl-5">
+                    <v-container class="px-0">
                         <v-layout row v-for="item in order.items" :key="item.id">
                             <v-flex>
                                 <div class="caption grey--text">Materiał:</div>
@@ -105,6 +105,9 @@
                                 <div>{{ item.quantity }}</div>
                             </v-flex>
                             <v-flex>
+                                <ViewOperations @refresh='refresh' v-bind:operations="item.operations" v-bind:operationStatusItems="operationStatusItems"/>
+                            </v-flex>
+                            <v-flex>
                                 <v-chip :class="`${item.status} white--text caption my-2`">{{ item.status }}</v-chip>
                             </v-flex>
                         </v-layout>
@@ -118,11 +121,13 @@
 <script>
 import AddOrder from '@/components/AddOrder';
 import ViewOrder from '@/components/ViewOrder';
+import ViewOperations from '@/components/ViewOperations';
 
 export default {
     components: { 
         AddOrder,
-        ViewOrder
+        ViewOrder,
+        ViewOperations
     },
     data() {
         return {
@@ -130,7 +135,7 @@ export default {
             materials: [],
             materialsItems: [],
             orderStatusItems: ['PRZYJĘTO', 'W_REALIZACJI', 'GOTOWE', 'WYDANE', 'ROZLICZONE'],
-            operationStatusItems: ['ZABLOKOWANE', 'GOTOWE_DO_REALIZACJI' , 'W_REALIZACJI', 'ZROBIONE'],
+            operationStatusItems: ['NIEROBIONE', 'ZAPLANOWANE', 'GOTOWE_DO_REALIZACJI' , 'ZROBIONE'],
             editMode: false,
             panel: [],
             loading: false,
@@ -139,6 +144,7 @@ export default {
     },
     methods: {
         refresh() {
+            console.log("REFRESHING...");
             this.loadData();
         },
         loadData() {
@@ -149,6 +155,7 @@ export default {
             this.loading = true;
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/orders').then(response => {
                 this.orders = response.body;
+                console.log(this.orders);
                 this.loading = false;
             }, response => { 
                 console.log(response.body);
