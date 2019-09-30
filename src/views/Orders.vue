@@ -105,10 +105,7 @@
                                 <div>{{ item.quantity }}</div>
                             </v-flex>
                             <v-flex>
-                                <ViewOperations @refresh='refresh' v-bind:operations="item.operations" v-bind:operationStatusItems="operationStatusItems"/>
-                            </v-flex>
-                            <v-flex>
-                                <v-chip :class="`${item.status} white--text caption my-2`">{{ item.status }}</v-chip>
+                                <ViewOperations @refresh='refresh' v-bind:operations="item.operations"/>
                             </v-flex>
                         </v-layout>
                     </v-container>

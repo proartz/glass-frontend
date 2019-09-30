@@ -55,9 +55,7 @@
                                 <div>{{ item.quantity }}</div>
                             </v-flex>
                             <v-flex>
-                                <div class="right">
-                                    <v-chip small :class="`${item.status} white--text caption my-2`">{{ item.status }}</v-chip>
-                                </div>
+                                <ViewOperations @refresh='refresh' v-bind:operations="item.operations"/>
                             </v-flex>
                         </v-layout>
                     </v-container>
@@ -69,10 +67,12 @@
 
 <script>
 import ViewOrder from '@/components/ViewOrder';
+import ViewOperations from '@/components/ViewOperations'
 
 export default {
     components: {
-      ViewOrder
+      ViewOrder,
+      ViewOperations
     },
     data() {
         return {
@@ -87,9 +87,17 @@ export default {
                 HARTOWANIE: 'Hartowanie',
                 EMALIOWANIE: 'Emaliowanie',
                 LAMINOWANIE: 'Laminowanie',
-                WYDANIE: 'Wydanie'
+                WYDANIE: 'Wydanie',
+                ROZLICZENIE: 'Rozliczenie'
             },
-            operationsItems: ['Wszystkie', 'Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC', 'Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
+            orderStatusEnum: {
+                PRZYJĘTO: 'PRZYJĘTO',
+                W_REALIZACJI: 'W_REALIZACJI',
+                GOTOWE: 'GOTOWE',
+                WYDANE: 'WYDANE',
+                ROZLICZONE: 'ROZLICZONE'
+            },
+            operationsItems: ['Wszystkie', 'Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC', 'Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie', 'Rozliczenie'],
             materials: [],
             materialsItems: [],
             orderStatusItems: ['PRZYJĘTO', 'W_REALIZACJI', 'GOTOWE', 'WYDANE', 'ROZLICZONE'],
@@ -126,40 +134,20 @@ export default {
             });
         },
         getFilteredItems(items) {
-            return items.filter(this.includes);
+            if(this.operationsFilter != this.operationsEnum.ROZLICZENIE) {
+                return items.filter(this.includes);
+            } else {
+                return items;
+            }
+
         },
-        // changeStatus(item, operation, newStatus) {
-        //   this.loading = true;
-
-        //   const changeStatusDto = {
-        //       operationId: operation.id,
-        //       newStatus: newStatus
-        //   };
-
-        //   this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
-        //   {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
-        //       const order = response.body;
-        //       var index;
-        //       for(index = 0; index < order.items.length; index++) {
-        //           if(order.items[index].id == item.id) {
-        //               const itemId = this.items.indexOf(item);
-        //               this.items[itemId].operations = order.items[index].operations;
-        //               this.items[itemId].status = order.items[index].status;
-        //           }
-        //       }
-              
-        //       this.loading = false;
-        //   }, response => {
-        //       console.log(response);
-        //   });
-        // },
         fetchMaterials() {
             this.loading = true;
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/materials').then(response => {
                 this.materials = response.body;
                 this.materials.forEach((material) => {
                     this.materialsItems.push(material.name);
-                })
+                });
                 this.loading = false;
             }), response => {
                 console.error(response);
@@ -172,21 +160,27 @@ export default {
             }
             return result;
         },
+        isOrderReadyForOperation(order) {
+            if(this.operationsFilter == this.operationsEnum.ROZLICZENIE) {
+                if(order.status == this.orderStatusEnum.WYDANE) {
+                    return true;
+                }
+            } else {
+                var i;
+                for(i = 0; i < order.items.length; i++) {
+                    if(this.isReadyForOperation(order.items[i])) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        },
         includes(item) {
             var result = true;
             if(this.operationsFilter != this.operationsEnum.WSZYSTKIE) {
                 result = result && this.isReadyForOperation(item);
             }
             return result;
-        },
-        isOrderReadyForOperation(order) {
-            var i;
-            for(i = 0; i < order.items.length; i++) {
-                if(this.isReadyForOperation(order.items[i])) {
-                    return true;
-                }
-            }
-            return false;
         },
         isReadyForOperation(item) {
             var i;

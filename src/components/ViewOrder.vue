@@ -84,7 +84,7 @@
             </v-form>
             <v-divider></v-divider>
             <v-subheader class="pa-0">POZYCJE
-              <AddItem v-if="editMode" @addItem='addItem' v-bind:materialsItems="materialsItems" v-bind:materials="materials" v-bind:operationStatusItems="operationStatusItems"/>
+              <AddItem v-if="editMode && (order.status != orderStatusEnum.ROZLICZONE)" @addItem='addItem' v-bind:materialsItems="materialsItems" v-bind:materials="materials" v-bind:operationStatusItems="operationStatusItems"/>
             </v-subheader>
             <v-dialog  v-if="itemToDelete" v-model="deleteDialog" width="500">
                 <v-card>
@@ -201,6 +201,13 @@ export default {
             loading: false,
             deleteDialog: false,
             itemToDelete: '',
+            orderStatusEnum: {
+                PRZYJĘTO: 'PRZYJĘTO',
+                W_REALIZACJI: 'W_REALIZACJI',
+                GOTOWE: 'GOTOWE',
+                WYDANE: 'WYDANE',
+                ROZLICZONE: 'ROZLICZONE'
+            },
 
             stageOneOperations: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC'],
             stageTwoOperations: ['Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
@@ -299,7 +306,7 @@ export default {
                         invoiceNumber: this.order.invoiceNumber,
                         price: this.order.price,
                         dueDate: this.order.dueDate,
-                        status: ''
+                        status: this.order.status
                     };
 
                     console.log(order);

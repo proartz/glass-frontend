@@ -1,6 +1,6 @@
 <template>
     <v-layout row>
-        <v-flex v-for="operation in filteredOperations" :key="operation.id">
+        <v-flex v-for="(operation, i) in filteredOperations" :key="i">
             <div class="caption grey--text">{{ operation.abbreviation }}</div>
             <v-btn :color="`${buttonColor[operation.status]}`"
                     :disabled="operation.status == operationStatusEnum.NIEROBIONE"
@@ -14,7 +14,6 @@
 export default {
     props: [
        'operations',
-       'operationStatusItems'
     ],
     data() {
         return {
@@ -59,12 +58,10 @@ export default {
             var operation;
             for(operation in this.operationsEnum) {
                 this.filteredOperations.push({
-                    id: i,
                     name: this.operationsEnum[operation],
                     abbreviation: this.operationAbbreviationsEnum[operation],
                     status: this.operationStatusEnum.NIEROBIONE
                 });
-                i++;
             }
             this.updateFilteredOperations();
         },
@@ -85,23 +82,25 @@ export default {
             }
         },
         changeStatus(operation, newStatus) {
-          this.loading = true;
+            if(operation.status == this.operationStatusEnum.GOTOWE_DO_REALIZACJI) {
+                this.loading = true;
 
-          const changeStatusDto = {
-              operationId: operation.id,
-              newStatus: newStatus
-          };
+                const changeStatusDto = {
+                    operationId: operation.id,
+                    newStatus: newStatus
+                };
 
-          console.log(changeStatusDto);
+                console.log(changeStatusDto);
 
-          this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
-          {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
-              console.log(response.status);
-              this.$emit('refresh');
-              this.loading = false;
-          }, response => {
-              console.log(response);
-          });
+                this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
+                {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
+                    console.log(response.status);
+                    this.$emit('refresh');
+                    this.loading = false;
+                }, response => {
+                    console.log(response);
+                });
+          }
         },
     },
     watch: {
