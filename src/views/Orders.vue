@@ -85,6 +85,9 @@
                     <v-container class="px-0">
                         <v-layout row v-for="item in order.items" :key="item.id">
                             <v-flex>
+                                <v-checkbox ref="items" :id="`${item.id}`"></v-checkbox>
+                            </v-flex>
+                            <v-flex>
                                 <div class="caption grey--text">Materiał:</div>
                                 <div>{{ item.material.name }}</div>
                             </v-flex>
@@ -145,8 +148,13 @@ export default {
             this.loadData();
         },
         loadData() {
+            this.i = 0;
             this.fetchOrders();
             this.fetchMaterials();
+        },
+        giveIndex() {
+
+            return this.i;
         },
         fetchOrders() {
             this.loading = true;
@@ -212,6 +220,7 @@ export default {
     // },
     created() {
         this.loadData();
+        console.log("REFS: ");
     },
 }
 </script>

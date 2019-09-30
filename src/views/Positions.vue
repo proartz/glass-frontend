@@ -8,6 +8,9 @@
                     <v-icon>refresh</v-icon>
                 </v-btn>
             </v-flex>
+            <v-btn icon @click="groupStatusChange">
+                <v-icon>done</v-icon>
+            </v-btn>
             <v-flex>
                 <v-select :items="operationsItems" v-model="operationsFilter" label="Filtruj gotowe do:"></v-select>
             </v-flex>
@@ -17,6 +20,10 @@
                 <v-expansion-panel-content expand v-for="order in filteredOrders" :key="order.id">
                     <template v-slot:header class="pa-0 ma-0">
                         <v-layout row wrap :class="`pa-0 ma-0 order ${order.status}`">
+                             <v-flex>
+                                <v-checkbox v-model="groupOrders[orders.indexOf(order)]" @change="selectAllItems(orders.indexOf(order))">
+                                </v-checkbox>
+                            </v-flex>
                             <v-flex>
                                 <div class="caption grey--text">Zewnętrzny Numer Zlecenia</div>
                                 <div class="slim">{{ order.externalOrderId }}</div>
@@ -30,6 +37,12 @@
                     <v-divider></v-divider>
                     <v-container class="py-1 pl-5">
                         <v-layout row wrap v-for="item in getFilteredItems(order.items)" :key="item.id" :class="`pa-3 item ${item.status}`">
+                            <v-flex>
+                                <v-checkbox ref="items"
+                                            :id="`${item.id}`"
+                                            v-model="groupItems[orders.indexOf(order)][order.items.indexOf(item)]">
+                                </v-checkbox>
+                            </v-flex>
                             <v-flex>
                                 <div class="caption grey--text">Id</div>
                                 <div>{{ item.id }}</div>
@@ -97,6 +110,8 @@ export default {
                 WYDANE: 'WYDANE',
                 ROZLICZONE: 'ROZLICZONE'
             },
+            groupItems: [],
+            groupOrders: [],
             operationsItems: ['Wszystkie', 'Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC', 'Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie', 'Rozliczenie'],
             materials: [],
             materialsItems: [],
@@ -126,12 +141,44 @@ export default {
             this.loading = true;
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/orders').then(response => {
                 this.orders = response.body;
+                this.initializeGroupItems();
+                this.initializeGroupOrders();
                 this.ordersFetched = true;
                 // this.expandAll();
                 this.loading = false;
             }, response => { 
                 console.log(response.body);
             });
+        },
+        initializeGroupItems() {
+            // create twodimensional array for a groupItems
+            this.groupItems = new Array(this.orders.length);
+            var i;
+            for(i = 0; i < this.orders.length; i++) {
+                this.groupItems[i] = new Array(this.orders[i].items.length);
+            }
+
+            // initialize groupItems with false
+            for(i = 0; i < this.groupItems.length; i++) {
+                var j;
+                for(j = 0; j < this.groupItems[i].length; j++) {
+                    this.groupItems[i][j] = false;
+                }
+            }
+            console.log(this.groupItems);
+        },
+        initializeGroupOrders() {
+            this.groupOrders = new Array(this.orders.length);
+            var i;
+            for(i = 0; i < this.groupOrders.length; i++) {
+                this.groupOrders[i] = false;
+            }
+        },
+        selectAllItems(orderId) {
+            var i;
+            for(i = 0; i < this.groupItems[orderId].length; i++) {
+                this.groupItems[orderId][i] = !this.groupItems[orderId][i];
+            }
         },
         getFilteredItems(items) {
             if(this.operationsFilter != this.operationsEnum.ROZLICZENIE) {
@@ -152,6 +199,61 @@ export default {
             }), response => {
                 console.error(response);
             }
+        },
+        groupStatusChange() {
+            if(this.operationsFilter != this.operationsEnum.WSZYSTKIE) {
+                var i;
+                for(i = 0; i < this.$refs.items.length; i++) {
+                    if(this.$refs.items[i]._data.lazyValue) {
+                        this.loading = true;
+                        var itemId = this.$refs.items[i]._props.id;
+                        var item = this.findItem(itemId);
+                        var operationId = this.findOperationReadyForRealisation(item);
+                        console.log("itemId=" + itemId);
+                        console.log("item=");
+                        console.log(item);
+                        console.log("operationId=" + operationId);
+
+                        const changeStatusDto = {
+                            operationId: operationId,
+                            newStatus: this.operationStatusEnum.ZROBIONE
+                        };
+
+                        console.log(changeStatusDto);
+
+                        this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
+                        {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
+                            console.log(response.status);
+                            this.refresh();
+                            this.loading = false;
+                        }, response => {
+                            console.log(response);
+                        });
+                        // console.log(this.$refs.items[i]._props.id);
+                    }
+                }
+            }
+        },
+        findItem(itemId) {
+            var i;
+            for(i = 0; i < this.orders.length; i++) {
+                var j;
+                for(j = 0; j < this.orders[i].items.length; j++) {
+                    if(this.orders[i].items[j].id == itemId) {
+                        return this.orders[i].items[j];
+                    }
+                }
+            }
+            return null;
+        },
+        findOperationReadyForRealisation(item) {
+            var i;
+            for(i = 0; i < item.operations.length; i++) {
+                if(item.operations[i].status == this.operationStatusEnum.GOTOWE_DO_REALIZACJI) {
+                    return item.operations[i].id;
+                }
+            }
+            return null;
         },
         includesOrder(order) {
             var result = true;
@@ -205,7 +307,7 @@ export default {
     watch: {
         filteredOrders: function() {
             this.expandAll();
-        }
+        },
     },
     created() {
         this.loadData();

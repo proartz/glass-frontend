@@ -106,73 +106,36 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-            <v-expansion-panel v-model="panel" expand>
-                <v-expansion-panel-content v-for="(item, i) in order.items" :key="i">
-                    <template v-slot:header>
-                        <v-layout row wrap :class="`py-0 item ${item.status}`">
-                            <v-flex>
-                                <v-btn v-if="item.id" icon @click.stop="openDeleteDialog(item)">
-                                    <v-icon>delete</v-icon>
-                                </v-btn>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Materiał</div>
-                                <div>{{ item.material.name }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Szerokość</div>
-                                <div>{{ item.width }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Wysokość</div>
-                                <div>{{ item.height }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Grubość</div>
-                                <div>{{ item.depth }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Ilość</div>
-                                <div>{{ item.quantity }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div class="right">
-                                    <v-chip small :class="`status ${item.status} white--text caption my-2`">{{ item.status }}</v-chip>
-                                </div>
-                            </v-flex>
-                        </v-layout>
-                    </template>
-                    <v-divider></v-divider>
-                    <v-container class="py-1 pl-5">
-                        <v-layout row v-for="operation in item.operations" :key="operation.id">
-                            <v-flex>
-                                <div class="caption grey--text">Id:</div>
-                                <div>{{ operation.id }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Nazwa:</div>
-                                <div>{{ operation.name }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div>
-                                  <v-menu offset-y :disabled="`${operation.status}` == operationStatusItems[0] || `${operation.status}` == operationStatusItems[3]">
-                                    <template v-slot:activator="{ on }">
-                                      <v-chip v-on="on" :class="`status ${operation.status} white--text caption my-2`">
-                                        {{ operation.status }}
-                                      </v-chip>
-                                    </template>
-                                    <v-list>
-                                      <v-list-tile v-for="(status, index) in operationStatusItems" :key="index" @click="changeStatus(operation, status)">
-                                        <v-list-tile-title>{{ status }}</v-list-tile-title>
-                                      </v-list-tile>
-                                    </v-list>
-                                  </v-menu>
-                                </div>
-                            </v-flex>
-                        </v-layout>
-                    </v-container>
-                </v-expansion-panel-content>
-            </v-expansion-panel>
+                <v-layout row wrap v-for="(item, i) in order.items" :key="i" :class="`py-0 item ${item.status}`">
+                    <v-flex>
+                        <v-btn v-if="item.id" icon @click.stop="openDeleteDialog(item)">
+                            <v-icon>delete</v-icon>
+                        </v-btn>
+                    </v-flex>
+                    <v-flex>
+                        <div class="caption grey--text">Materiał</div>
+                        <div>{{ item.material.name }}</div>
+                    </v-flex>
+                    <v-flex>
+                        <div class="caption grey--text">Szerokość</div>
+                        <div>{{ item.width }}</div>
+                    </v-flex>
+                    <v-flex>
+                        <div class="caption grey--text">Wysokość</div>
+                        <div>{{ item.height }}</div>
+                    </v-flex>
+                    <v-flex>
+                        <div class="caption grey--text">Grubość</div>
+                        <div>{{ item.depth }}</div>
+                    </v-flex>
+                    <v-flex>
+                        <div class="caption grey--text">Ilość</div>
+                        <div>{{ item.quantity }}</div>
+                    </v-flex>
+                    <v-flex>
+                        <ViewOperations @refresh='refresh' v-bind:operations="item.operations"/>
+                    </v-flex>
+                </v-layout>
           </v-card-text>
         </v-card>
     </v-dialog>
@@ -180,10 +143,12 @@
 
 <script>
 import AddItem from '@/components/AddItem'
+import ViewOperations from '@/components/ViewOperations'
 
 export default {
     components: {
-      AddItem
+      AddItem,
+      ViewOperations
     },
     props: [ 
         'materialsItems',
@@ -216,6 +181,9 @@ export default {
         }
     },
     methods: {
+        refresh() {
+            this.loadOrder();
+        },
         loadOrder() {
           this.fetchOrder();
         },
@@ -306,7 +274,7 @@ export default {
                         invoiceNumber: this.order.invoiceNumber,
                         price: this.order.price,
                         dueDate: this.order.dueDate,
-                        status: this.order.status
+                        status: this.order.statuss
                     };
 
                     console.log(order);
