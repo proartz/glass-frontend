@@ -232,7 +232,12 @@ export default {
                         // console.log(this.$refs.items[i]._props.id);
                     }
                 }
+            } else {
+                this.showSnackbar("Nie można grupowo zmienić statusu pozycji przy filtrowaniu 'Wszystkie'. Wybierz inne filtrowanie.");
             }
+        },
+        showSnackbar(message) {
+            this.$emit('showSnackbar', message);
         },
         findItem(itemId) {
             var i;

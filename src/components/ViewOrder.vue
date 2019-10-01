@@ -35,7 +35,7 @@
                               data-vv-name="customer"
                               label="Klient"
                               v-model="order.customer"
-                              :readonly="!editMode">
+                              :readonly="!editMode">loadOrder
                 </v-text-field>
                 <v-text-field v-validate="`max:30`"
                               :counter="30"
@@ -108,7 +108,7 @@
             </v-dialog>
                 <v-layout row wrap v-for="(item, i) in order.items" :key="i" :class="`py-0 item ${item.status}`">
                     <v-flex>
-                        <v-btn v-if="item.id" icon @click.stop="openDeleteDialog(item)">
+                        <v-btn v-if="isReadyForDelete(item)" icon @click.stop="openDeleteDialog(item)">
                             <v-icon>delete</v-icon>
                         </v-btn>
                     </v-flex>
@@ -173,6 +173,12 @@ export default {
                 WYDANE: 'WYDANE',
                 ROZLICZONE: 'ROZLICZONE'
             },
+            operationStatusEnum: {
+                NIEROBIONE: 'NIEROBIONE',
+                ZAPLANOWANE: 'ZAPLANOWANE',
+                GOTOWE_DO_REALIZACJI: 'GOTOWE_DO_REALIZACJI',
+                ZROBIONE: 'ZROBIONE'
+            },
 
             stageOneOperations: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC'],
             stageTwoOperations: ['Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
@@ -183,6 +189,7 @@ export default {
     methods: {
         refresh() {
             this.loadOrder();
+            this.$emit('refresh');
         },
         loadOrder() {
           this.fetchOrder();
@@ -196,6 +203,14 @@ export default {
             }, response => { 
                 console.log(response.body);
             });
+        },
+        isReadyForDelete(item) {
+            // item can be deleted if it have id(it is not a new item, that haven't been added to the database)
+            // and operation Cięcie is in status GOTOWE_DO_REALIZACJI
+            if(item.id && item.operations[0].status == this.operationStatusEnum.GOTOWE_DO_REALIZACJI) {
+                return true;
+            }
+            return false;
         },
         open() {
             this.$refs.showDialog.value = true;
@@ -230,8 +245,9 @@ export default {
           this.$http.delete('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/item', {body: deleteItemDto}).then(response => {
               this.showSnackbar("Pozycja " + item.material.name + " została usunięta.");
               // remove the item from the order in viewOrder
-              this.order.items.splice(this.items.indexOf(item), 1);
+            //   this.order.items.splice(this.items.indexOf(item), 1);
               console.log(response.status);
+              this.refresh();
               this.$emit('refresh');
               this.itemToDelete = '';
               this.deleteDialog = false;
@@ -274,7 +290,7 @@ export default {
                         invoiceNumber: this.order.invoiceNumber,
                         price: this.order.price,
                         dueDate: this.order.dueDate,
-                        status: this.order.statuss
+                        status: this.order.status
                     };
 
                     console.log(order);

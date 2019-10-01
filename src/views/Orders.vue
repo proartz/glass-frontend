@@ -51,8 +51,12 @@
                                 <div>{{ order.externalOrderId }}</div>
                             </v-flex>
                             <v-flex>
-                               <ViewOrder @refresh='refresh' @showSnackbar='showSnackbar' v-bind:materialsItems="materialsItems" v-bind:materials="materials" v-bind:orderId="order.id"
-                                          v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
+                               <ViewOrder @refresh='refresh' @showSnackbar='showSnackbar'
+                                            v-bind:materialsItems="materialsItems"
+                                            v-bind:materials="materials"
+                                            v-bind:orderId="order.id"
+                                            v-bind:orderStatusItems="orderStatusItems"
+                                            v-bind:operationStatusItems="operationStatusItems"/>
                             </v-flex>
                             <v-flex>
                                 <div class="caption grey--text">Klient</div>
@@ -84,9 +88,6 @@
                     <v-divider></v-divider>
                     <v-container class="px-0">
                         <v-layout row v-for="item in order.items" :key="item.id">
-                            <v-flex>
-                                <v-checkbox ref="items" :id="`${item.id}`"></v-checkbox>
-                            </v-flex>
                             <v-flex>
                                 <div class="caption grey--text">Materiał:</div>
                                 <div>{{ item.material.name }}</div>

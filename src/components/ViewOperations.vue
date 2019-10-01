@@ -7,6 +7,11 @@
                     @click="changeStatus(operation, operationStatusEnum.ZROBIONE)"
                     small></v-btn>
         </v-flex>
+        <v-flex>
+            <v-btn icon v-if="isReadyForReset()" @click="resetOperations()">
+                <v-icon>highlight_off</v-icon>
+            </v-btn>
+        </v-flex>
     </v-layout>
 </template>
 
@@ -81,8 +86,28 @@ export default {
                 }
             }
         },
+        isReadyForReset() {
+            // if item is just added and not yet saved in the database
+            // will have operation Cięcie in status ZAPLANOWANE
+            // Cięcie have index 0 in filteredOperations
+            if(this.filteredOperations[0].status == this.operationStatusEnum.ZAPLANOWANE) {
+                return false;
+            }
+            return true;
+        },
+        resetOperations() {
+            // invoke cahgeStatus(CIĘCIE, GOTOWE_DO_REALIZACJI)
+            // it will never normally happend
+            // so we use it as a reset message
+            if(this.filteredOperations[0].status != this.operationStatusEnum.GOTOWE_DO_REALIZACJI) {
+                this.changeStatus(this.filteredOperations[0], this.operationStatusEnum.GOTOWE_DO_REALIZACJI);
+            }
+        },
         changeStatus(operation, newStatus) {
-            if(operation.status == this.operationStatusEnum.GOTOWE_DO_REALIZACJI) {
+            // 1st (cięcie, ZROBIONE) wants ZROBIONE
+            // 2nd(reset) (cięcie, ZROBIONE) wants GOTOWE_DO_REALIZACJI
+            if(operation.status == this.operationStatusEnum.GOTOWE_DO_REALIZACJI ||
+                newStatus == this.operationStatusEnum.GOTOWE_DO_REALIZACJI) {
                 this.loading = true;
 
                 const changeStatusDto = {
