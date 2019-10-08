@@ -1,17 +1,45 @@
 <template>
     <nav>
+        <v-navigation-drawer
+            v-model="drawer"
+            fixed
+            clipped
+            app
+        >
+            <v-toolbar flat class="transparent">
+                <v-list class="pa-0">
+                    <v-list-tile avatar>
+                        <v-list-tile-avatar>
+                            <img src="https://randomuser.me/api/portraits/men/85.jpg">
+                        </v-list-tile-avatar>
+
+                        <v-list-tile-content>
+                            <v-list-tile-title>John Leider</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                </v-list>
+            </v-toolbar>
+            <v-list dense>
+                <v-list-tile v-for="link in links" :key="link.text" router :to="link.route">
+                    <v-list-tile-action>
+                        <v-icon>{{ link.icon }}</v-icon>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                        <v-list-tile-title>{{ link.text }}</v-list-tile-title>
+                    </v-list-tile-content>
+                    </v-list-tile>
+            </v-list>
+        </v-navigation-drawer>
+        <v-toolbar color="indigo" dark fixed app>
+            <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+            <v-toolbar-title>{{ this.$router.currentRoute.name }}</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <router-view @refresh='refresh' name="navigation"></router-view>
+        </v-toolbar>
         <v-snackbar v-model="snackbar" :timeout="4000" top>
             <span>{{ snackbarText }}</span>
             <v-btn dark @click="snackbar = false">Close</v-btn>
         </v-snackbar>
-        <v-toolbar card dark color="primary" app>
-            <v-toolbar-side-icon></v-toolbar-side-icon>
-            <v-toolbar-title>glass</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items class="hidden-sm-and-down">
-                <v-btn flat v-for="link in links" :key="link.text" router :to="link.route">{{ link.text }}</v-btn>
-            </v-toolbar-items>
-        </v-toolbar>
     </nav>
 </template>
 
@@ -23,17 +51,19 @@ export default {
     ],
     data() {
         return {
+            drawer: false,
             snackbar: false,
             links: [
-                {icon: 'dashboard', text: 'Zlecenia', route: '/orders'},
-                {icon: 'folder', text: 'Pozycje', route: '/positions'},
-                {icon: 'person', text: 'Operacje', route: '/operations'},
-                {icon: 'person', text: 'Materiały', route: '/materials'}
-            ]
+                { icon: 'dashboard', text: 'Zlecenia', route: '/orders' },
+                { icon: 'folder', text: 'Pozycje', route: '/positions' },
+                { icon: 'folder', text: 'blah', route: '/blah' },
+            ],
         }
     },
     methods: {
-        
+        refresh() {
+            this.$emit('refresh');
+        }
     },
     watch: {
         snackbarWatch: function() {

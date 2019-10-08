@@ -106,7 +106,7 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-                <v-layout row wrap v-for="(item, i) in order.items" :key="i" :class="`py-0 item ${item.status}`">
+                <v-layout row wrap v-for="item in order.items" :key="item.id" :class="`py-0 item ${item.status}`">
                     <v-flex>
                         <v-btn v-if="isReadyForDelete(item)" icon @click.stop="openDeleteDialog(item)">
                             <v-icon>delete</v-icon>

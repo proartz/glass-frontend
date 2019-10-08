@@ -148,6 +148,7 @@ div.btn__content {
 
 .v-btn {
   min-width: 0;
+  height: 16px;
 }
 
 .v-btn.NIEROBIONE {

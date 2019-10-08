@@ -1,56 +1,75 @@
 <template>
     <div>
-        <h1 class="subheading grey--text">Zlecenia</h1>
-
-    
-        <v-btn icon @click="refresh" :loading="loading">
-            <v-icon>refresh</v-icon>
-        </v-btn>
-        <AddOrder @orderAdded="refresh" v-bind:materialsItems="materialsItems" v-bind:materials="materials" v-bind:operationStatusItems="operationStatusItems"/>
-        <v-text-field prepend-icon="search"
-                v-model="searchText"
-                solo append-icon="cancel" hide-details single-line></v-text-field>
         <v-container fluid>
-            <v-layout row justify-start class="mb-3">
-                <v-subheader class="gray--text font-weight-light caption">Sortuj po:</v-subheader>
-                <v-btn small flat color="grey" @click="sortBy('externalOrderId')">
-                    <v-icon small left>folder</v-icon>
-                    <span class="caption text-lowercase">Zewnętrzny Numer Zlecenia</span>
-                </v-btn>
-                <v-btn small flat color="grey" @click="sortBy('customer')">
-                    <v-icon small left>person</v-icon>
-                    <span class="caption text-lowercase">Klient</span>
-                </v-btn>
-                <v-btn small flat color="grey" @click="sortBy('invoiceNumber')">
-                    <v-icon small left>person</v-icon>
-                    <span class="caption text-lowercase">Numer Faktury</span>
-                </v-btn>
-                <v-btn small flat color="grey" @click="sortBy('price')">
-                    <v-icon small left>person</v-icon>
-                    <span class="caption text-lowercase">Cena</span>
-                </v-btn>
-                <v-btn small flat color="grey" @click="sortBy('dueDate')">
-                    <v-icon small left>person</v-icon>
-                    <span class="caption text-lowercase">Termin Realizacji</span>
-                </v-btn>
-                <v-btn small flat color="grey" @click="sortBy('createDate')">
-                    <v-icon small left>person</v-icon>
-                    <span class="caption text-lowercase">Data Przyjęcia</span>
-                </v-btn>
-                <v-btn small flat color="grey" @click="sortBy('status')">
-                    <v-icon small left>person</v-icon>
-                    <span class="caption text-lowercase">Status</span>
-                </v-btn>
+            <v-layout row justify-start mb-3>
+                <v-flex shrink>
+                    <v-btn icon @click="refresh" :loading="loading">
+                        <v-icon>refresh</v-icon>
+                    </v-btn>
+                </v-flex>
+                <v-flex shrink>
+                    <AddOrder @orderAdded="refresh" v-bind:materialsItems="materialsItems" v-bind:materials="materials" v-bind:operationStatusItems="operationStatusItems"/>
+                </v-flex>
+                <v-flex shrink>
+                    <v-text-field prepend-icon="search"
+                                    v-model="searchText"
+                                    solo append-icon="cancel" hide-details single-line>
+                    </v-text-field>
+                </v-flex>
             </v-layout>
-            <v-expansion-panel v-model="panel" >
-                <v-expansion-panel-content v-for="order in filteredOrders" :key="order.id">
+            <v-layout row justify-start mb-3>
+                <v-flex md2>
+                    <v-btn small flat color="grey" @click="sortBy('externalOrderId')">
+                        <v-icon small left>folder</v-icon>
+                        <span class="caption text-lowercase">Zewnętrzny Numer Zlecenia</span>
+                    </v-btn>
+                </v-flex>
+                <v-flex md2>
+                    <v-btn small flat color="grey" @click="sortBy('customer')">
+                        <v-icon small left>person</v-icon>
+                        <span class="caption text-lowercase">Klient</span>
+                    </v-btn>
+                </v-flex>
+                <v-flex md2>
+                    <v-btn small flat color="grey" @click="sortBy('invoiceNumber')">
+                        <v-icon small left>person</v-icon>
+                        <span class="caption text-lowercase">Numer Faktury</span>
+                    </v-btn>
+                </v-flex>
+                <v-flex md1>
+                    <v-btn small flat color="grey" @click="sortBy('price')">
+                        <v-icon small left>person</v-icon>
+                        <span class="caption text-lowercase">Cena</span>
+                    </v-btn>
+                </v-flex>
+                <v-flex md1>
+                    <v-btn small flat color="grey" @click="sortBy('dueDate')">
+                        <v-icon small left>person</v-icon>
+                        <span class="caption text-lowercase">Termin Realizacji</span>
+                    </v-btn>
+                </v-flex>
+                <v-flex md1>
+                    <v-btn small flat color="grey" @click="sortBy('createDate')">
+                        <v-icon small left>person</v-icon>
+                        <span class="caption text-lowercase">Data Przyjęcia</span>
+                    </v-btn>
+                </v-flex>
+                <v-flex md1>
+                    <v-btn small flat color="grey" @click="sortBy('status')">
+                        <v-icon small left>person</v-icon>
+                        <span class="caption text-lowercase">Status</span>
+                    </v-btn>
+                </v-flex>
+            </v-layout>
+            <v-expansion-panel v-model="panel" class="order">
+                <v-expansion-panel-content v-for="order in filteredOrders" :key="order.id"  class="order">
                     <template v-slot:header>
-                        <v-layout row wrap :class="`pa-3 order ${order.status}`">
-                            <v-flex>
+                        <v-layout row :class="`order ${order.status}`">
+                            <v-flex lg2 md2>
                                 <div class="caption grey--text">Zewnętrzny Numer Zlecenia</div>
-                                <div>{{ order.externalOrderId }}</div>
+                                <div class="body-1 text-truncate">{{ order.externalOrderId }}</div>
                             </v-flex>
-                            <v-flex>
+                            <v-flex lg1 md1>
                                <ViewOrder @refresh='refresh' @showSnackbar='showSnackbar'
                                             v-bind:materialsItems="materialsItems"
                                             v-bind:materials="materials"
@@ -58,61 +77,59 @@
                                             v-bind:orderStatusItems="orderStatusItems"
                                             v-bind:operationStatusItems="operationStatusItems"/>
                             </v-flex>
-                            <v-flex>
+                            <v-flex lg2 md2>
                                 <div class="caption grey--text">Klient</div>
-                                <div>{{ order.customer }}</div>
+                                <div class="body-1 text-truncate">{{ order.customer }}</div>
                             </v-flex>
-                            <v-flex>
+                            <v-flex lg2 md2>
                                 <div class="caption grey--text">Numer Faktury</div>
-                                <div>{{ order.invoiceNumber }}</div>
+                                <div class="body-1 text-truncate">{{ order.invoiceNumber }}</div>
                             </v-flex>
-                            <v-flex>
+                            <v-flex lg1 md1>
                                 <div class="caption grey--text">Cena</div>
-                                <div>{{ order.price }}</div>
+                                <div class="body-1">{{ order.price }}</div>
                             </v-flex>
-                            <v-flex>
+                            <v-flex lg1 md1>
                                 <div class="caption grey--text">Termin Realizacji</div>
-                                <div>{{ order.dueDate }}</div>
+                                <div class="body-1">{{ order.dueDate }}</div>
                             </v-flex>
-                            <v-flex>
+                            <v-flex lg1 md1>
                                 <div class="caption grey--text">Data Przyjęcia</div>
-                                <div>{{ order.createDate }}</div>
+                                <div class="body-1">{{ order.createDate }}</div>
                             </v-flex>
-                            <v-flex>
-                                <div class="right">
-                                    <v-chip small :class="`${order.status} white--text caption my-2`">{{ order.status }}</v-chip>
-                                </div>
+                            <v-flex lg1 md1>
+                                <v-chip small :class="`${order.status} white--text caption my-2`">{{ order.status }}</v-chip>
                             </v-flex>
                         </v-layout>
                     </template>
                     <v-divider></v-divider>
-                    <v-container class="px-0">
-                        <v-layout row v-for="item in order.items" :key="item.id">
-                            <v-flex>
+                    <v-card>
+                        <v-layout row justify-center v-for="item in order.items" :key="item.id">
+                            <v-flex shrink>
                                 <div class="caption grey--text">Materiał:</div>
                                 <div>{{ item.material.name }}</div>
                             </v-flex>
-                            <v-flex>
+                            <v-flex shrink>
                                 <div class="caption grey--text">Szerokość:</div>
                                 <div>{{ item.width }}</div>
                             </v-flex>
-                            <v-flex>
+                            <v-flex shrink>
                                 <div class="caption grey--text">Wysokość:</div>
                                 <div>{{ item.height }}</div>
                             </v-flex>
-                            <v-flex>
+                            <v-flex shrink>
                                 <div class="caption grey--text">Grubość:</div>
                                 <div>{{ item.depth }}</div>
                             </v-flex>
-                            <v-flex>
+                            <v-flex shrink>
                                 <div class="caption grey--text">Ilość:</div>
                                 <div>{{ item.quantity }}</div>
                             </v-flex>
-                            <v-flex>
+                            <v-flex shrink>
                                 <ViewOperations @refresh='refresh' v-bind:operations="item.operations"/>
                             </v-flex>
                         </v-layout>
-                    </v-container>
+                    </v-card>
                 </v-expansion-panel-content>
             </v-expansion-panel>
         </v-container>
@@ -125,6 +142,9 @@ import ViewOrder from '@/components/ViewOrder';
 import ViewOperations from '@/components/ViewOperations';
 
 export default {
+    props: [
+        'bus'
+    ],
     components: { 
         AddOrder,
         ViewOrder,
@@ -222,11 +242,22 @@ export default {
     created() {
         this.loadData();
         console.log("REFS: ");
+        this.bus.$on('refresh', this.refresh());
     },
 }
 </script>
 
 <style>
+/* .order {
+    min-height: 0;
+    height: 36px
+} */
+
+/* .v-expansion-panel__header {
+    min-height: 0;
+    padding: 0;
+    height: 36px; 
+} */
 
 .order.PRZYJĘTO{
     border-left: 4px solid blue;

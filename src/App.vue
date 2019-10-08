@@ -1,9 +1,23 @@
 <template>
-  <v-app>
-    <Navbar v-bind:snackbarText="snackbarText" v-bind:snackbarWatch="snackbarWatch"/>
-    <v-content class="mx-4 my-4">
-      <router-view @showSnackbar='showSnackbar'></router-view>
+  <v-app id="inspire">
+    <Navbar
+      :snackbarText="snackbarText"
+      :snackbarWatch="snackbarWatch"
+      @refresh="refresh"
+    />
+    <v-content>
+      <v-container fluid fill-height>
+        <v-layout>
+          <v-flex text-xs-center>
+            <router-view :bus="bus" @showSnackbar='showSnackbar'></router-view>
+             <!-- <router-view name="navigation"></router-view> -->
+          </v-flex>
+        </v-layout>
+      </v-container>
     </v-content>
+    <v-footer color="indigo" app>
+      <span class="white--text">&copy; 2019 Glass</span>
+    </v-footer>
   </v-app>
 </template>
 
@@ -15,6 +29,7 @@ export default {
   components: { Navbar },
   data () {
     return {
+      bus: new Vue(),
       snackbarText: '',
       snackbarWatch: false,
     }
@@ -25,6 +40,9 @@ export default {
       this.snackbarText = message;
       this.snackbarWatch = !this.snackbarWatch;
     },
+    refresh() {
+      this.bus.$emit('refresh');
+    }
   }
 }
 </script>
