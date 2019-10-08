@@ -1,8 +1,6 @@
 <template>
     <div>
-        <h1 class="subheading grey--text">Positions</h1>
-
-        <v-layout row justify-start class="mb-3">
+        <!-- <v-layout row justify-start class="mb-3">
             <v-flex>
                 <v-btn icon @click="refresh" :loading="loading">
                     <v-icon>refresh</v-icon>
@@ -14,7 +12,7 @@
             <v-flex>
                 <v-select :items="operationsItems" v-model="operationsFilter" label="Filtruj gotowe do:"></v-select>
             </v-flex>
-        </v-layout>
+        </v-layout> -->
         <v-container fluid>
             <v-expansion-panel v-model="panel" expand>
                 <v-expansion-panel-content expand v-for="order in filteredOrders" :key="order.id">
@@ -80,7 +78,8 @@
 
 <script>
 import ViewOrder from '@/components/ViewOrder';
-import ViewOperations from '@/components/ViewOperations'
+import ViewOperations from '@/components/ViewOperations';
+import EventBus from '@/event-bus.js';
 
 export default {
     components: {
@@ -316,6 +315,9 @@ export default {
     },
     created() {
         this.loadData();
+        EventBus.$on('refreshPositions', () => { this.refresh() });
+        EventBus.$on('operationsFilterInput', (input) => { this.operationsFilter = input });
+        EventBus.$on('groupStatusChange', () => { this.groupStatusChange() });
     },
 }
 </script>

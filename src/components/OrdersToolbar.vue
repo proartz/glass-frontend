@@ -1,5 +1,5 @@
 <template>
-    <v-layout row justify-start mb-3>
+    <v-layout row>
         <v-flex shrink>
             <v-btn icon @click="refreshOrders" :loading="loading">
                 <v-icon>refresh</v-icon>
@@ -67,7 +67,7 @@ export default {
             EventBus.$emit('refreshOrders');
         },
         searchTextInput(input) {
-            EventBus.$emit('searchTextInput', this.searchText);
+            EventBus.$emit('searchTextInput', input);
         },
         sortOrders(prop) {
             console.log(prop);

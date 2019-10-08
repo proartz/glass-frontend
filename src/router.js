@@ -8,6 +8,7 @@ import Materials from './views/Materials.vue'
 import OrdersToolbar from './components/OrdersToolbar.vue'
 import AddOrder from './views/AddOrder.vue'
 import AddOrderToolbar from './components/AddOrderToolbar'
+import PositionsToolbar from './components/PositionsToolbar'
 
 Vue.use(Router)
 
@@ -39,7 +40,10 @@ export default new Router({
     {
       path: '/positions',
       name: 'Pozycje',
-      component: Positions
+      components: {
+        default: Positions,
+        navigation: PositionsToolbar
+      }
     },
     {
       path: '/operations',
