@@ -51,17 +51,14 @@
 </template>
 
 <script>
-import { EventBus } from '@/event-bus.js';
+import EventBus from '@/event-bus.js';
 
 export default {
-    props: [
-        'snackbarText',
-        'snackbarWatch'
-    ],
     data() {
         return {
             drawer: false,
             snackbar: false,
+            snackbarText: '',
             links: [
                 { icon: 'dashboard', text: 'Zlecenia', route: '/orders' },
                 { icon: 'folder', text: 'Pozycje', route: '/positions' },
@@ -69,12 +66,18 @@ export default {
         }
     },
     methods: {
-        
+        showSnackbar(message) {
+            this.snackbarText = message;
+            this.snackbar = true;
+        }
     },
     watch: {
         snackbarWatch: function() {
             this.snackbar = true;
         }
+    },
+    created() {
+        EventBus.$on('showSnackbar', (message) => { this.showSnackbar(message); })
     }
 }
 </script>

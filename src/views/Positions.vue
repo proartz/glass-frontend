@@ -236,7 +236,7 @@ export default {
             }
         },
         showSnackbar(message) {
-            this.$emit('showSnackbar', message);
+            EventBus.$emit('showSnackbar', message);
         },
         findItem(itemId) {
             var i;

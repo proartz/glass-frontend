@@ -1,82 +1,49 @@
 <template>
     <div>
         <v-container fluid>
-            <!-- <v-layout row justify-start mb-3>
-                <v-flex shrink>
-                    <v-btn icon @click="refresh" :loading="loading">
-                        <v-icon>refresh</v-icon>
-                    </v-btn>
-                </v-flex>
-                <v-flex shrink>
-                    <AddOrder @orderAdded="refresh" v-bind:materialsItems="materialsItems" v-bind:materials="materials" v-bind:operationStatusItems="operationStatusItems"/>
-                </v-flex>
-                <v-flex shrink>
-                    <v-text-field prepend-icon="search"
-                                    v-model="searchText"
-                                    solo append-icon="cancel" hide-details single-line>
-                    </v-text-field>
-                </v-flex>
-            </v-layout> -->
-            <!-- <v-layout row justify-start mb-3>
-                <v-flex md2>
-                    <v-btn small flat color="grey" @click="sortBy('externalOrderId')">
-                        <v-icon small left>folder</v-icon>
-                        <span class="caption text-lowercase">Zewnętrzny Numer Zlecenia</span>
-                    </v-btn>
-                </v-flex>
-                <v-flex md2>
-                    <v-btn small flat color="grey" @click="sortBy('customer')">
-                        <v-icon small left>person</v-icon>
-                        <span class="caption text-lowercase">Klient</span>
-                    </v-btn>
-                </v-flex>
-                <v-flex md2>
-                    <v-btn small flat color="grey" @click="sortBy('invoiceNumber')">
-                        <v-icon small left>person</v-icon>
-                        <span class="caption text-lowercase">Numer Faktury</span>
-                    </v-btn>
-                </v-flex>
-                <v-flex md1>
-                    <v-btn small flat color="grey" @click="sortBy('price')">
-                        <v-icon small left>person</v-icon>
-                        <span class="caption text-lowercase">Cena</span>
-                    </v-btn>
-                </v-flex>
-                <v-flex md1>
-                    <v-btn small flat color="grey" @click="sortBy('dueDate')">
-                        <v-icon small left>person</v-icon>
-                        <span class="caption text-lowercase">Termin Realizacji</span>
-                    </v-btn>
-                </v-flex>
-                <v-flex md1>
-                    <v-btn small flat color="grey" @click="sortBy('createDate')">
-                        <v-icon small left>person</v-icon>
-                        <span class="caption text-lowercase">Data Przyjęcia</span>
-                    </v-btn>
-                </v-flex>
-                <v-flex md1>
-                    <v-btn small flat color="grey" @click="sortBy('status')">
-                        <v-icon small left>person</v-icon>
-                        <span class="caption text-lowercase">Status</span>
-                    </v-btn>
-                </v-flex>
-            </v-layout> -->
             <v-expansion-panel v-model="panel" class="order">
                 <v-expansion-panel-content v-for="order in filteredOrders" :key="order.id"  class="order">
                     <template v-slot:header>
-                        <v-layout row :class="`order ${order.status}`">
+                        <v-layout row wrap :class="`order ${order.status}`">
                             <v-flex lg2 md2>
                                 <div class="caption grey--text">Zewnętrzny Numer Zlecenia</div>
                                 <div class="body-1 text-truncate">{{ order.externalOrderId }}</div>
                             </v-flex>
-                            <v-flex lg1 md1>
-                               <ViewOrder @refresh='refresh' @showSnackbar='showSnackbar'
+                            <v-flex shrink>
+                                <v-btn
+                                    :to = "{
+                                        name: 'Zlecenie',
+                                        params: {
+                                            id: order.id
+                                        }
+                                    }"
+                                    flat
+                                    icon
+                                >
+                                    <v-icon>remove_red_eye</v-icon>
+                                </v-btn>
+                            </v-flex>
+                            <v-flex shrink>
+                                <v-btn
+                                    :to = "{
+                                        name: 'Edytuj Zlecenie',
+                                        params: {
+                                            id: order.id
+                                        }
+                                    }"
+                                    flat
+                                    icon
+                                >
+                                    <v-icon>edit</v-icon>
+                                </v-btn>
+                               <!-- <ViewOrder @refresh='refresh' @showSnackbar='showSnackbar'
                                             v-bind:materialsItems="materialsItems"
                                             v-bind:materials="materials"
                                             v-bind:orderId="order.id"
                                             v-bind:orderStatusItems="orderStatusItems"
-                                            v-bind:operationStatusItems="operationStatusItems"/>
-                            </v-flex>
+                                            v-bind:operationStatusItems="operationStatusItems"/> -->
+                            </v-flex>           
+                            
                             <v-flex lg2 md2>
                                 <div class="caption grey--text">Klient</div>
                                 <div class="body-1 text-truncate">{{ order.customer }}</div>
@@ -224,7 +191,7 @@ export default {
                     order.externalOrderId.toLowerCase().includes(this.searchText);
         },
         showSnackbar(message) {
-            this.$emit('showSnackbar', message);
+            EventBus.$emit('showSnackbar', message);
         },
     },
     computed: {

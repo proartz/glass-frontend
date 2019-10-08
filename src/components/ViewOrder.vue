@@ -144,6 +144,7 @@
 <script>
 import AddItem from '@/components/AddItem'
 import ViewOperations from '@/components/ViewOperations'
+import EventBus from '@/event-bus.js';
 
 export default {
     components: {
@@ -309,7 +310,7 @@ export default {
             });
         },
         showSnackbar(message) {
-            this.$emit('showSnackbar', message);
+            EventBus.$emit('showSnackbar', message);
         }
     },
     watch: {

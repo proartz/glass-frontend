@@ -6,7 +6,7 @@
         <v-btn icon @click="fetchMaterials" :loading="loading">
             <v-icon>refresh</v-icon>
         </v-btn>
-        <AddMaterial @showSnackbar='showSnackbar' @materialAdded="fetchMaterials"/>
+        <AddMaterial @materialAdded="fetchMaterials"/>
         <v-text-field prepend-icon="search"
                 v-model="searchText"
                 solo append-icon="cancel" hide-details single-line></v-text-field>
@@ -31,7 +31,7 @@
                                 <div>{{ material.id }}</div>
                             </v-flex>
                             <v-flex>
-                               <ViewMaterial @showSnackbar='showSnackbar' @refresh='fetchMaterials' v-bind:material="material"/>
+                               <ViewMaterial @refresh='fetchMaterials' v-bind:material="material"/>
                             </v-flex>
                             <v-flex>
                                 <div class="caption grey--text">Nazwa</div>
@@ -57,6 +57,7 @@
 <script>
 import AddMaterial from '@/components/AddMaterial';
 import ViewMaterial from '@/components/ViewMaterial';
+import EventBus from '@/event-bus.js';
 
 export default {
     components: { 
@@ -88,7 +89,7 @@ export default {
             return material.name.toLowerCase().includes(this.searchText.toLowerCase())
         },
         showSnackbar(message) {
-            this.$emit('showSnackbar', message);
+            EventBus.$emit('showSnackbar', message);
         }
     },
     computed: {

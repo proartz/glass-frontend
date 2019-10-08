@@ -1,14 +1,11 @@
 <template>
   <v-app id="inspire">
-    <Navbar
-      :snackbarText="snackbarText"
-      :snackbarWatch="snackbarWatch"
-    />
+    <Navbar/>
     <v-content>
       <v-container fluid fill-height>
         <v-layout>
           <v-flex text-xs-center>
-            <router-view @showSnackbar='showSnackbar'></router-view>
+            <router-view></router-view>
              <!-- <router-view name="navigation"></router-view> -->
           </v-flex>
         </v-layout>
@@ -29,16 +26,8 @@ export default {
   components: { Navbar },
   data () {
     return {
-      snackbarText: '',
-      snackbarWatch: false,
+      
     }
   },
-  methods: {
-    showSnackbar(message) {
-      console.log("showSnackbar() invoked");
-      this.snackbarText = message;
-      this.snackbarWatch = !this.snackbarWatch;
-    },
-  }
 }
 </script>

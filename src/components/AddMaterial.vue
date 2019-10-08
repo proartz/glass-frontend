@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import EventBus from '@/event-bus.js';
 export default {
     data() {
         return {
@@ -84,7 +85,7 @@ export default {
                         console.log(response.status);
                         this.loading = false;
                         this.dialog = false;
-                        this.$emit('showSnackbar', "Material " + material.name + " added.");
+                        EventBus.$emit('showSnackbar', "Material " + material.name + " added.");
                         this.$emit('materialAdded');
                         this.clearForm();
                     }, response => {

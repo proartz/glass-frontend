@@ -7,8 +7,12 @@ import Operations from './views/Operations.vue'
 import Materials from './views/Materials.vue'
 import OrdersToolbar from './components/OrdersToolbar.vue'
 import AddOrder from './views/AddOrder.vue'
-import AddOrderToolbar from './components/AddOrderToolbar'
-import PositionsToolbar from './components/PositionsToolbar'
+import AddOrderToolbar from './components/AddOrderToolbar.vue'
+import PositionsToolbar from './components/PositionsToolbar.vue'
+import ViewOrder from './views/ViewOrder.vue'
+import ViewOrderToolbar from './components/ViewOrderToolbar.vue'
+import EditOrder from './views/EditOrder.vue'
+import EditOrderToolbar from './components/EditOrderToolbar.vue'
 
 Vue.use(Router)
 
@@ -36,6 +40,24 @@ export default new Router({
         default: AddOrder,
         navigation: AddOrderToolbar
       }
+    },
+    {
+      path: '/orders/:id',
+      name: 'Zlecenie',
+      components: {
+        default: ViewOrder,
+        navigation: ViewOrderToolbar
+      },
+      props: {default: true, navigation: true}
+    },
+    {
+      path: '/orders/:id/edit',
+      name: 'Edytuj Zlecenie',
+      components: {
+        default: EditOrder,
+        navigation: EditOrderToolbar
+      },
+      props: {default: true, navigation: true}
     },
     {
       path: '/positions',

@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import EventBus from '@/event-bus.js';
+
 export default {
     props: [
        'operations',
@@ -102,6 +104,7 @@ export default {
             if(this.filteredOperations[0].status != this.operationStatusEnum.GOTOWE_DO_REALIZACJI) {
                 this.changeStatus(this.filteredOperations[0], this.operationStatusEnum.GOTOWE_DO_REALIZACJI);
             }
+            EventBus.$emit('refreshOperations');
         },
         changeStatus(operation, newStatus) {
             // 1st (cięcie, ZROBIONE) wants ZROBIONE
@@ -120,7 +123,7 @@ export default {
                 this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
                 {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                     console.log(response.status);
-                    this.$emit('refresh');
+                    EventBus.$emit('refreshOperations');
                     this.loading = false;
                 }, response => {
                     console.log(response);

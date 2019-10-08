@@ -81,6 +81,7 @@
 </template>
 
 <script>
+import EventBus from '@/event-bus.js';
 
 export default {
     props: [ 
@@ -113,7 +114,7 @@ export default {
                     this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/updateMaterial', material,
                     {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                         console.log(response);
-                        this.$emit('showSnackbar', "Materiał " + this.material.name + " zaaktualizowany.");
+                        EventBus.$emit('showSnackbar', "Materiał " + this.material.name + " zaaktualizowany.");
                         this.$emit('refresh');
                     }, response => {
                         console.log(response);
@@ -138,11 +139,11 @@ export default {
                     this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/deleteMaterial', material,
                     {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                         console.log(response);
-                        this.$emit('showSnackbar', "Materiał " + this.material.name + " usunięty.");
+                        EventBus.$emit('showSnackbar', "Materiał " + this.material.name + " usunięty.");
                         this.$emit('refresh');
                     }, response => {
                         console.log(response);
-                        this.$emit('showSnackbar', "Nie można usunąć materiału. Jest on używany przez inne zlecenie.");
+                        EventBus.$emit('showSnackbar', "Nie można usunąć materiału. Jest on używany przez inne zlecenie.");
                     });
                     this.editMode = false;
                     this.loading = false;
