@@ -1,46 +1,41 @@
 <template>
-    <v-layout row>
-        <v-flex shrink>
-            <v-btn icon @click="refreshOrders" :loading="loading">
-                <v-icon>refresh</v-icon>
-            </v-btn>
-        </v-flex>
-        <v-flex shrink>
-            <router-link to="/orders/add" tag="button">
-                <v-icon>add</v-icon>
-            </router-link>
-        </v-flex>
-        <v-flex shrink>
-            <v-text-field prepend-icon="search"
-                            v-model="searchText"
-                            @input="searchTextInput(searchText)"
-                            solo append-icon="cancel" hide-details single-line>
-            </v-text-field>
-        </v-flex>
-        <v-flex>
-            <v-menu offset-y>
-                <template v-slot:activator="{ on }">
-                    <v-btn
-                    icon
-                    v-on="on"
-                    >
-                        <v-icon>sort</v-icon>
-                    </v-btn>
-                </template>
-                <v-list dense>
-                    <v-list-tile class="caption grey--text">Sortuj po:</v-list-tile>
-                    <v-divider></v-divider>
-                    <v-list-tile
-                    v-for="(item, index) in items"
-                    :key="index"
-                    @click="sortOrders(item.value)"
-                    >
-                    <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                    </v-list-tile>
-                </v-list>
-            </v-menu>
-        </v-flex>
-    </v-layout>
+    <v-toolbar-items>
+        <v-text-field prepend-icon="search"
+                        v-model="searchText"
+                        @input="searchTextInput(searchText)"
+                        solo append-icon="cancel" hide-details single-line>
+        </v-text-field>
+
+        <v-btn icon @click="refreshOrders" :loading="loading">
+            <v-icon>refresh</v-icon>
+        </v-btn>
+
+        <router-link to="/orders/add" tag="button">
+            <v-icon>add</v-icon>
+        </router-link>
+
+        <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+                <v-btn
+                icon
+                v-on="on"
+                >
+                    <v-icon>sort</v-icon>
+                </v-btn>
+            </template>
+            <v-list dense>
+                <v-list-tile class="caption grey--text">Sortuj po:</v-list-tile>
+                <v-divider></v-divider>
+                <v-list-tile
+                v-for="(item, index) in items"
+                :key="index"
+                @click="sortOrders(item.value)"
+                >
+                <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                </v-list-tile>
+            </v-list>
+        </v-menu>
+    </v-toolbar-items>
 </template>
 
 <script>
@@ -76,3 +71,9 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+.v-input {
+    align-items: center;
+}
+</style>

@@ -30,11 +30,18 @@
                     </v-list-tile>
             </v-list>
         </v-navigation-drawer>
+
+        <!-- Toolbar -->
+
         <v-toolbar color="indigo" dark fixed app>
             <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
             <v-toolbar-title>{{ this.$router.currentRoute.name }}</v-toolbar-title>
             <v-spacer></v-spacer>
+
+            <!-- ToolbarButtons -->
+
             <router-view name="navigation"></router-view>
+            
         </v-toolbar>
         <v-snackbar v-model="snackbar" :timeout="4000" top>
             <span>{{ snackbarText }}</span>
