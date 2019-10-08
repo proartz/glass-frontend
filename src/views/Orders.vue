@@ -1,106 +1,102 @@
 <template>
-    <div>
-        <v-container fluid>
-            <v-expansion-panel v-model="panel" class="order">
-                <v-expansion-panel-content v-for="order in filteredOrders" :key="order.id"  class="order">
-                    <template v-slot:header>
-                        <v-layout row wrap :class="`order ${order.status}`">
-                            <v-flex lg2 md2>
-                                <div class="caption grey--text">Zewnętrzny Numer Zlecenia</div>
-                                <div class="body-1 text-truncate">{{ order.externalOrderId }}</div>
-                            </v-flex>
-                            <v-flex shrink>
-                                <v-btn
-                                    :to = "{
-                                        name: 'Zlecenie',
-                                        params: {
-                                            id: order.id
-                                        }
-                                    }"
-                                    flat
-                                    icon
-                                >
-                                    <v-icon>remove_red_eye</v-icon>
-                                </v-btn>
-                            </v-flex>
-                            <v-flex shrink>
-                                <v-btn
-                                    :to = "{
-                                        name: 'Edytuj Zlecenie',
-                                        params: {
-                                            id: order.id
-                                        }
-                                    }"
-                                    flat
-                                    icon
-                                >
-                                    <v-icon>edit</v-icon>
-                                </v-btn>
-                               <!-- <ViewOrder @refresh='refresh' @showSnackbar='showSnackbar'
-                                            v-bind:materialsItems="materialsItems"
-                                            v-bind:materials="materials"
-                                            v-bind:orderId="order.id"
-                                            v-bind:orderStatusItems="orderStatusItems"
-                                            v-bind:operationStatusItems="operationStatusItems"/> -->
-                            </v-flex>           
-                            
-                            <v-flex lg2 md2>
-                                <div class="caption grey--text">Klient</div>
-                                <div class="body-1 text-truncate">{{ order.customer }}</div>
-                            </v-flex>
-                            <v-flex lg2 md2>
-                                <div class="caption grey--text">Numer Faktury</div>
-                                <div class="body-1 text-truncate">{{ order.invoiceNumber }}</div>
-                            </v-flex>
-                            <v-flex lg1 md1>
-                                <div class="caption grey--text">Cena</div>
-                                <div class="body-1">{{ order.price }}</div>
-                            </v-flex>
-                            <v-flex lg1 md1>
-                                <div class="caption grey--text">Termin Realizacji</div>
-                                <div class="body-1">{{ order.dueDate }}</div>
-                            </v-flex>
-                            <v-flex lg1 md1>
-                                <div class="caption grey--text">Data Przyjęcia</div>
-                                <div class="body-1">{{ order.createDate }}</div>
-                            </v-flex>
-                            <v-flex lg1 md1>
-                                <v-chip small :class="`${order.status} white--text caption my-2`">{{ order.status }}</v-chip>
-                            </v-flex>
-                        </v-layout>
-                    </template>
-                    <v-divider></v-divider>
-                    <v-card>
-                        <v-layout row justify-center v-for="item in order.items" :key="item.id">
-                            <v-flex shrink>
-                                <div class="caption grey--text">Materiał:</div>
-                                <div>{{ item.material.name }}</div>
-                            </v-flex>
-                            <v-flex shrink>
-                                <div class="caption grey--text">Szerokość:</div>
-                                <div>{{ item.width }}</div>
-                            </v-flex>
-                            <v-flex shrink>
-                                <div class="caption grey--text">Wysokość:</div>
-                                <div>{{ item.height }}</div>
-                            </v-flex>
-                            <v-flex shrink>
-                                <div class="caption grey--text">Grubość:</div>
-                                <div>{{ item.depth }}</div>
-                            </v-flex>
-                            <v-flex shrink>
-                                <div class="caption grey--text">Ilość:</div>
-                                <div>{{ item.quantity }}</div>
-                            </v-flex>
-                            <v-flex shrink>
-                                <ViewOperations @refresh='refresh' v-bind:operations="item.operations"/>
-                            </v-flex>
-                        </v-layout>
-                    </v-card>
-                </v-expansion-panel-content>
-            </v-expansion-panel>
-        </v-container>
-    </div>
+    <v-container fluid>
+        <v-expansion-panel v-model="panel">
+            <v-expansion-panel-content v-for="order in filteredOrders" :key="order.id" :class="`order ${order.status}`">
+                <template v-slot:header>
+                    <v-layout row wrap align-center>
+                        <v-flex lg1 md1 sm1 xs1 mr-4>
+                            <div class="caption grey--text">Id</div>
+                            <div class="body-1 text-truncate">{{ order.id }}</div>
+                        </v-flex>
+                        <v-flex lg2 md2 sm3 hidden-xs-only mr-4>
+                            <div class="caption grey--text text-truncate">Zewnętrzny Numer Zlecenia</div>
+                            <div class="body-1 text-truncate">{{ order.externalOrderId }}</div>
+                        </v-flex>
+                        <v-flex lg2 md2 sm2 xs1 mr-4 hidden-sm-and-down>
+                            <div class="caption grey--text">Klient</div>
+                            <div class="body-1 text-truncate">{{ order.customer }}</div>
+                        </v-flex>
+                        <v-flex shrink>
+                            <v-btn
+                                :to = "{
+                                    name: 'Zlecenie',
+                                    params: {
+                                        id: order.id
+                                    }
+                                }"
+                                flat
+                                icon
+                            >
+                                <v-icon>remove_red_eye</v-icon>
+                            </v-btn>
+                        </v-flex>
+                        <v-flex shrink mr-2>
+                            <v-btn
+                                :to = "{
+                                    name: 'Edytuj Zlecenie',
+                                    params: {
+                                        id: order.id
+                                    }
+                                }"
+                                flat
+                                icon
+                            >
+                                <v-icon>edit</v-icon>
+                            </v-btn>
+                        </v-flex> 
+                        <v-spacer class="hidden-sm-and-down"></v-spacer>
+                        <v-flex shrink mr-4 hidden-sm-and-down>
+                            <div class="caption grey--text">Termin Realizacji</div>
+                            <div class="body-1">{{ order.dueDate }}</div>
+                        </v-flex>
+                        <v-flex lg1 md1 mr-4>
+                            <v-chip small :class="`${order.status} white--text caption`">{{ order.status }}</v-chip>
+                        </v-flex>
+                    </v-layout>
+                </template>
+                <v-divider></v-divider>
+                <v-card>
+                    <v-layout
+                        justify-end
+                        align-center
+                        row
+                        py-1
+                        v-for="item in order.items"
+                        :key="item.id"
+                    >
+                        <v-spacer></v-spacer>
+                        <v-flex md1>
+                            <div class="caption grey--text">Id:</div>
+                            <div>{{ item.id }}</div>
+                        </v-flex>
+                        <v-flex md1>
+                            <div class="caption grey--text">Materiał:</div>
+                            <div>{{ item.material.name }}</div>
+                        </v-flex>
+                        <v-flex md1 hidden-sm-and-down>
+                            <div class="caption grey--text">Szerokość:</div>
+                            <div>{{ item.width }}</div>
+                        </v-flex>
+                        <v-flex md1  hidden-sm-and-down>
+                            <div class="caption grey--text">Wysokość:</div>
+                            <div>{{ item.height }}</div>
+                        </v-flex>
+                        <v-flex md1  hidden-sm-and-down>
+                            <div class="caption grey--text">Grubość:</div>
+                            <div>{{ item.depth }}</div>
+                        </v-flex>
+                        <v-flex md1  hidden-sm-and-down>
+                            <div class="caption grey--text">Ilość:</div>
+                            <div>{{ item.quantity }}</div>
+                        </v-flex>
+                        <v-flex md4>
+                            <ViewOperations @refresh='refresh' v-bind:operations="item.operations"/>
+                        </v-flex>
+                    </v-layout>
+                </v-card>
+            </v-expansion-panel-content>
+        </v-expansion-panel>
+    </v-container>
 </template>
 
 <script>
@@ -130,7 +126,6 @@ export default {
     },
     methods: {
         refresh() {
-            console.log("REFRESHING...");
             this.loadData();
         },
         loadData() {
@@ -145,7 +140,6 @@ export default {
             this.loading = true;
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/orders').then(response => {
                 this.orders = response.body;
-                console.log(this.orders);
                 this.loading = false;
             }, response => { 
                 console.log(response.body);
@@ -179,7 +173,6 @@ export default {
             this.searchText = input;
         },
         sortBy(prop) {
-            console.log("SortBy=" + prop);
             this.orders.sort((a, b) => a[prop] < b[prop] ? -1: 1)
         },
         includes(order) {
@@ -209,7 +202,6 @@ export default {
     // },
     created() {
         this.loadData();
-        console.log("REFS: ");
         EventBus.$on('refreshOrders', () => {this.refresh()});
         EventBus.$on('searchTextInput', (input) => {this.searchTextInput(input)});
         EventBus.$on('sortOrders', (prop) => {this.sortBy(prop)});
@@ -218,6 +210,7 @@ export default {
 </script>
 
 <style>
+
 /* .order {
     min-height: 0;
     height: 36px
@@ -225,9 +218,13 @@ export default {
 
 /* .v-expansion-panel__header {
     min-height: 0;
-    padding: 0;
+    padding-left: 0 ;
     height: 36px; 
 } */
+
+.text-truncate{
+    line-height: 1.5 !important;
+}
 
 .order.PRZYJĘTO{
     border-left: 4px solid blue;

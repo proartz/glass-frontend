@@ -1,13 +1,13 @@
 <template>
-    <v-layout row>
-        <v-flex v-for="(operation, i) in filteredOperations" :key="i">
-            <div class="caption grey--text">{{ operation.abbreviation }}</div>
+    <v-layout row align-center>
+        <v-flex shrink v-for="(operation, i) in filteredOperations" :key="i">
+            <span class="caption grey--text">{{ operation.abbreviation }}</span>
             <v-btn :color="`${buttonColor[operation.status]}`"
                     :disabled="operation.status == operationStatusEnum.NIEROBIONE"
                     @click="changeStatus(operation, operationStatusEnum.ZROBIONE)"
                     small></v-btn>
         </v-flex>
-        <v-flex>
+        <v-flex shrink>
             <v-btn icon v-if="isReadyForReset()" @click="resetOperations()">
                 <v-icon>highlight_off</v-icon>
             </v-btn>
@@ -118,11 +118,8 @@ export default {
                     newStatus: newStatus
                 };
 
-                console.log(changeStatusDto);
-
                 this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
                 {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
-                    console.log(response.status);
                     EventBus.$emit('refreshOperations');
                     this.loading = false;
                 }, response => {
@@ -138,12 +135,15 @@ export default {
     },
     created() {
         this.createFilteredOperations();
-        console.log("operations: " + this.operations);
     }
 }
 </script>
 
 <style scoped>
+
+.layout.row {
+    text-align: center;
+}
 
 div.btn__content {
   padding: 0;
