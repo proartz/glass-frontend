@@ -3,13 +3,12 @@
     <Navbar
       :snackbarText="snackbarText"
       :snackbarWatch="snackbarWatch"
-      @refresh="refresh"
     />
     <v-content>
       <v-container fluid fill-height>
         <v-layout>
           <v-flex text-xs-center>
-            <router-view :bus="bus" @showSnackbar='showSnackbar'></router-view>
+            <router-view @showSnackbar='showSnackbar'></router-view>
              <!-- <router-view name="navigation"></router-view> -->
           </v-flex>
         </v-layout>
@@ -22,14 +21,14 @@
 </template>
 
 <script>
-import Navbar from '@/components/Navbar'
+import Navbar from '@/components/Navbar';
+import EventBus from '@/event-bus.js';
 
 export default {
   name: 'App',
   components: { Navbar },
   data () {
     return {
-      bus: new Vue(),
       snackbarText: '',
       snackbarWatch: false,
     }
@@ -40,9 +39,6 @@ export default {
       this.snackbarText = message;
       this.snackbarWatch = !this.snackbarWatch;
     },
-    refresh() {
-      this.bus.$emit('refresh');
-    }
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-container fluid>
-            <v-layout row justify-start mb-3>
+            <!-- <v-layout row justify-start mb-3>
                 <v-flex shrink>
                     <v-btn icon @click="refresh" :loading="loading">
                         <v-icon>refresh</v-icon>
@@ -16,8 +16,8 @@
                                     solo append-icon="cancel" hide-details single-line>
                     </v-text-field>
                 </v-flex>
-            </v-layout>
-            <v-layout row justify-start mb-3>
+            </v-layout> -->
+            <!-- <v-layout row justify-start mb-3>
                 <v-flex md2>
                     <v-btn small flat color="grey" @click="sortBy('externalOrderId')">
                         <v-icon small left>folder</v-icon>
@@ -60,7 +60,7 @@
                         <span class="caption text-lowercase">Status</span>
                     </v-btn>
                 </v-flex>
-            </v-layout>
+            </v-layout> -->
             <v-expansion-panel v-model="panel" class="order">
                 <v-expansion-panel-content v-for="order in filteredOrders" :key="order.id"  class="order">
                     <template v-slot:header>
@@ -140,11 +140,9 @@
 import AddOrder from '@/components/AddOrder';
 import ViewOrder from '@/components/ViewOrder';
 import ViewOperations from '@/components/ViewOperations';
+import EventBus from '@/event-bus.js';
 
 export default {
-    props: [
-        'bus'
-    ],
     components: { 
         AddOrder,
         ViewOrder,
@@ -174,7 +172,6 @@ export default {
             this.fetchMaterials();
         },
         giveIndex() {
-
             return this.i;
         },
         fetchOrders() {
@@ -211,7 +208,11 @@ export default {
                 console.log(response.body);
             });
         },
+        searchTextInput(input) {
+            this.searchText = input;
+        },
         sortBy(prop) {
+            console.log("SortBy=" + prop);
             this.orders.sort((a, b) => a[prop] < b[prop] ? -1: 1)
         },
         includes(order) {
@@ -242,7 +243,9 @@ export default {
     created() {
         this.loadData();
         console.log("REFS: ");
-        this.bus.$on('refresh', this.refresh());
+        EventBus.$on('refreshOrders', () => {this.refresh()});
+        EventBus.$on('searchTextInput', (input) => {this.searchTextInput(input)});
+        EventBus.$on('sortOrders', (prop) => {this.sortBy(prop)});
     },
 }
 </script>

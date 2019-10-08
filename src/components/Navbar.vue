@@ -34,7 +34,7 @@
             <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
             <v-toolbar-title>{{ this.$router.currentRoute.name }}</v-toolbar-title>
             <v-spacer></v-spacer>
-            <router-view @refresh='refresh' name="navigation"></router-view>
+            <router-view name="navigation"></router-view>
         </v-toolbar>
         <v-snackbar v-model="snackbar" :timeout="4000" top>
             <span>{{ snackbarText }}</span>
@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import { EventBus } from '@/event-bus.js';
+
 export default {
     props: [
         'snackbarText',
@@ -56,14 +58,11 @@ export default {
             links: [
                 { icon: 'dashboard', text: 'Zlecenia', route: '/orders' },
                 { icon: 'folder', text: 'Pozycje', route: '/positions' },
-                { icon: 'folder', text: 'blah', route: '/blah' },
             ],
         }
     },
     methods: {
-        refresh() {
-            this.$emit('refresh');
-        }
+        
     },
     watch: {
         snackbarWatch: function() {
