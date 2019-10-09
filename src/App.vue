@@ -11,8 +11,8 @@
         </v-layout>
       </v-container>
     </v-content>
-    <v-footer color="indigo" app>
-      <span class="white--text">&copy; 2019 Glass</span>
+    <v-footer class="pl-2" color="indigo" app>
+      <span class="white--text">&copy; 2019 OnCode - Glass</span>
     </v-footer>
   </v-app>
 </template>

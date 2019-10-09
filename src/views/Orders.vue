@@ -1,55 +1,41 @@
 <template>
     <v-container fluid>
-        <v-expansion-panel v-model="panel">
-            <v-expansion-panel-content v-for="order in filteredOrders" :key="order.id" :class="`order ${order.status}`">
+        <v-expansion-panel
+            v-model="panel"
+            focusable
+        >
+            <v-expansion-panel-content
+                v-for="order in filteredOrders"
+                :key="order.id"
+                :class="`order ${order.status}`"
+                @input="orderSelected(order.id)"
+                
+            >
                 <template v-slot:header>
-                    <v-layout row wrap align-center>
+                    <v-layout
+                        row
+                        wrap
+                        align-center
+                        pr-4
+                    >
                         <v-flex lg1 md1 sm1 xs1 mr-4>
                             <div class="caption grey--text">Id</div>
                             <div class="body-1 text-truncate">{{ order.id }}</div>
                         </v-flex>
-                        <v-flex lg2 md2 sm3 hidden-xs-only mr-4>
+                        <v-flex lg2 md3 sm2 hidden-xs-only mr-4>
                             <div class="caption grey--text text-truncate">Zewnętrzny Numer Zlecenia</div>
                             <div class="body-1 text-truncate">{{ order.externalOrderId }}</div>
                         </v-flex>
-                        <v-flex lg2 md2 sm2 xs1 mr-4 hidden-sm-and-down>
+                        <v-flex lg2 md2 xs1 mr-4 hidden-sm-and-down>
                             <div class="caption grey--text">Klient</div>
                             <div class="body-1 text-truncate">{{ order.customer }}</div>
                         </v-flex>
-                        <v-flex shrink>
-                            <v-btn
-                                :to = "{
-                                    name: 'Zlecenie',
-                                    params: {
-                                        id: order.id
-                                    }
-                                }"
-                                flat
-                                icon
-                            >
-                                <v-icon>remove_red_eye</v-icon>
-                            </v-btn>
-                        </v-flex>
-                        <v-flex shrink mr-2>
-                            <v-btn
-                                :to = "{
-                                    name: 'Edytuj Zlecenie',
-                                    params: {
-                                        id: order.id
-                                    }
-                                }"
-                                flat
-                                icon
-                            >
-                                <v-icon>edit</v-icon>
-                            </v-btn>
-                        </v-flex> 
-                        <v-spacer class="hidden-sm-and-down"></v-spacer>
-                        <v-flex shrink mr-4 hidden-sm-and-down>
+                        <v-flex md2 mr-4 hidden-sm-and-down>
                             <div class="caption grey--text">Termin Realizacji</div>
                             <div class="body-1">{{ order.dueDate }}</div>
                         </v-flex>
-                        <v-flex lg1 md1 mr-4>
+                          <v-spacer></v-spacer>
+                        <v-flex md2 class="text-xs-right">
                             <v-chip small :class="`${order.status} white--text caption`">{{ order.status }}</v-chip>
                         </v-flex>
                     </v-layout>
@@ -172,6 +158,10 @@ export default {
         searchTextInput(input) {
             this.searchText = input;
         },
+        orderSelected(id) {
+            console.log("OrderSelected=" + id);
+            EventBus.$emit('orderSelected', id);
+        },
         sortBy(prop) {
             this.orders.sort((a, b) => a[prop] < b[prop] ? -1: 1)
         },
@@ -220,6 +210,10 @@ export default {
     min-height: 0;
     padding-left: 0 ;
     height: 36px; 
+} */
+
+/* .theme--light.v-expansion-panel--focusable .v-expansion-panel__container:focus{
+    background-color: rgb(117, 169, 238);
 } */
 
 .text-truncate{
