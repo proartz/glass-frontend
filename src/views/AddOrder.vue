@@ -25,7 +25,7 @@
                     justify-space-around
                     align-end
                     mb-6
-            >
+                >
                     <v-flex md5>{
                         <v-text-field 
                             v-validate="`required|max:30`"
@@ -37,48 +37,53 @@
                         </v-text-field>
                     </v-flex>
                     <v-flex md5>
-                        <v-text-field v-validate="`max:30`"
-                                        :counter="30"
-                                        :error-messages="errors.collect('form1.externalOrderId')"
-                                        data-vv-name="externalOrderId"
-                                        label="Zewnętrzny Numer Zlecenia"
-                                        v-model="externalOrderId">
+                        <v-text-field
+                            v-validate="`max:30`"
+                            :counter="30"
+                            :error-messages="errors.collect('form1.externalOrderId')"
+                            data-vv-name="externalOrderId"
+                            label="Zewnętrzny Numer Zlecenia"
+                            v-model="externalOrderId">
                         </v-text-field>
                     </v-flex>
                     <v-flex md5>
-                        <v-text-field v-validate="`max:30`"
-                                        :counter="30"
-                                        :error-messages="errors.collect('form1.invoiceNumber')"
-                                        data-vv-name="invoiceNumber"
-                                        label="Numer Faktury"
-                                        v-model="invoiceNumber">
+                        <v-text-field
+                            v-validate="`max:30`"
+                            :counter="30"
+                            :error-messages="errors.collect('form1.invoiceNumber')"
+                            data-vv-name="invoiceNumber"
+                            label="Numer Faktury"
+                            v-model="invoiceNumber">
                         </v-text-field>
                     </v-flex>
                     <v-flex md5>
-                        <v-text-field v-validate="`numeric|max_value:999999999999999999`"
-                                        :error-messages="errors.collect('form1.price')"
-                                        data-vv-name="price"
-                                        label="Cena"
-                                        v-model="price">
+                        <v-text-field
+                            v-validate="`numeric|max_value:999999999999999999`"
+                            :error-messages="errors.collect('form1.price')"
+                            data-vv-name="price"
+                            label="Cena"
+                            v-model="price">
                         </v-text-field>
                     </v-flex>
                     <v-flex md5>
-                        <v-textarea v-validate="`max:100`"
-                                        counter="100"
-                                        :error-messages="errors.collect('form1.description')"
-                                        data-vv-name="description"
-                                        label="Opis"
-                                        v-model="description">
+                        <v-textarea
+                            v-validate="`max:100`"
+                            counter="100"
+                            :error-messages="errors.collect('form1.description')"
+                            data-vv-name="description"
+                            label="Opis"
+                            v-model="description">
                         </v-textarea>
                     </v-flex>
                     <v-flex md5 class="text-xs-left">
                         <v-menu>
-                            <v-text-field v-validate="`required`"
-                                            :error-messages="errors.collect('form1.dueDate')"
-                                            data-vv-name="dueDate"
-                                            label="Termin Realizacji"
-                                            :value="dueDate"
-                                            slot="activator">
+                            <v-text-field
+                                v-validate="`required`"
+                                :error-messages="errors.collect('form1.dueDate')"
+                                data-vv-name="dueDate"
+                                label="Termin Realizacji"
+                                :value="dueDate"
+                                slot="activator">
                             </v-text-field>
                             <v-date-picker v-model="dueDate"
                                             :min="now">
@@ -93,61 +98,105 @@
           color="primary"
           @click="stage1Next"
         >
-          Dalej
+            Dalej
         </v-btn>
 
       </v-stepper-content>
 
       <v-stepper-content step="2">
         <v-card
-          class="mb-5"
         >
             <v-form ref="form2" data-vv-scope="form2">
-                <v-select v-validate="`required`"
-                            :error-messages="errors.collect('Material', 'form1')"
+                <v-layout
+                    row
+                    wrap
+                    align-end
+                >
+                    <v-flex md2 mx-3>
+                        <v-select
+                            v-validate="`required`"
+                            :error-messages="errors.collect('form2.Material')"
                             data-vv-name="Material"
                             v-model="materialSelected"
                             :items="materialsItems"
                             label="Materiał">
-                </v-select>
-                <v-text-field v-validate="`required|numeric|min_value:1`"
-                                :error-messages="errors.collect('Width')"
-                                data-vv-name="Width"
-                                label="Szerokość"
-                                v-model="width">
-                </v-text-field>
-                <v-text-field v-validate="`required|numeric|min_value:1`"
-                                :error-messages="errors.collect('Height')"
-                                data-vv-name="Height"
-                                label="Wysokość"
-                                v-model="height">
-                </v-text-field>
-                <v-text-field v-validate="`required|numeric|min_value:1`"
-                                :error-messages="errors.collect('Depth')"
-                                data-vv-name="Depth"
-                                label="Grubość" v-model="depth">
-                </v-text-field>
-                <v-text-field v-validate="`required|numeric|min_value:1`"
-                                :error-messages="errors.collect('Quantity')"
-                                data-vv-name="Quantity"
-                                label="Ilość"
-                                v-model="quantity">
-                </v-text-field>
-                <v-text-field v-validate="`max:100`"
-                                counter="100"
-                                :error-messages="errors.collect('Note')"
-                                data-vv-name="Note"
-                                label="Uwagi" v-model="note"></v-text-field>
-                <div class=" grey--text">Operacje</div>
-                <v-container>
-                        <v-checkbox v-model="selectAllOperations" label="Wybierz Wszystko"></v-checkbox>
-                        <v-checkbox v-for="(operation, i) in operationsItems" :key="i" v-model="operationsSelected[operationsItems.indexOf(operation)]" :label="`${operation}`"></v-checkbox>
-                </v-container>
-                <v-list>
-                    <v-list-tile v-for="(error, i) in errors.all()" :key="i">
-                        <v-list-tile-title class="red--text caption">{{ error }}</v-list-tile-title>
-                    </v-list-tile>
-                </v-list>
+                        </v-select>
+                    </v-flex>
+                    <v-flex md2 mx-3>
+                        <v-text-field
+                            v-validate="`required|numeric|min_value:1`"
+                            :error-messages="errors.collect('form2.Width')"
+                            data-vv-name="Width"
+                            label="Szerokość"
+                            v-model="width">
+                        </v-text-field>
+                    </v-flex>
+                    <v-flex md2 mx-3>
+                        <v-text-field
+                            v-validate="`required|numeric|min_value:1`"
+                            :error-messages="errors.collect('form2.Height')"
+                            data-vv-name="Height"
+                            label="Wysokość"
+                            v-model="height">
+                        </v-text-field>
+                    </v-flex>
+                    <v-flex md2 mx-3>
+                        <v-text-field
+                            v-validate="`required|numeric|min_value:1`"
+                            :error-messages="errors.collect('form2.Depth')"
+                            data-vv-name="Depth"
+                            label="Grubość" v-model="depth">
+                        </v-text-field>
+                    </v-flex>
+                    <v-flex md2 mx-3>
+                        <v-text-field
+                            v-validate="`required|numeric|min_value:1`"
+                            :error-messages="errors.collect('form2.Quantity')"
+                            data-vv-name="Quantity"
+                            label="Ilość"
+                            v-model="quantity">
+                        </v-text-field>
+                    </v-flex>
+                    <v-flex md6 mx-3>            
+                        <v-textarea
+                            v-validate="`max:100`"
+                            counter="100"
+                            :error-messages="errors.collect('form2.Note')"
+                            data-vv-name="Note"
+                            label="Uwagi"
+                            v-model="note">
+                        </v-textarea>
+                    </v-flex>
+                    <v-spacer></v-spacer>
+                    <v-flex mx-3>
+                        <v-layout
+                            row
+                            justify-center
+                        >
+                            <v-flex
+                                text-xs-center
+                                shrink
+                                mx-2
+                                v-for="(value, propertyName) in operationAbbreviationsEnum"
+                                :key="propertyName"
+                            >
+                                <span class="caption grey--text">{{ value }}</span>
+                                <v-checkbox
+                                    v-model="operationsSelected[propertyName].selected"
+                                    :readonly="operationsSelected[propertyName].required"
+                                >
+                                </v-checkbox>
+                            </v-flex>
+                        </v-layout>
+                    </v-flex>
+                    <v-flex>
+                        <v-list>
+                            <v-list-tile v-for="(error, i) in errors.all()" :key="i">
+                                <v-list-tile-title class="red--text caption">{{ error }}</v-list-tile-title>
+                            </v-list-tile>
+                        </v-list>
+                    </v-flex>
+                </v-layout>
             </v-form>
             <v-list>
                     <v-subheader class="pa-0">
@@ -216,7 +265,7 @@ export default {
     components: { AddItem },
     data() {
         return {
-            e1: 0,
+            e1: 2,
             now: '',
             loading: false,
             dialog: false,
@@ -226,8 +275,28 @@ export default {
             operationStatusItems: ['NIEROBIONE', 'ZAPLANOWANE', 'GOTOWE_DO_REALIZACJI' , 'ZROBIONE'],
 
             materialSelected: '',
+            operationAbbreviationsEnum: {
+                Cięcie: 'C',
+                Szlifowanie: 'SZ',
+                Wiercenie: 'WI',
+                CNC: 'CNC',
+                Hartowanie: 'H',
+                Emaliowanie: 'E',
+                Laminowanie: 'L',
+                Wydanie: 'WY'
+            },
+            operationsSelected: {
+                Cięcie:         {selected: true, required: true},
+                Szlifowanie:    {selected: false, required: false},
+                Wiercenie:      {selected: false, required: false},
+                CNC:            {selected: false, required: false},
+                Hartowanie:     {selected: false, required: false},
+                Emaliowanie:    {selected: false, required: false},
+                Laminowanie:    {selected: false, required: false},
+                Wydanie:        {selected: true, required: true},
+            },
             operationsItems: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC', 'Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
-            operationsSelected: [false, false, false, false, false, false, false, false],
+            // operationsSelected: [false, false, false, false, false, false, false, false],
             selectAllOperations: false,
             stageOneOperations: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC'],
             stageTwoOperations: ['Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
@@ -355,4 +424,12 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+
+.layout.row {
+    text-align: center;
+}
+
+</style>
 
