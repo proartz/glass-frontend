@@ -1,53 +1,155 @@
 <template>
-   <v-container>
-       <v-layout>
-            <v-form ref="form">
-                <v-text-field v-validate="`required|max:30`"
-                                :counter="30"
-                                :error-messages="errors.collect('customer')"
-                                data-vv-name="customer" label="Klient"
-                                v-model="customer">
+   <v-container fluid fill-height>
+       <v-stepper
+            v-model="e1"
+            >
+    <v-stepper-header>
+      <v-stepper-step :complete="e1 > 1" step="1" editable>Podstawowe Informacje</v-stepper-step>
+
+      <v-divider></v-divider>
+
+      <v-stepper-step :complete="e1 > 2" step="2" editable>Dodaj Pozycje</v-stepper-step>
+
+      <v-divider></v-divider> 
+
+      <v-stepper-step step="3" editable>Podsumowanie</v-stepper-step>
+    </v-stepper-header>
+
+    <v-stepper-items>
+    <v-stepper-content step="1">
+        <v-card flat class="pb-4">
+            <v-form ref="form1" data-vv-scope="form1">
+                <v-layout
+                    row
+                    wrap
+                    justify-space-around
+                    align-end
+                    mb-6
+            >
+                    <v-flex md5>{
+                        <v-text-field 
+                            v-validate="`required|max:30`"
+                            :counter="30"
+                            :error-messages="errors.collect('form1.customer')"
+                            data-vv-name="customer" label="Klient"
+                            v-model="customer"
+                        >
+                        </v-text-field>
+                    </v-flex>
+                    <v-flex md5>
+                        <v-text-field v-validate="`max:30`"
+                                        :counter="30"
+                                        :error-messages="errors.collect('form1.externalOrderId')"
+                                        data-vv-name="externalOrderId"
+                                        label="Zewnętrzny Numer Zlecenia"
+                                        v-model="externalOrderId">
+                        </v-text-field>
+                    </v-flex>
+                    <v-flex md5>
+                        <v-text-field v-validate="`max:30`"
+                                        :counter="30"
+                                        :error-messages="errors.collect('form1.invoiceNumber')"
+                                        data-vv-name="invoiceNumber"
+                                        label="Numer Faktury"
+                                        v-model="invoiceNumber">
+                        </v-text-field>
+                    </v-flex>
+                    <v-flex md5>
+                        <v-text-field v-validate="`numeric|max_value:999999999999999999`"
+                                        :error-messages="errors.collect('form1.price')"
+                                        data-vv-name="price"
+                                        label="Cena"
+                                        v-model="price">
+                        </v-text-field>
+                    </v-flex>
+                    <v-flex md5>
+                        <v-textarea v-validate="`max:100`"
+                                        counter="100"
+                                        :error-messages="errors.collect('form1.description')"
+                                        data-vv-name="description"
+                                        label="Opis"
+                                        v-model="description">
+                        </v-textarea>
+                    </v-flex>
+                    <v-flex md5 class="text-xs-left">
+                        <v-menu>
+                            <v-text-field v-validate="`required`"
+                                            :error-messages="errors.collect('form1.dueDate')"
+                                            data-vv-name="dueDate"
+                                            label="Termin Realizacji"
+                                            :value="dueDate"
+                                            slot="activator">
+                            </v-text-field>
+                            <v-date-picker v-model="dueDate"
+                                            :min="now">
+                            </v-date-picker>
+                        </v-menu>
+                    </v-flex>
+                </v-layout>
+            </v-form>
+        </v-card>
+
+        <v-btn
+          color="primary"
+          @click="stage1Next"
+        >
+          Dalej
+        </v-btn>
+
+      </v-stepper-content>
+
+      <v-stepper-content step="2">
+        <v-card
+          class="mb-5"
+        >
+            <v-form ref="form2" data-vv-scope="form2">
+                <v-select v-validate="`required`"
+                            :error-messages="errors.collect('Material', 'form1')"
+                            data-vv-name="Material"
+                            v-model="materialSelected"
+                            :items="materialsItems"
+                            label="Materiał">
+                </v-select>
+                <v-text-field v-validate="`required|numeric|min_value:1`"
+                                :error-messages="errors.collect('Width')"
+                                data-vv-name="Width"
+                                label="Szerokość"
+                                v-model="width">
                 </v-text-field>
-                <v-text-field v-validate="`max:30`"
-                                :counter="30"
-                                :error-messages="errors.collect('externalOrderId')"
-                                data-vv-name="externalOrderId"
-                                label="Zewnętrzny Numer Zlecenia"
-                                v-model="externalOrderId">
+                <v-text-field v-validate="`required|numeric|min_value:1`"
+                                :error-messages="errors.collect('Height')"
+                                data-vv-name="Height"
+                                label="Wysokość"
+                                v-model="height">
                 </v-text-field>
-                <v-text-field v-validate="`max:30`"
-                                :counter="30"
-                                :error-messages="errors.collect('invoiceNumber')"
-                                data-vv-name="invoiceNumber"
-                                label="Numer Faktury"
-                                v-model="invoiceNumber">
+                <v-text-field v-validate="`required|numeric|min_value:1`"
+                                :error-messages="errors.collect('Depth')"
+                                data-vv-name="Depth"
+                                label="Grubość" v-model="depth">
                 </v-text-field>
-                <v-text-field v-validate="`numeric|max_value:999999999999999999`"
-                                :error-messages="errors.collect('price')"
-                                data-vv-name="price"
-                                label="Cena"
-                                v-model="price">
+                <v-text-field v-validate="`required|numeric|min_value:1`"
+                                :error-messages="errors.collect('Quantity')"
+                                data-vv-name="Quantity"
+                                label="Ilość"
+                                v-model="quantity">
                 </v-text-field>
-                <v-menu>
-                    <v-text-field v-validate="`required`"
-                                    :error-messages="errors.collect('dueDate')"
-                                    data-vv-name="dueDate"
-                                    label="Termin Realizacji"
-                                    :value="dueDate"
-                                    slot="activator">
-                    </v-text-field>
-                    <v-date-picker v-model="dueDate"
-                                    :min="now">
-                    </v-date-picker>
-                </v-menu>
                 <v-text-field v-validate="`max:100`"
                                 counter="100"
-                                :error-messages="errors.collect('description')"
-                                data-vv-name="description"
-                                label="Opis"
-                                v-model="description">
-                </v-text-field>
+                                :error-messages="errors.collect('Note')"
+                                data-vv-name="Note"
+                                label="Uwagi" v-model="note"></v-text-field>
+                <div class=" grey--text">Operacje</div>
+                <v-container>
+                        <v-checkbox v-model="selectAllOperations" label="Wybierz Wszystko"></v-checkbox>
+                        <v-checkbox v-for="(operation, i) in operationsItems" :key="i" v-model="operationsSelected[operationsItems.indexOf(operation)]" :label="`${operation}`"></v-checkbox>
+                </v-container>
                 <v-list>
+                    <v-list-tile v-for="(error, i) in errors.all()" :key="i">
+                        <v-list-tile-title class="red--text caption">{{ error }}</v-list-tile-title>
+                    </v-list-tile>
+                </v-list>
+            </v-form>
+            <v-list>
                     <v-subheader class="pa-0">
                         POZYCJE
                         <AddItem @addItem='addItem'
@@ -73,31 +175,70 @@
                         </v-list-tile-content>
                     </v-list-tile>
                 </v-list>
-                <v-spacer></v-spacer>
-                <v-btn @click="submit" :loading="loading">Dodaj Zlecenie</v-btn>
-                <v-btn @click="clearForm">Wyczyść</v-btn>
-            </v-form>
-        </v-layout>
+        </v-card>
+
+        <v-btn
+          color="primary"
+          @click="e1 = 3"
+        >
+          Continue
+        </v-btn>
+
+        <v-btn flat>Cancel</v-btn>
+      </v-stepper-content>
+
+      <v-stepper-content step="3">
+        <v-card
+          class="mb-5"
+          color="grey lighten-1"
+          height="200px"
+        ></v-card>
+
+        <v-btn
+          color="primary"
+          @click="e1 = 1"
+        >
+          Continue
+        </v-btn>
+
+        <v-btn flat>Cancel</v-btn>
+      </v-stepper-content>
+    </v-stepper-items>
+  </v-stepper>
     </v-container>
 </template>
 
 <script>
-import AddItem from '@/components/AddItem'
+import AddItem from '@/components/AddItem';
+import EventBus from '@/event-bus.js';
 
 export default {
-    props: [
-        'materialsItems',
-        'materials',
-        'operationStatusItems'
-    ],
     components: { AddItem },
     data() {
         return {
+            e1: 0,
             now: '',
             loading: false,
             dialog: false,
             toolbarItems: [],
+            materials: [],
+            materialsItems: [],
+            operationStatusItems: ['NIEROBIONE', 'ZAPLANOWANE', 'GOTOWE_DO_REALIZACJI' , 'ZROBIONE'],
 
+            materialSelected: '',
+            operationsItems: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC', 'Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
+            operationsSelected: [false, false, false, false, false, false, false, false],
+            selectAllOperations: false,
+            stageOneOperations: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC'],
+            stageTwoOperations: ['Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
+            operationStatusEnum: {
+                NIEROBIONE: 'NIEROBIONE',
+                ZAPLANOWANE: 'ZAPLANOWANE',
+                GOTOWE_DO_REALIZACJI: 'GOTOWE_DO_REALIZACJI',
+                ZROBIONE: 'ZROBIONE'
+            },
+
+            // order
             items: [],
             itemsLength: 0,
             attachments: [],
@@ -109,6 +250,16 @@ export default {
             description: '',
             createDate: '',
             status: '',
+
+            //item
+            material: '',
+            operations: [],
+            width: '',
+            height: '',
+            depth: '',
+            quantity: '',
+            status: '',
+            note: ''
 
         }
     },
@@ -129,6 +280,19 @@ export default {
             this.itemsLength = 0;
             this.dueDate = '';
         },
+        fetchMaterials() {
+            this.loading = true;
+            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/materials').then(response => {
+                this.materials = response.body;
+                this.materialsItems = [];
+                this.materials.forEach((material) => {
+                    this.materialsItems.push(material.name);
+                })
+                this.loading = false;
+            }), response => {
+                console.error(response);
+            }
+        },
         addItem(item) {
             item.id = this.items.length;
             this.items.push(item);
@@ -141,10 +305,21 @@ export default {
                 }
             }
         },
+        stage1Next() {
+            this.$validator.validateAll('form1')
+                .then(valid => {
+                    console.log(valid);
+                    if(valid) {
+
+                        this.e1 = 2
+                    }
+                });
+        },
         submit() {
             this.$validator.validate().then(valid => {
                 if(valid){
                     this.loading = true;
+                    EventBus.$emit('disableLoading');
 
                     const order = {
                         items: this.items,
@@ -163,8 +338,7 @@ export default {
                     this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/order', order,
                     {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                         this.loading = false;
-                        this.dialog = false;
-                        this.$emit('orderAdded');
+                        EventBus.$emit('enableLoading');
                         this.clearForm();
                     }, response => {
                         console.log(response);
@@ -175,6 +349,9 @@ export default {
     },
     created() {
         this.date();
+        this.fetchMaterials();
+        EventBus.$on('submit', () => { this.submit(); });
+        EventBus.$on('clearForm', () => { this.clearForm(); });
     }
 }
 </script>
