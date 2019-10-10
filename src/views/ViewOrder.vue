@@ -1,79 +1,133 @@
 <template>
-    <v-container fluid>
-        <v-card class="pa-4">
-            <v-layout
-                row
-                wrap
-                justify-center
-                text-xs-left
-            >
-                <v-flex md4 ma-4>
-                    <div class="caption grey--text">Id</div>
-                    <div>{{ order.id }}</div>
-                </v-flex>
-                <v-flex md4 ma-4>
-                    <div class="caption grey--text">Klient</div>
-                    <div>{{ order.customer }}</div>
-                </v-flex>
-                <v-flex md4 ma-4>
-                    <div class="caption grey--text">Zewnętrzny Numer Zlecenia</div>
-                    <div>{{ order.externalOrderId }}</div>
-                </v-flex>
-                <v-flex md4 ma-4>
-                    <div class="caption grey--text">Numer Faktury</div>
-                    <div>{{ order.invoiceNumber }}</div>
-                </v-flex>
-                <v-flex md4 ma-4>
-                    <div class="caption grey--text">Cena</div>
-                    <div>{{ order.price }}</div>
-                </v-flex>
-                <v-flex md4 ma-4>
-                    <div class="caption grey--text">Termin Realizacji</div>
-                    <div>{{ order.dueDate }}</div>
-                </v-flex>
-                <v-flex md4 ma-4>
-                    <div class="caption grey--text">Data Utworzenia</div>
-                    <div>{{ order.createDate }}</div>
-                </v-flex>
-                <v-flex md4 ma-4>
-                    <v-chip :class="`${order.status} white--text caption my-2`">{{ order.status }}</v-chip>
-                </v-flex>
-            </v-layout>
-            <v-divider></v-divider>
-            <v-subheader class="pa-0">POZYCJE</v-subheader>
-            <template v-for="item in order.items">
-                <v-layout row wrap :key="item.id" :class="`py-0 item ${item.status}`">
-                    <v-flex>
-                        <v-btn v-if="isReadyForDelete(item)" icon @click.stop="openDeleteDialog(item)">
-                            <v-icon>delete</v-icon>
-                        </v-btn>
-                    </v-flex>
-                    <v-flex>
-                        <div class="caption grey--text">Materiał</div>
-                        <div>{{ item.material.name }}</div>
-                    </v-flex>
-                    <v-flex>
-                        <div class="caption grey--text">Szerokość</div>
-                        <div>{{ item.width }}</div>
-                    </v-flex>
-                    <v-flex>
-                        <div class="caption grey--text">Wysokość</div>
-                        <div>{{ item.height }}</div>
-                    </v-flex>
-                    <v-flex>
-                        <div class="caption grey--text">Grubość</div>
-                        <div>{{ item.depth }}</div>
-                    </v-flex>
-                    <v-flex>
-                        <div class="caption grey--text">Ilość</div>
-                        <div>{{ item.quantity }}</div>
-                    </v-flex>
-                    <v-flex>
-                        <ViewOperations v-bind:operations="item.operations"/>
-                    </v-flex>
-                </v-layout>
-            </template>
-        </v-card>
+   <v-container fluid fill-height>
+       <v-layout>
+           <v-flex>
+                <v-stepper v-model="e1">
+                    <v-stepper-header>
+                        <v-stepper-step :complete="e1 > 1" step="1" editable>Podstawowe Informacje</v-stepper-step>
+                        <v-divider></v-divider>
+                        <v-stepper-step :complete="e1 > 2" step="2" editable>Pozycje</v-stepper-step>
+                    </v-stepper-header>
+                    <v-stepper-items>
+                        <v-stepper-content step="1">
+                            <v-card flat class="pb-4">
+                                <v-form ref="form1" data-vv-scope="form1">
+                                    <v-layout
+                                        row
+                                        wrap
+                                        justify-space-around
+                                        align-end
+                                        my-5
+                                    >
+                                        <v-flex md5 class="text-xs-left">
+                                            <div class="caption grey--text">Id</div>
+                                            <div class="body-1 text-truncate mb-1">{{ order.id }}</div>
+                                            <v-divider class="mb-5"></v-divider>
+                                        </v-flex>
+                                        <v-flex md5 class="text-xs-left">
+                                            <div class="caption grey--text">Klient</div>
+                                            <div class="body-1 text-truncate mb-1">{{ order.customer }}</div>
+                                            <v-divider class="mb-5"></v-divider>
+                                        </v-flex>
+                                        <v-flex md5 class="text-xs-left">
+                                            <div class="caption grey--text">Zewnętrzny Numer Klienta</div>
+                                            <div class="body-1 text-truncate mb-1">{{ order.externalOrderId }}</div>
+                                            <v-divider class="mb-5"></v-divider>
+                                        </v-flex>
+                                        <v-flex md5 class="text-xs-left">
+                                            <div class="caption grey--text">Numer Faktury</div>
+                                            <div class="body-1 text-truncate mb-1">{{ order.invoiceNumber }}</div>
+                                            <v-divider class="mb-5"></v-divider>
+                                        </v-flex>
+                                        <v-flex md5 class="text-xs-left">
+                                            <div class="caption grey--text">Opis</div>
+                                            <div class="body-1 mb-1">{{ order.description }}</div>
+                                            <v-divider class="mb-5"></v-divider>
+                                        </v-flex>
+                                        <v-flex md5 class="text-xs-left">
+                                            <div class="caption grey--text">Termin Realizacji</div>
+                                            <div class="body-1 mb-1">{{ order.dueDate }}</div>
+                                            <v-divider class="mb-5"></v-divider>
+                                        </v-flex>
+                                        <v-flex md5 class="text-xs-left">
+                                            <div class="caption grey--text">Data Utworzenia</div>
+                                            <div class="body-1 mb-1">{{ order.createDate }}</div>
+                                            <v-divider class="mb-5"></v-divider>
+                                        </v-flex>
+                                        
+                                    </v-layout>
+                                </v-form>
+                            </v-card>
+
+                            <v-btn
+                            color="primary"
+                            @click="e1 = 2"
+                            >
+                                Dalej
+                            </v-btn>
+
+                        </v-stepper-content>
+
+                        <v-stepper-content
+                            step="2"
+                            class="px-4"
+                        >
+                            <v-container px-0>
+                                <v-card
+                                    hover
+                                    mb-1
+                                    v-for="item in order.items"
+                                    :key="item.id"
+                                >
+                                <v-layout
+                                    justify-center
+                                    align-center
+                                    row
+                                    py-1
+                                    
+                                >
+                                    <v-flex md1>
+                                        <div class="caption grey--text">Id:</div>
+                                        <div>{{ item.id }}</div>
+                                    </v-flex>
+                                    <v-flex md1>
+                                        <div class="caption grey--text">Materiał:</div>
+                                        <div>{{ item.material.name }}</div>
+                                    </v-flex>
+                                    <v-flex md1 hidden-sm-and-down>
+                                        <div class="caption grey--text">Szerokość:</div>
+                                        <div>{{ item.width }}</div>
+                                    </v-flex>
+                                    <v-flex md1  hidden-sm-and-down>
+                                        <div class="caption grey--text">Wysokość:</div>
+                                        <div>{{ item.height }}</div>
+                                    </v-flex>
+                                    <v-flex md1  hidden-sm-and-down>
+                                        <div class="caption grey--text">Grubość:</div>
+                                        <div>{{ item.depth }}</div>
+                                    </v-flex>
+                                    <v-flex md1  hidden-sm-and-down>
+                                        <div class="caption grey--text">Ilość:</div>
+                                        <div>{{ item.quantity }}</div>
+                                    </v-flex>
+                                    <v-flex md4>
+                                        <ViewOperations v-bind:operations="item.operations"/>
+                                    </v-flex>
+                                </v-layout>
+                                </v-card>
+                            </v-container>
+
+                            <v-btn
+                            color="primary"
+                            @click="e1 = 1"
+                            >
+                            Wstecz
+                            </v-btn>
+                        </v-stepper-content>
+                    </v-stepper-items>
+                </v-stepper>
+            </v-flex>
+        </v-layout>
     </v-container>
 </template>
 
@@ -96,6 +150,7 @@ export default {
      ],
     data() {
         return {
+            e1: 0,
             now: '',
             dialog: false,
             panel: [],
@@ -228,7 +283,9 @@ export default {
 }
 </script>
 <style>
-
+    .theme--light.v-divider {
+        border-color: #949494;
+    }
     .v-chip.PRZYJĘTO{
         background: blue;
     }

@@ -26,7 +26,7 @@
                             <div class="caption grey--text text-truncate">Zewnętrzny Numer Zlecenia</div>
                             <div class="body-1 text-truncate">{{ order.externalOrderId }}</div>
                         </v-flex>
-                        <v-flex lg2 md2 xs1 mr-4 hidden-sm-and-down>
+                        <v-flex lg2 md3 xs1 mr-4 hidden-sm-and-down>
                             <div class="caption grey--text">Klient</div>
                             <div class="body-1 text-truncate">{{ order.customer }}</div>
                         </v-flex>
@@ -34,8 +34,8 @@
                             <div class="caption grey--text">Termin Realizacji</div>
                             <div class="body-1">{{ order.dueDate }}</div>
                         </v-flex>
-                          <v-spacer></v-spacer>
-                        <v-flex md2 class="text-xs-right">
+                          <!-- <v-spacer></v-spacer> -->
+                        <v-flex shrink class="text-xs-right">
                             <v-chip small :class="`${order.status} white--text caption`">{{ order.status }}</v-chip>
                         </v-flex>
                     </v-layout>
@@ -192,9 +192,10 @@ export default {
     // },
     created() {
         this.loadData();
-        EventBus.$on('refreshOrders', () => {this.refresh()});
-        EventBus.$on('searchTextInput', (input) => {this.searchTextInput(input)});
-        EventBus.$on('sortOrders', (prop) => {this.sortBy(prop)});
+        EventBus.$on('refreshOrders', () => { this.refresh() });
+        EventBus.$on('searchTextInput', (input) => { this.searchTextInput(input) });
+        EventBus.$on('sortOrders', (prop) => { this.sortBy(prop) });
+        EventBus.$on('refreshOperations', () => { this.refresh() });
     },
 }
 </script>
