@@ -26,13 +26,13 @@
                     align-end
                     mb-6
                 >
-                    <v-flex md5>{
+                    <v-flex md5>
                         <v-text-field 
                             v-validate="`required|max:30`"
                             :counter="30"
                             :error-messages="errors.collect('form1.customer')"
                             data-vv-name="customer" label="Klient"
-                            v-model="customer"
+                            v-model="order.customer"
                         >
                         </v-text-field>
                     </v-flex>
@@ -43,7 +43,7 @@
                             :error-messages="errors.collect('form1.externalOrderId')"
                             data-vv-name="externalOrderId"
                             label="Zewnętrzny Numer Zlecenia"
-                            v-model="externalOrderId">
+                            v-model="order.externalOrderId">
                         </v-text-field>
                     </v-flex>
                     <v-flex md5>
@@ -53,7 +53,7 @@
                             :error-messages="errors.collect('form1.invoiceNumber')"
                             data-vv-name="invoiceNumber"
                             label="Numer Faktury"
-                            v-model="invoiceNumber">
+                            v-model="order.invoiceNumber">
                         </v-text-field>
                     </v-flex>
                     <v-flex md5>
@@ -62,7 +62,7 @@
                             :error-messages="errors.collect('form1.price')"
                             data-vv-name="price"
                             label="Cena"
-                            v-model="price">
+                            v-model="order.price">
                         </v-text-field>
                     </v-flex>
                     <v-flex md5>
@@ -72,7 +72,7 @@
                             :error-messages="errors.collect('form1.description')"
                             data-vv-name="description"
                             label="Opis"
-                            v-model="description">
+                            v-model="order.description">
                         </v-textarea>
                     </v-flex>
                     <v-flex md5 class="text-xs-left">
@@ -82,10 +82,10 @@
                                 :error-messages="errors.collect('form1.dueDate')"
                                 data-vv-name="dueDate"
                                 label="Termin Realizacji"
-                                :value="dueDate"
+                                :value="order.dueDate"
                                 slot="activator">
                             </v-text-field>
-                            <v-date-picker v-model="dueDate"
+                            <v-date-picker v-model="order.dueDate"
                                             :min="now">
                             </v-date-picker>
                         </v-menu>
@@ -128,7 +128,7 @@
                             :error-messages="errors.collect('form2.Width')"
                             data-vv-name="Width"
                             label="Szerokość"
-                            v-model="width">
+                            v-model="item.width">
                         </v-text-field>
                     </v-flex>
                     <v-flex md2 mx-3>
@@ -137,7 +137,7 @@
                             :error-messages="errors.collect('form2.Height')"
                             data-vv-name="Height"
                             label="Wysokość"
-                            v-model="height">
+                            v-model="item.height">
                         </v-text-field>
                     </v-flex>
                     <v-flex md2 mx-3>
@@ -145,7 +145,7 @@
                             v-validate="`required|numeric|min_value:1`"
                             :error-messages="errors.collect('form2.Depth')"
                             data-vv-name="Depth"
-                            label="Grubość" v-model="depth">
+                            label="Grubość" v-model="item.depth">
                         </v-text-field>
                     </v-flex>
                     <v-flex md2 mx-3>
@@ -154,7 +154,7 @@
                             :error-messages="errors.collect('form2.Quantity')"
                             data-vv-name="Quantity"
                             label="Ilość"
-                            v-model="quantity">
+                            v-model="item.quantity">
                         </v-text-field>
                     </v-flex>
                     <v-flex md6 mx-3>            
@@ -164,7 +164,7 @@
                             :error-messages="errors.collect('form2.Note')"
                             data-vv-name="Note"
                             label="Uwagi"
-                            v-model="note">
+                            v-model="item.note">
                         </v-textarea>
                     </v-flex>
                     <v-spacer></v-spacer>
@@ -200,7 +200,7 @@
                 justify-center
                 row
                 py-1
-                v-for="item in items"
+                v-for="item in order.items"
                 :key="item.id"
             >
                 <v-flex md1>
@@ -249,47 +249,63 @@
       </v-stepper-content>
 
       <v-stepper-content step="3">
-        <v-card>
+        <v-card class="pa-4">
             <v-layout
-                justify-center
                 row
-                py-1
-                v-for="item in items"
-                :key="item.id"
+                wrap
+                justify-center
+                text-xs-left
             >
-                <v-flex md1>
-                    <v-btn text icon @click="deleteItem(item.id)">
-                        <v-icon>delete</v-icon>
-                    </v-btn>
+                <v-flex md4 ma-4>
+                    <div class="caption grey--text">Klient</div>
+                    <div>{{ order.customer }}</div>
                 </v-flex>
-                <v-flex md1>
-                    <div class="caption grey--text">Id:</div>
-                    <div>{{ item.id }}</div>
+                <v-flex md4 ma-4>
+                    <div class="caption grey--text">Zewnętrzny Numer Zlecenia</div>
+                    <div>{{ order.externalOrderId }}</div>
                 </v-flex>
-                <v-flex md1>
-                    <div class="caption grey--text">Materiał:</div>
-                    <div>{{ item.material.name }}</div>
+                <v-flex md4 ma-4>
+                    <div class="caption grey--text">Numer Faktury</div>
+                    <div>{{ order.invoiceNumber }}</div>
                 </v-flex>
-                <v-flex md1 hidden-sm-and-down>
-                    <div class="caption grey--text">Szerokość:</div>
-                    <div>{{ item.width }}</div>
+                <v-flex md4 ma-4>
+                    <div class="caption grey--text">Cena</div>
+                    <div>{{ order.price }}</div>
                 </v-flex>
-                <v-flex md1  hidden-sm-and-down>
-                    <div class="caption grey--text">Wysokość:</div>
-                    <div>{{ item.height }}</div>
-                </v-flex>
-                <v-flex md1  hidden-sm-and-down>
-                    <div class="caption grey--text">Grubość:</div>
-                    <div>{{ item.depth }}</div>
-                </v-flex>
-                <v-flex md1  hidden-sm-and-down>
-                    <div class="caption grey--text">Ilość:</div>
-                    <div>{{ item.quantity }}</div>
-                </v-flex>
-                <v-flex md4>
-                    <ViewOperations v-bind:operations="item.operations"/>
+                <v-flex md4 ma-4>
+                    <div class="caption grey--text">Termin Realizacji</div>
+                    <div>{{ order.dueDate }}</div>
                 </v-flex>
             </v-layout>
+            <v-divider></v-divider>
+            <v-subheader class="pa-0">POZYCJE</v-subheader>
+            <template v-for="item in order.items">
+                <v-layout row wrap :key="item.id" :class="`py-0 item ${item.status}`">
+                    <v-flex>
+                        <div class="caption grey--text">Materiał</div>
+                        <div>{{ item.material.name }}</div>
+                    </v-flex>
+                    <v-flex>
+                        <div class="caption grey--text">Szerokość</div>
+                        <div>{{ item.width }}</div>
+                    </v-flex>
+                    <v-flex>
+                        <div class="caption grey--text">Wysokość</div>
+                        <div>{{ item.height }}</div>
+                    </v-flex>
+                    <v-flex>
+                        <div class="caption grey--text">Grubość</div>
+                        <div>{{ item.depth }}</div>
+                    </v-flex>
+                    <v-flex>
+                        <div class="caption grey--text">Ilość</div>
+                        <div>{{ item.quantity }}</div>
+                    </v-flex>
+                    <v-flex>
+                        <ViewOperations v-bind:operations="item.operations"/>
+                    </v-flex>
+                </v-layout>
+            </template>
         </v-card>
 
         <v-btn
@@ -319,11 +335,9 @@ export default {
     data() {
         return {
             itemCounterError: false,
-            e1: 3,
+            e1: 0,
             now: '',
             loading: false,
-            dialog: false,
-            toolbarItems: [],
             materials: [],
             materialsItems: [],
             operationStatusItems: ['NIEROBIONE', 'ZAPLANOWANE', 'GOTOWE_DO_REALIZACJI' , 'ZROBIONE'],
@@ -349,11 +363,6 @@ export default {
                 Laminowanie:    {selected: false, required: false},
                 Wydanie:        {selected: true, required: true},
             },
-            operationsItems: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC', 'Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
-            // operationsSelected: [false, false, false, false, false, false, false, false],
-            selectAllOperations: false,
-            stageOneOperations: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC'],
-            stageTwoOperations: ['Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
             operationStatusEnum: {
                 NIEROBIONE: 'NIEROBIONE',
                 ZAPLANOWANE: 'ZAPLANOWANE',
@@ -361,29 +370,29 @@ export default {
                 ZROBIONE: 'ZROBIONE'
             },
 
-            // order
-            items: [],
-            itemsLength: 0,
-            attachments: [],
-            externalOrderId: '',
-            customer: '',
-            invoiceNumber: '',
-            price: '',
-            dueDate: '',
-            description: '',
-            createDate: '',
-            status: '',
+            order: {
+                items: [],
+                attachments: [],
+                externalOrderId: '',
+                customer: '',
+                invoiceNumber: '',
+                price: '',
+                dueDate: '',
+                description: '',
+                createDate: '',
+                status: ''
+            },
 
-            //item
-            material: '',
-            operations: [],
-            width: '',
-            height: '',
-            depth: '',
-            quantity: '',
-            status: '',
-            note: ''
-
+            item: {
+                material: '',
+                operations: [],
+                width: '',
+                height: '',
+                depth: '',
+                quantity: '',
+                status: '',
+                note: ''
+            }
         }
     },
     methods: {
@@ -405,24 +414,22 @@ export default {
             // this.$refs.form2.reset();
             this.$validator.reset();
             this.materialSelected = '';
-            this.width = '';
-            this.height = '';
-            this.depth = '';
-            this.quantity = '';
-            this.note = '';
-            this.operations = [];
+            this.item.width = '';
+            this.item.height = '';
+            this.item.depth = '';
+            this.item.quantity = '';
+            this.item.note = '';
+            this.item.operations = [];
             this.prepareData();
         },
         clearForm1() {
-            // this.items = [];
-            this.attachments = [];
-            this.$refs.form2.reset();
+            this.order.attachments = [];
+            this.$refs.form1.reset();
             this.$validator.reset();
-            // this.itemsLength = 0;
-            this.dueDate = '';
+            this.order.dueDate = '';
         },
         fetchMaterials() {
-            this.loading = true;
+            this.loading = true;operationsItems:
             this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/materials').then(response => {
                 this.materials = response.body;
                 this.materialsItems = [];
@@ -439,45 +446,38 @@ export default {
             this.$validator.validateAll('form2').then(valid => {
                 console.log(valid);
                 if(valid){
-                    // this.materialId = (this.materialsItems.indexOf(this.materialSelected) + 1);
 
                     //find material in materials with the same name
                     console.log(this.materialSelected);
                     var index;
                     for(index = 0; index < this.materials.length; index++) {
                         if(this.materials[index].name == this.materialSelected) {
-                            this.material = this.materials[index];
+                            this.item.material = this.materials[index];
                         }
                     }
 
-                    // var i;
-                    // for(i = 0; i < this.operationsSelected.length; i++) {
-                    //     if(this.operationsSelected[i] == true) {
-                    //         this.operations.push({name: this.operationsItems[i], status: this.operationStatusEnum.ZAPLANOWANE});
-                    //     }
-                    // }
+                    // add operations to the item
                     var operation;
                     for(operation in this.operationsSelected) {
                         if(this.operationsSelected[operation].selected) {
-                            this.operations.push({ name: operation, status: this.operationStatusEnum.ZAPLANOWANE });
+                            this.item.operations.push({ name: operation, status: this.operationStatusEnum.ZAPLANOWANE });
                         }
                     }
 
                     const item = {
                         id: '',
-                        material: this.material,
-                        operations: this.operations,
-                        width: this.width,
-                        height: this.height,
-                        depth: this.depth,
-                        quantity: this.quantity,
-                        status: this.operationStatusItems[1],
-                        note: this.note
+                        material: this.item.material,
+                        operations: this.item.operations,
+                        width: this.item.width,
+                        height: this.item.height,
+                        depth: this.item.depth,
+                        quantity: this.item.quantity,
+                        status: this.operationStatusEnum.ZAPLANOWANE,
+                        note: this.item.note
                     }
 
-                    item.id = this.items.length;
-                    this.items.push(item);
-                    this.itemsLength++;
+                    item.id = this.order.items.length;
+                    this.order.items.push(item);
 
                     console.log(item);
                     this.loading = false;
@@ -485,15 +485,10 @@ export default {
                 }
             })
         },
-        // addItem(item) {
-        //     item.id = this.items.length;
-        //     this.items.push(item);
-        //     this.itemsLength++;
-        // },
         deleteItem(id) {
             for(var i = 0; i < this.items.length; i++) {
-                if(this.items[i].id == id) {
-                    this.items.splice(i, 1);
+                if(this.order.items[i].id == id) {
+                    this.order.items.splice(i, 1);
                 }
             }
         },
@@ -508,7 +503,7 @@ export default {
                 });
         },
         stage2Next() {
-            if(this.itemsLength) {
+            if(this.order.items.length) {
                 this.e1 = 3
             } else {
                 this.itemCounterError = true;
@@ -519,37 +514,35 @@ export default {
             }
         },
         finish() {
-
+            this.submit();
         },
         submit() {
-            this.$validator.validate().then(valid => {
-                if(valid){
-                    this.loading = true;
-                    EventBus.$emit('disableLoading');
+            this.loading = true;
+            EventBus.$emit('enableLoading');
 
-                    const order = {
-                        items: this.items,
-                        attachments: [],
-                        externalOrderId: this.externalOrderId,
-                        customer: this.customer,
-                        invoiceNumber: this.invoiceNumber,
-                        price: this.price,
-                        dueDate: this.dueDate,
-                        description: this.description,
-                        status: ''
-                    };
+            const order = {
+                items: this.order.items,
+                attachments: [],
+                externalOrderId: this.order.externalOrderId,
+                customer: this.order.customer,
+                invoiceNumber: this.order.invoiceNumber,
+                price: this.order.price,
+                dueDate: this.order.dueDate,
+                description: this.order.description,
+                status: ''
+            };
 
-                    console.log(order);
+            console.log(order);
 
-                    this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/order', order,
-                    {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
-                        this.loading = false;
-                        EventBus.$emit('enableLoading');
-                        this.clearForm();
-                    }, response => {
-                        console.log(response);
-                    });
-                }
+            this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/order', order,
+            {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
+                this.loading = false;
+                EventBus.$emit('disableLoading');
+                EventBus.$emit('showSnackbar', "Dodano nowe zlecenie")
+                this.$router.push({ name: 'Zlecenia'});
+                // this.clearForm();
+            }, response => {
+                console.log(response);
             });
         }
     },
