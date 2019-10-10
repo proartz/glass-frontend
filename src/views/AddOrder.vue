@@ -2,7 +2,7 @@
    <v-container fluid fill-height>
        <v-stepper
             v-model="e1"
-            >
+        >
     <v-stepper-header>
       <v-stepper-step :complete="e1 > 1" step="1" editable>Podstawowe Informacje</v-stepper-step>
 
@@ -104,13 +104,13 @@
       </v-stepper-content>
 
       <v-stepper-content step="2">
-        <v-card
-        >
+        <v-card>
             <v-form ref="form2" data-vv-scope="form2">
                 <v-layout
                     row
                     wrap
                     align-end
+                    mb-6
                 >
                     <v-flex md2 mx-3>
                         <v-select
@@ -182,36 +182,22 @@
                             >
                                 <span class="caption grey--text">{{ value }}</span>
                                 <v-checkbox
+                                    v-bind:checked="operationsSelected[propertyName].selected"
                                     v-model="operationsSelected[propertyName].selected"
-                                    :readonly="operationsSelected[propertyName].required"
+                                    :disabled="operationsSelected[propertyName].required"
                                 >
                                 </v-checkbox>
                             </v-flex>
                         </v-layout>
                     </v-flex>
-                    <v-flex>
-                        <v-list>
-                            <v-list-tile v-for="(error, i) in errors.all()" :key="i">
-                                <v-list-tile-title class="red--text caption">{{ error }}</v-list-tile-title>
-                            </v-list-tile>
-                        </v-list>
-                    </v-flex>
                 </v-layout>
             </v-form>
+            <v-btn  mt-4 @click="addItem">Dodaj Pozycję</v-btn>
+            <v-btn @click="clearForm2">Wyczyść</v-btn>
             <v-list>
                     <v-subheader class="pa-0">
                         POZYCJE
-                        <AddItem @addItem='addItem'
-                                    v-bind:materialsItems="materialsItems"
-                                    v-bind:materials="materials"
-                                    v-bind:operationStatusItems="operationStatusItems"/>
-                        <v-text-field v-show="false"
-                                        v-validate="'min_value:1'"
-                                        data-vv-name="itemsCounter"
-                                        :disabled="true"
-                                        v-model="itemsLength">
-                        </v-text-field>
-                        <span class="red--text caption">{{ errors.first('itemsCounter') }}</span>
+                        <span v-if="itemCounterError" class="red--text caption">Nie dodano żadnej pozycji</span>
                     </v-subheader>
                     <v-list-tile v-for="item in items" :key="item.id">
                         <v-list-tile-action>
@@ -228,7 +214,7 @@
 
         <v-btn
           color="primary"
-          @click="e1 = 3"
+          @click="stage2Next"
         >
           Continue
         </v-btn>
@@ -265,6 +251,7 @@ export default {
     components: { AddItem },
     data() {
         return {
+            itemCounterError: false,
             e1: 2,
             now: '',
             loading: false,
@@ -341,12 +328,30 @@ export default {
             var yyyy = today.getFullYear();
             this.now = yyyy + '-' + mm + '-' + dd;
         },
-        clearForm() {
-            this.items = [];
-            this.attachments = [];
-            this.$refs.form.reset();
+        prepareData() {
+            var operation;
+            for(operation in this.operationsSelected) {
+                this.operationsSelected[operation].selected = this.operationsSelected[operation].required;
+            }
+        },
+        clearForm2() {
+            // this.$refs.form2.reset();
             this.$validator.reset();
-            this.itemsLength = 0;
+            this.materialSelected = '';
+            this.width = '';
+            this.height = '';
+            this.depth = '';
+            this.quantity = '';
+            this.note = '';
+            this.operations = [];
+            this.prepareData();
+        },
+        clearForm1() {
+            // this.items = [];
+            this.attachments = [];
+            this.$refs.form2.reset();
+            this.$validator.reset();
+            // this.itemsLength = 0;
             this.dueDate = '';
         },
         fetchMaterials() {
@@ -362,11 +367,62 @@ export default {
                 console.error(response);
             }
         },
-        addItem(item) {
-            item.id = this.items.length;
-            this.items.push(item);
-            this.itemsLength++;
+        addItem() {
+            this.loading = true;
+            this.$validator.validateAll('form2').then(valid => {
+                console.log(valid);
+                if(valid){
+                    // this.materialId = (this.materialsItems.indexOf(this.materialSelected) + 1);
+
+                    //find material in materials with the same name
+                    console.log(this.materialSelected);
+                    var index;
+                    for(index = 0; index < this.materials.length; index++) {
+                        if(this.materials[index].name == this.materialSelected) {
+                            this.material = this.materials[index];
+                        }
+                    }
+
+                    // var i;
+                    // for(i = 0; i < this.operationsSelected.length; i++) {
+                    //     if(this.operationsSelected[i] == true) {
+                    //         this.operations.push({name: this.operationsItems[i], status: this.operationStatusEnum.ZAPLANOWANE});
+                    //     }
+                    // }
+                    var operation;
+                    for(operation in this.operationsSelected) {
+                        if(this.operationsSelected[operation].selected) {
+                            this.operations.push({ name: operation, status: this.operationStatusEnum.ZAPLANOWANE });
+                        }
+                    }
+
+                    const item = {
+                        id: '',
+                        material: this.material,
+                        operations: this.operations,
+                        width: this.width,
+                        height: this.height,
+                        depth: this.depth,
+                        quantity: this.quantity,
+                        status: this.operationStatusItems[1],
+                        note: this.note
+                    }
+
+                    item.id = this.items.length;
+                    this.items.push(item);
+                    this.itemsLength++;
+
+                    console.log(item);
+                    this.loading = false;
+                    this.clearForm2();
+                }
+            })
         },
+        // addItem(item) {
+        //     item.id = this.items.length;
+        //     this.items.push(item);
+        //     this.itemsLength++;
+        // },
         deleteItem(id) {
             for(var i = 0; i < this.items.length; i++) {
                 if(this.items[i].id == id) {
@@ -383,6 +439,14 @@ export default {
                         this.e1 = 2
                     }
                 });
+        },
+        stage2Next() {
+            if(this.itemsLength) {
+                this.e1 = 3
+            } else {
+                this.itemCounterError = true;
+                EventBus.$emit('showSnackbar', "Nie dodano żadnej pozycji.");
+            }
         },
         submit() {
             this.$validator.validate().then(valid => {
@@ -419,6 +483,7 @@ export default {
     created() {
         this.date();
         this.fetchMaterials();
+        this.prepareData();
         EventBus.$on('submit', () => { this.submit(); });
         EventBus.$on('clearForm', () => { this.clearForm(); });
     }
