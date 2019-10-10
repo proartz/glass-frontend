@@ -110,7 +110,7 @@
                     row
                     wrap
                     align-end
-                    mb-6
+                    class="mb-5"
                 >
                     <v-flex md2 mx-3>
                         <v-select
@@ -182,7 +182,7 @@
                             >
                                 <span class="caption grey--text">{{ value }}</span>
                                 <v-checkbox
-                                    v-bind:checked="operationsSelected[propertyName].selected"
+                                    class="ml-2"                                    v-bind:checked="operationsSelected[propertyName].selected"
                                     v-model="operationsSelected[propertyName].selected"
                                     :disabled="operationsSelected[propertyName].required"
                                 >
@@ -192,51 +192,114 @@
                     </v-flex>
                 </v-layout>
             </v-form>
-            <v-btn  mt-4 @click="addItem">Dodaj Pozycję</v-btn>
+            <v-btn @click="addItem">Dodaj Pozycję</v-btn>
             <v-btn @click="clearForm2">Wyczyść</v-btn>
-            <v-list>
-                    <v-subheader class="pa-0">
-                        POZYCJE
-                        <span v-if="itemCounterError" class="red--text caption">Nie dodano żadnej pozycji</span>
-                    </v-subheader>
-                    <v-list-tile v-for="item in items" :key="item.id">
-                        <v-list-tile-action>
-                            <v-btn text icon class="my-2" @click="deleteItem(`${item.id}`)">
-                                <v-icon>delete</v-icon>
-                            </v-btn>
-                        </v-list-tile-action>
-                        <v-list-tile-content>
-                            <v-list-tile-title width="0%">{{ item.material.name }}</v-list-tile-title>
-                        </v-list-tile-content>
-                    </v-list-tile>
-                </v-list>
+            <v-subheader>POZYCJE</v-subheader>
+            <span v-if="itemCounterError" class="red--text caption text-xs-left">BŁĄD: Nie dodano żadnej pozycji</span>
+            <v-layout
+                justify-center
+                row
+                py-1
+                v-for="item in items"
+                :key="item.id"
+            >
+                <v-flex md1>
+                    <v-btn text icon @click="deleteItem(item.id)">
+                        <v-icon>delete</v-icon>
+                    </v-btn>
+                </v-flex>
+                <v-flex md1>
+                    <div class="caption grey--text">Id:</div>
+                    <div>{{ item.id }}</div>
+                </v-flex>
+                <v-flex md1>
+                    <div class="caption grey--text">Materiał:</div>
+                    <div>{{ item.material.name }}</div>
+                </v-flex>
+                <v-flex md1 hidden-sm-and-down>
+                    <div class="caption grey--text">Szerokość:</div>
+                    <div>{{ item.width }}</div>
+                </v-flex>
+                <v-flex md1  hidden-sm-and-down>
+                    <div class="caption grey--text">Wysokość:</div>
+                    <div>{{ item.height }}</div>
+                </v-flex>
+                <v-flex md1  hidden-sm-and-down>
+                    <div class="caption grey--text">Grubość:</div>
+                    <div>{{ item.depth }}</div>
+                </v-flex>
+                <v-flex md1  hidden-sm-and-down>
+                    <div class="caption grey--text">Ilość:</div>
+                    <div>{{ item.quantity }}</div>
+                </v-flex>
+                <v-flex md4>
+                    <ViewOperations v-bind:operations="item.operations"/>
+                </v-flex>
+            </v-layout>
         </v-card>
 
         <v-btn
           color="primary"
           @click="stage2Next"
         >
-          Continue
+          Dalej
         </v-btn>
 
-        <v-btn flat>Cancel</v-btn>
+        <v-btn flat>Anuluj</v-btn>
       </v-stepper-content>
 
       <v-stepper-content step="3">
-        <v-card
-          class="mb-5"
-          color="grey lighten-1"
-          height="200px"
-        ></v-card>
+        <v-card>
+            <v-layout
+                justify-center
+                row
+                py-1
+                v-for="item in items"
+                :key="item.id"
+            >
+                <v-flex md1>
+                    <v-btn text icon @click="deleteItem(item.id)">
+                        <v-icon>delete</v-icon>
+                    </v-btn>
+                </v-flex>
+                <v-flex md1>
+                    <div class="caption grey--text">Id:</div>
+                    <div>{{ item.id }}</div>
+                </v-flex>
+                <v-flex md1>
+                    <div class="caption grey--text">Materiał:</div>
+                    <div>{{ item.material.name }}</div>
+                </v-flex>
+                <v-flex md1 hidden-sm-and-down>
+                    <div class="caption grey--text">Szerokość:</div>
+                    <div>{{ item.width }}</div>
+                </v-flex>
+                <v-flex md1  hidden-sm-and-down>
+                    <div class="caption grey--text">Wysokość:</div>
+                    <div>{{ item.height }}</div>
+                </v-flex>
+                <v-flex md1  hidden-sm-and-down>
+                    <div class="caption grey--text">Grubość:</div>
+                    <div>{{ item.depth }}</div>
+                </v-flex>
+                <v-flex md1  hidden-sm-and-down>
+                    <div class="caption grey--text">Ilość:</div>
+                    <div>{{ item.quantity }}</div>
+                </v-flex>
+                <v-flex md4>
+                    <ViewOperations v-bind:operations="item.operations"/>
+                </v-flex>
+            </v-layout>
+        </v-card>
 
         <v-btn
           color="primary"
-          @click="e1 = 1"
+          @click="finish"
         >
-          Continue
+          Dodaj Zlecenie
         </v-btn>
 
-        <v-btn flat>Cancel</v-btn>
+        <v-btn flat>Anuluj</v-btn>
       </v-stepper-content>
     </v-stepper-items>
   </v-stepper>
@@ -245,14 +308,18 @@
 
 <script>
 import AddItem from '@/components/AddItem';
+import ViewOperations from '@/components/ViewOperations';
 import EventBus from '@/event-bus.js';
 
 export default {
-    components: { AddItem },
+    components: {
+        AddItem,
+        ViewOperations
+    },
     data() {
         return {
             itemCounterError: false,
-            e1: 2,
+            e1: 3,
             now: '',
             loading: false,
             dialog: false,
@@ -445,8 +512,14 @@ export default {
                 this.e1 = 3
             } else {
                 this.itemCounterError = true;
-                EventBus.$emit('showSnackbar', "Nie dodano żadnej pozycji.");
+                setTimeout(() => {
+                    this.itemCounterError = false;
+                }, 5000);
+                EventBus.$emit('showSnackbar', "BŁĄD: Nie dodano żadnej pozycji.");
             }
+        },
+        finish() {
+
         },
         submit() {
             this.$validator.validate().then(valid => {
@@ -494,6 +567,10 @@ export default {
 
 .layout.row {
     text-align: center;
+}
+.v-input--selection-controls__input {
+    margin-right: 0px !important;
+    margin-left: 8px;
 }
 
 </style>
