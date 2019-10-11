@@ -1,133 +1,298 @@
 <template>
-    <v-container>
-        <v-layout>
-            <v-card tile>
-                <v-card-text>
-                    <v-form ref="form">
-                        <v-text-field
-                            v-validate="`required|max:30`"
-                            :counter="30"
-                            :error-messages="errors.collect('customer')"
-                            data-vv-name="customer"
-                            label="Klient"
-                            v-model="order.customer"
-                            @change="isOrderEdited = true"
-                        >
-                        </v-text-field>
-                        <v-text-field
-                            v-validate="`max:30`"
-                            :counter="30"
-                            :error-messages="errors.collect('externalOrderId')"
-                            data-vv-name="externalOrderId"
-                            label="Zewnętrzny Numer Zlecenia"
-                            v-model="order.externalOrderId"
-                            @change="isOrderEdited = true"
-                        >
-                        </v-text-field>
-                        <v-text-field
-                            v-validate="`max:30`"
-                            :counter="30"
-                            :error-messages="errors.collect('invoiceNumber')"
-                            data-vv-name="invoiceNumber"
-                            label="Numer Faktury"
-                            v-model="order.invoiceNumber"
-                            @change="isOrderEdited = true"
-                        >
-                        </v-text-field>
-                        <v-text-field
-                            v-validate="`numeric|max_value:999999999999999999`"
-                            :error-messages="errors.collect('price')"
-                            data-vv-name="price"
-                            label="Cena"
-                            v-model="order.price"
-                            @change="isOrderEdited = true"
-                        >
-                        </v-text-field>
-                        <v-menu>
-                            <v-text-field
-                                v-validate="`required`"
-                                :error-messages="errors.collect('dueDate')"
-                                data-vv-name="dueDate"
-                                label="Termin Realizacji"
-                                :value="order.dueDate"
-                                slot="activator"
-                                @change="isOrderEdited = true">
-                            </v-text-field>
-                            <v-date-picker
-                                v-model="order.dueDate"
-                                :min="now"
+   <v-container fluid fill-height>
+       <v-layout>
+           <v-flex>
+                <v-stepper v-model="e1">
+                    <v-stepper-header>
+                        <v-stepper-step
+                            :complete="e1 > 1"
+                            step="1"
+                            editable
+                        >Podstawowe Informacje</v-stepper-step>
+                        <v-divider></v-divider>
+                        <v-stepper-step
+                            :complete="e1 > 2"
+                            step="2"
+                            editable
+                        >Dodaj Pozycje</v-stepper-step>
+                    </v-stepper-header>
+                    <v-stepper-items>
+                        <v-stepper-content step="1">
+                            <v-card flat class="pb-4">
+                                <v-form ref="form1" data-vv-scope="form1">
+                                    <v-layout
+                                        row
+                                        wrap
+                                        justify-space-around
+                                        align-end
+                                        mb-6
+                                    >
+                                        <v-flex md5>
+                                            <v-text-field 
+                                                label="Id"
+                                                v-model="order.id"
+                                                disabled
+                                            >
+                                            </v-text-field>
+                                        </v-flex>
+                                        <v-flex md5>
+                                            <v-text-field 
+                                                v-validate="`required|max:30`"
+                                                :counter="30"
+                                                :error-messages="errors.collect('form1.customer')"
+                                                data-vv-name="customer"
+                                                @change="isOrderEdited = true"
+                                                label="Klient"
+                                                v-model="order.customer"
+                                            >
+                                            </v-text-field>
+                                        </v-flex>
+                                        <v-flex md5>
+                                            <v-text-field
+                                                v-validate="`max:30`"
+                                                :counter="30"
+                                                :error-messages="errors.collect('form1.externalOrderId')"
+                                                data-vv-name="externalOrderId"
+                                                @change="isOrderEdited = true"
+                                                label="Zewnętrzny Numer Zlecenia"
+                                                v-model="order.externalOrderId">
+                                            </v-text-field>
+                                        </v-flex>
+                                        <v-flex md5>
+                                            <v-text-field
+                                                v-validate="`max:30`"
+                                                :counter="30"
+                                                :error-messages="errors.collect('form1.invoiceNumber')"
+                                                data-vv-name="invoiceNumber"
+                                                @change="isOrderEdited = true"
+                                                label="Numer Faktury"
+                                                v-model="order.invoiceNumber">
+                                            </v-text-field>
+                                        </v-flex>
+                                        <v-flex md5>
+                                            <v-text-field
+                                                v-validate="`numeric|max_value:999999999999999999`"
+                                                :error-messages="errors.collect('form1.price')"
+                                                data-vv-name="price"
+                                                @change="isOrderEdited = true"
+                                                label="Cena"
+                                                v-model="order.price">
+                                            </v-text-field>
+                                        </v-flex>
+                                        <v-flex md5>
+                                            <v-textarea
+                                                v-validate="`max:100`"
+                                                counter="100"
+                                                :error-messages="errors.collect('form1.description')"
+                                                data-vv-name="description"
+                                                @change="isOrderEdited = true"
+                                                label="Opis"
+                                                v-model="order.description">
+                                            </v-textarea>
+                                        </v-flex>
+                                        <v-flex md5 class="text-xs-left">
+                                            <v-menu>
+                                                <v-text-field
+                                                    v-validate="`required`"
+                                                    :error-messages="errors.collect('form1.dueDate')"
+                                                    data-vv-name="dueDate"
+                                                    label="Termin Realizacji"
+                                                    @change="isOrderEdited = true"
+                                                    :value="order.dueDate"
+                                                    slot="activator">
+                                                </v-text-field>
+                                                <v-date-picker v-model="order.dueDate"
+                                                                :min="now">
+                                                </v-date-picker>
+                                            </v-menu>
+                                        </v-flex>
+                                        <v-flex md5 py-3 class="text-xs-left">
+                                            <v-chip :class="`${order.status} white--text caption`">{{ order.status }}</v-chip>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-form>
+                            </v-card>
+                            <v-btn
+                            color="primary"
+                            @click="stage1Next"
                             >
-                            </v-date-picker>
-                        </v-menu>
-                        <v-text-field
-                            v-validate="`max:100`"
-                            counter="100"
-                            :error-messages="errors.collect('description')"
-                            data-vv-name="description"
-                            label="Opis"
-                            v-model="order.description"
-                            @change="isOrderEdited = true"
-                        >
-                        </v-text-field>
-                        <v-chip :class="`${order.status} white--text caption my-2`">{{ order.status }}</v-chip>
-                        <v-spacer></v-spacer>
-                    </v-form>
-                    <v-divider></v-divider>
-                    <v-subheader class="pa-0">POZYCJE
-                    <AddItem v-if="order.status != orderStatusEnum.ROZLICZONE" @addItem='addItem' v-bind:materialsItems="materialsItems" v-bind:materials="materials" v-bind:operationStatusItems="operationStatusItems"/>
-                    </v-subheader>
-                    <v-dialog  v-if="itemToDelete" v-model="deleteDialog" width="500">
-                        <v-card>
-                            <v-card-title class="headline grey lighten-2" primary-title>
-                                Usuń Pozycję
-                            </v-card-title>
-                            <v-card-text>
-                                Czy na pewno chcesz usunąć pozycję {{ itemToDelete.material.name }} ?
-                            </v-card-text>
-                            <v-divider></v-divider>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn flat @click="deleteItem(itemToDelete)">
-                                    ok
-                                </v-btn>
-                                <v-btn flat @click="deleteDialog = false">
-                                    anuluj
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>rE
-                    </v-dialog>
-                        <v-layout row wrap v-for="item in order.items" :key="item.id" :class="`py-0 item ${item.status}`">
-                            <v-flex>
-                                <v-btn v-if="isReadyForDelete(item)" icon @click.stop="openDeleteDialog(item)">
-                                    <v-icon>delete</v-icon>
-                                </v-btn>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Materiał</div>
-                                <div>{{ item.material.name }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Szerokość</div>
-                                <div>{{ item.width }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Wysokość</div>
-                                <div>{{ item.height }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Grubość</div>
-                                <div>{{ item.depth }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Ilość</div>
-                                <div>{{ item.quantity }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <ViewOperations @refresh='refresh' v-bind:operations="item.operations"/>
-                            </v-flex>
-                        </v-layout>
-                </v-card-text>
-            </v-card>
+                                Dalej
+                            </v-btn>
+
+                        </v-stepper-content>
+
+                        <v-stepper-content step="2">
+                            <v-card>
+                                <v-subheader>NOWA POZYCJA</v-subheader>
+                                <v-form ref="form2" data-vv-scope="form2">
+                                    <v-layout
+                                        row
+                                        wrap
+                                        align-end
+                                        class="mb-5"
+                                    >
+                                        <v-flex md2 mx-3>
+                                            <v-select
+                                                v-validate="`required`"
+                                                :error-messages="errors.collect('form2.Material')"
+                                                data-vv-name="Material"
+                                                v-model="materialSelected"
+                                                :items="materialsItems"
+                                                label="Materiał">
+                                            </v-select>
+                                        </v-flex>
+                                        <v-flex md2 mx-3>
+                                            <v-text-field
+                                                v-validate="`required|numeric|min_value:1`"
+                                                :error-messages="errors.collect('form2.Width')"
+                                                data-vv-name="Width"
+                                                label="Szerokość"
+                                                v-model="item.width">
+                                            </v-text-field>
+                                        </v-flex>
+                                        <v-flex md2 mx-3>
+                                            <v-text-field
+                                                v-validate="`required|numeric|min_value:1`"
+                                                :error-messages="errors.collect('form2.Height')"
+                                                data-vv-name="Height"
+                                                label="Wysokość"
+                                                v-model="item.height">
+                                            </v-text-field>
+                                        </v-flex>
+                                        <v-flex md2 mx-3>
+                                            <v-text-field
+                                                v-validate="`required|numeric|min_value:1`"
+                                                :error-messages="errors.collect('form2.Depth')"
+                                                data-vv-name="Depth"
+                                                label="Grubość" v-model="item.depth">
+                                            </v-text-field>
+                                        </v-flex>
+                                        <v-flex md2 mx-3>
+                                            <v-text-field
+                                                v-validate="`required|numeric|min_value:1`"
+                                                :error-messages="errors.collect('form2.Quantity')"
+                                                data-vv-name="Quantity"
+                                                label="Ilość"
+                                                v-model="item.quantity">
+                                            </v-text-field>
+                                        </v-flex>
+                                        <v-flex md6 mx-3>            
+                                            <v-textarea
+                                                v-validate="`max:100`"
+                                                counter="100"
+                                                :error-messages="errors.collect('form2.Note')"
+                                                data-vv-name="Note"
+                                                label="Uwagi"
+                                                v-model="item.note">
+                                            </v-textarea>
+                                        </v-flex>
+                                        <v-spacer></v-spacer>
+                                        <v-flex mx-3>
+                                            <v-layout
+                                                row
+                                                justify-center
+                                            >
+                                                <v-flex
+                                                    text-xs-center
+                                                    shrink
+                                                    mx-2
+                                                    v-for="(value, propertyName) in operationAbbreviationsEnum"
+                                                    :key="propertyName"
+                                                >
+                                                    <span class="caption grey--text">{{ value }}</span>
+                                                    <v-checkbox
+                                                        class="ml-2"                                    v-bind:checked="operationsSelected[propertyName].selected"
+                                                        v-model="operationsSelected[propertyName].selected"
+                                                        :disabled="operationsSelected[propertyName].required"
+                                                    >
+                                                    </v-checkbox>
+                                                </v-flex>
+                                            </v-layout>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-form>
+                                <v-btn
+                                    @click="addItem"
+                                    :disabled="order.status == orderStatusEnum.ROZLICZONE"
+                                >Dodaj Pozycję</v-btn>
+                                <v-btn @click="clearForm2">Wyczyść</v-btn>
+                                <v-subheader>POZYCJE</v-subheader>
+                                <span v-if="itemCounterError" class="red--text caption text-xs-left">BŁĄD: Nie dodano żadnej pozycji</span>
+                                <v-layout
+                                    justify-center
+                                    row
+                                    py-1
+                                    v-for="item in filteredItems"
+                                    :key="item.id"
+                                >
+                                    <v-flex md1>
+                                        <v-btn v-if="isReadyForDelete(item)" icon @click.stop="openDeleteDialog(item)">
+                                            <v-icon>delete</v-icon>
+                                        </v-btn>
+                                    </v-flex>
+                                    <v-flex md1>
+                                        <div class="caption grey--text">Id:</div>
+                                        <div>{{ item.id }}</div>
+                                    </v-flex>
+                                    <v-flex md1>
+                                        <div class="caption grey--text">Materiał:</div>
+                                        <div>{{ item.material.name }}</div>
+                                    </v-flex>
+                                    <v-flex md1 hidden-sm-and-down>
+                                        <div class="caption grey--text">Szerokość:</div>
+                                        <div>{{ item.width }}</div>
+                                    </v-flex>
+                                    <v-flex md1  hidden-sm-and-down>
+                                        <div class="caption grey--text">Wysokość:</div>
+                                        <div>{{ item.height }}</div>
+                                    </v-flex>
+                                    <v-flex md1  hidden-sm-and-down>
+                                        <div class="caption grey--text">Grubość:</div>
+                                        <div>{{ item.depth }}</div>
+                                    </v-flex>
+                                    <v-flex md1  hidden-sm-and-down>
+                                        <div class="caption grey--text">Ilość:</div>
+                                        <div>{{ item.quantity }}</div>
+                                    </v-flex>
+                                    <v-flex md4>
+                                        <ViewOperations  @updateOperations="updateOrderStatus(item, ...arguments)" v-bind:operations="item.operations"/>
+                                    </v-flex>
+                                </v-layout>
+                            </v-card>
+
+                            <v-btn
+                                color="primary"
+                                @click="finish"
+                                :disabled="!isOrderEdited"
+                            >
+                            Zapisz Zlecenie
+                            </v-btn>
+
+                            <v-btn flat>Anuluj</v-btn>
+                            <v-dialog  v-if="itemToDelete" v-model="deleteDialog" width="500">
+                                <v-card>
+                                    <v-card-title class="headline grey lighten-2" primary-title>
+                                        Usuń Pozycję
+                                    </v-card-title>
+                                    <v-card-text>
+                                        Czy na pewno chcesz usunąć pozycję {{ itemToDelete.material.name }} ?
+                                    </v-card-text>
+                                    <v-divider></v-divider>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn flat @click="deleteItem(itemToDelete.id)">
+                                            ok
+                                        </v-btn>
+                                        <v-btn flat @click="deleteDialog = false">
+                                            anuluj
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                        </v-stepper-content>
+                    </v-stepper-items>
+                </v-stepper>
+            </v-flex>
         </v-layout>
     </v-container>
 </template>
@@ -139,19 +304,16 @@ import EventBus from '@/event-bus.js';
 
 export default {
     components: {
-      AddItem,
       ViewOperations
     },
     props: [
         'id',
-        'materialsItems',
-        'materials',
-        'orderId',
-        'operationStatusItems'
      ],
     data() {
         return {
+            e1: 0,
             isOrderEdited: false,
+            itemCounterError: false,
             now: '',
             dialog: false,
             panel: [],
@@ -176,7 +338,59 @@ export default {
             stageOneOperations: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC'],
             stageTwoOperations: ['Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
 
-            order: {}
+            materials: [],
+            materialsItems: [],
+            operationStatusItems: ['NIEROBIONE', 'ZAPLANOWANE', 'GOTOWE_DO_REALIZACJI' , 'ZROBIONE'],
+
+            materialSelected: '',
+            operationAbbreviationsEnum: {
+                Cięcie: 'C',
+                Szlifowanie: 'SZ',
+                Wiercenie: 'WI',
+                CNC: 'CNC',
+                Hartowanie: 'H',
+                Emaliowanie: 'E',
+                Laminowanie: 'L',
+                Wydanie: 'WY'
+            },
+            operationsSelected: {
+                Cięcie:         {selected: true, required: true},
+                Szlifowanie:    {selected: false, required: false},
+                Wiercenie:      {selected: false, required: false},
+                CNC:            {selected: false, required: false},
+                Hartowanie:     {selected: false, required: false},
+                Emaliowanie:    {selected: false, required: false},
+                Laminowanie:    {selected: false, required: false},
+                Wydanie:        {selected: true, required: true},
+            },
+            itemStatusEnum: {
+                NOWA: 'NOWA',
+                USUNIĘTA: 'USUNIĘTA'
+            },
+
+            order: {
+                items: [],
+                attachments: [],
+                externalOrderId: '',
+                customer: '',
+                invoiceNumber: '',
+                price: '',
+                dueDate: '',
+                description: '',
+                createDate: '',
+                status: ''
+            },
+
+            item: {
+                material: '',
+                operations: [],
+                width: '',
+                height: '',
+                depth: '',
+                quantity: '',
+                status: '',
+                note: ''
+            }
         }
     },
     methods: {
@@ -197,13 +411,49 @@ export default {
                 console.log(response.body);
             });
         },
-        isReadyForDelete(item) {
-            // item can be deleted if it have id(it is not a new item, that haven't been added to the database)
-            // and operation Cięcie is in status GOTOWE_DO_REALIZACJI
-            if(item.id && item.operations[0].status == this.operationStatusEnum.GOTOWE_DO_REALIZACJI) {
-                return true;
+        fetchMaterials() {
+            this.loading = true;
+            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/materials').then(response => {
+                this.materials = response.body;
+                this.materialsItems = [];
+                this.materials.forEach((material) => {
+                    this.materialsItems.push(material.name);
+                })
+                this.loading = false;
+            }), response => {
+                console.error(response);
             }
-            return false;
+        },
+        updateOperations(item, operations) {
+            item.operations = operations;
+            console.log("item=" + item);
+            console.log("operations=" + operations);
+        },
+        updateOrderStatus(item, newOrder) {
+            this.order.status = newOrder.status;
+            var i;
+            for(i = 0; i < newOrder.items.length; i++) {
+                if(newOrder.items[i].id == item.id) {
+                    item.operations = newOrder.items[i].operations;
+                }
+            }
+        },
+        prepareData() {
+            var operation;
+            for(operation in this.operationsSelected) {
+                this.operationsSelected[operation].selected = this.operationsSelected[operation].required;
+            }
+        },
+        clearForm2() {
+            this.$validator.reset();
+            this.materialSelected = '';
+            this.item.width = '';
+            this.item.height = '';
+            this.item.depth = '';
+            this.item.quantity = '';
+            this.item.note = '';
+            this.item.operations = [];
+            this.prepareData();
         },
         date() {
             var today = new Date();
@@ -213,37 +463,73 @@ export default {
             var yyyy = today.getFullYear();
             this.now = yyyy + '-' + mm + '-' + dd;
         },
-        addItem(item) {
-            this.order.items.push(item);
+        addItem() {
+            this.loading = true;
+            this.$validator.validateAll('form2').then(valid => {
+                console.log(valid);
+                if(valid){
+
+                    //find material in materials with the same name
+                    console.log(this.materialSelected);
+                    var index;
+                    for(index = 0; index < this.materials.length; index++) {
+                        if(this.materials[index].name == this.materialSelected) {
+                            this.item.material = this.materials[index];
+                        }
+                    }
+
+                    // add operations to the item
+                    var operation;
+                    for(operation in this.operationsSelected) {
+                        if(this.operationsSelected[operation].selected) {
+                            this.item.operations.push({ name: operation, status: this.operationStatusEnum.ZAPLANOWANE });
+                        }
+                    }
+
+                    const item = {
+                        id: '',
+                        material: this.item.material,
+                        operations: this.item.operations,
+                        width: this.item.width,
+                        height: this.item.height,
+                        depth: this.item.depth,
+                        quantity: this.item.quantity,
+                        status: this.itemStatusEnum.NOWA,
+                        note: this.item.note
+                    }
+
+                    // item.id = this.order.items.length;
+                    this.order.items.push(item);
+                    this.isOrderEdited = true;
+
+                    console.log(item);
+                    this.loading = false;
+                    this.clearForm2();
+                }
+            })
         },
         openDeleteDialog(item) {
             this.itemToDelete = item;
             this.deleteDialog = true;
         },
-        deleteItem(item) {
-            console.log(item);
-
-            this.loading = true;
-
-            const deleteItemDto = {
-                id: item.id
+        isReadyForDelete(item) {
+            // item can be deleted if it have id(it is not a new item, that haven't been added to the database)
+            // and operation Cięcie is in status GOTOWE_DO_REALIZACJI
+            if(item.id && item.operations[0].status == this.operationStatusEnum.GOTOWE_DO_REALIZACJI) {
+                return true;
             }
-
-          console.log(item.id);
-
-          this.$http.delete('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/item', {body: deleteItemDto}).then(response => {
-              this.showSnackbar("Pozycja " + item.material.name + " została usunięta.");
-              // remove the item from the order in viewOrder
-            //   this.order.items.splice(this.items.indexOf(item), 1);
-              console.log(response.status);
-              this.refresh();
-              this.$emit('refresh');
-              this.itemToDelete = '';
-              this.deleteDialog = false;
-              this.loading = false;
-          }, response => {
-              console.log(response);
-          });
+            return false;
+        },
+        deleteItem(id) {
+            for(var i = 0; i < this.order.items.length; i++) {
+                if(this.order.items[i].id == id) {
+                    // this.order.items.splice(i, 1);
+                    this.order.items[i].status = this.itemStatusEnum.USUNIĘTA;
+                }
+            }
+            this.isOrderEdited = true;
+            this.itemToDelete = '';
+            this.deleteDialog = false;
         },
         changeStatus(operation, newStatus) {
           this.loading = true;
@@ -264,36 +550,63 @@ export default {
               console.log(response);
           });
         },
+        stage1Next() {
+            this.$validator.validateAll('form1')
+                .then(valid => {
+                    console.log(valid);
+                    if(valid) {
+                        this.e1 = 2
+                    }
+                });
+        },
+        stage1Save() {
+            this.$validator.validateAll('form1')
+                .then(valid => {
+                    if(valid) {
+                        this.submit();
+                    }
+                });
+        },
+        finish() {
+            if(this.filteredItems.length) {
+                this.submit();
+            } else {
+                this.itemCounterError = true;
+                setTimeout(() => {
+                    this.itemCounterError = false;
+                }, 5000);
+                EventBus.$emit('showSnackbar', "BŁĄD: Nie dodano żadnej pozycji.");
+            }
+        },
         submit() {
-            console.log("submit");
-            this.$validator.validate().then(valid => {
-                if(valid){
-                    this.loading = true;
+            this.loading = true;
+            EventBus.$emit('enableLoading');
 
-                    const order = {
-                        id: this.id,
-                        items: this.order.items,
-                        attachments: [],
-                        externalOrderId: this.order.externalOrderId,
-                        customer: this.order.customer,
-                        invoiceNumber: this.order.invoiceNumber,
-                        price: this.order.price,
-                        dueDate: this.order.dueDate,
-                        status: this.order.status
-                    };
+            const order = {
+                id: this.order.id,
+                items: this.order.items,
+                attachments: [],
+                externalOrderId: this.order.externalOrderId,
+                customer: this.order.customer,
+                invoiceNumber: this.order.invoiceNumber,
+                price: this.order.price,
+                dueDate: this.order.dueDate,
+                description: this.order.description,
+                status: this.order.status
+            };
 
-                    console.log(order);
+            console.log(order);
 
-                    this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/updateOrder', order,
-                    {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
-                        this.order = response.body;
-                        console.log(response.body);
-                        this.loading = false;
-                        this.isOrderEdited = false;
-                    }, response => {
-                        console.log(response);
-                    });
-                }
+            this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/updateOrder', order,
+            {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
+                this.loading = false;
+                this.order = response.body;
+                EventBus.$emit('disableLoading');
+                EventBus.$emit('showSnackbar', "Zaktualizowano zlecenie. Id = " + this.id)
+                this.isOrderEdited = false;
+                // this.clearForm();
+            }, response => {
+                console.log(response);
             });
         },
         showSnackbar(message) {
@@ -303,8 +616,11 @@ export default {
     created() {
         this.date();
         this.loadOrder(this.id);
-        EventBus.$on('submit', () => { this.submit() });
-        EventBus.$on('refreshOperations', () => { this.refresh() });
+        this.fetchMaterials();
+        this.prepareData();
+        EventBus.$on('submit', () => { this.submit(); });
+        EventBus.$on('clearForm', () => { this.clearForm(); });
+        // EventBus.$on('refreshOperations', (operations) => { this.refreshOperations(operations); });
     },
     watch: {
         isOrderEdited: function() {
@@ -314,6 +630,11 @@ export default {
             else {
                 EventBus.$emit('disableSave');
             }
+        }
+    },
+    computed: {
+        filteredItems() {
+            return this.order.items.filter((item) => { return item.status != 'USUNIĘTA'; });
         }
     }
 }

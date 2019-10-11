@@ -61,7 +61,6 @@ export default {
     },
     methods: {
         createFilteredOperations() {
-            var i = 0;
             var operation;
             for(operation in this.operationsEnum) {
                 this.filteredOperations.push({
@@ -121,6 +120,7 @@ export default {
                 this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
                 {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                     EventBus.$emit('refreshOperations');
+                    this.$emit('updateOperations', response.body);
                     this.loading = false;
                 }, response => {
                     console.log(response);

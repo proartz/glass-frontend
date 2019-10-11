@@ -461,7 +461,7 @@ export default {
                 const id = response.body;
                 this.loading = false;
                 EventBus.$emit('disableLoading');
-                EventBus.$emit('showSnackbar', "Dodano nowe zlecenie")
+                EventBus.$emit('showSnackbar', "Dodano nowe zlecenie. Id = " + id)
                 this.$router.push({ name: 'Zlecenie', params: {id: id }});
                 // this.clearForm();
             }, response => {
