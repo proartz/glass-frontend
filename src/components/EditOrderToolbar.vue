@@ -1,12 +1,5 @@
 <template>
     <v-toolbar-items>
-        <v-btn
-            dark
-            flat
-            @click="submit"
-            :loading="loading"
-            :disabled="!isOrderEdited"
-        >Zapisz</v-btn>
     </v-toolbar-items>
 </template>
 

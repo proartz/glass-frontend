@@ -103,10 +103,11 @@ export default {
             loading: false,
             searchText: '',
             items: [
+                { title: 'Id', value: 'id'},
                 { title: 'Zewnętrzny Numer Zlecenia', value: 'externalOrderId'},
                 { title: 'Klient', value: 'customer'},
-                { title: 'Numer Faktury', value: 'invoiceNumber'},
-                { title: 'Cena', value: 'price'},
+                // { title: 'Numer Faktury', value: 'invoiceNumber'},
+                // { title: 'Cena', value: 'price'},
                 { title: 'Termin Realizacji', value: 'dueDate'},
                 { title: 'Data Przyjęcia', value: 'createDate'},
                 { title: 'Status', value: 'status'}
@@ -119,6 +120,10 @@ export default {
             EventBus.$emit('refreshOrders');
         },
         searchTextInput(input) {
+            if(input == null) {
+                this.searchText = '';
+                input = '';
+            }
             EventBus.$emit('searchTextInput', input);
         },
         sortOrders(prop) {

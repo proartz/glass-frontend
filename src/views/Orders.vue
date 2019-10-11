@@ -166,12 +166,13 @@ export default {
             this.orders.sort((a, b) => a[prop] < b[prop] ? -1: 1)
         },
         includes(order) {
-            return order.customer.toLowerCase().includes(this.searchText) ||
+            return  order.id.toString().includes(this.searchText) ||
+                    order.customer.toLowerCase().includes(this.searchText) ||
                     order.externalOrderId.toLowerCase().includes(this.searchText) ||
                     order.invoiceNumber.toLowerCase().includes(this.searchText) ||
                     order.externalOrderId.toLowerCase().includes(this.searchText) ||
-                    order.externalOrderId.toLowerCase().includes(this.searchText) ||
-                    order.externalOrderId.toLowerCase().includes(this.searchText);
+                    order.dueDate.includes(this.searchText) ||
+                    order.status.toLowerCase().includes(this.searchText);
         },
         showSnackbar(message) {
             EventBus.$emit('showSnackbar', message);

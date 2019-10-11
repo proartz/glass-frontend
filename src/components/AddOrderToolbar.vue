@@ -1,20 +1,5 @@
 <template>
     <v-toolbar-items>
-        <v-btn
-            @click="submit"
-            :loading="loading"
-            dark
-            flat
-        >
-        Dodaj Zlecenie
-        </v-btn>
-        <v-btn
-            @click="clearForm"
-            dark
-            flat
-        >
-        Wyczyść
-        </v-btn>
     </v-toolbar-items>
 </template>
 

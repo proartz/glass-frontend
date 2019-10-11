@@ -316,8 +316,6 @@ export default {
             itemCounterError: false,
             now: '',
             dialog: false,
-            panel: [],
-            items: [],
             loading: false,
             deleteDialog: false,
             itemToDelete: '',
@@ -335,14 +333,10 @@ export default {
                 ZROBIONE: 'ZROBIONE'
             },
 
-            stageOneOperations: ['Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC'],
-            stageTwoOperations: ['Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie'],
-
             materials: [],
             materialsItems: [],
-            operationStatusItems: ['NIEROBIONE', 'ZAPLANOWANE', 'GOTOWE_DO_REALIZACJI' , 'ZROBIONE'],
-
             materialSelected: '',
+            
             operationAbbreviationsEnum: {
                 Cięcie: 'C',
                 Szlifowanie: 'SZ',
@@ -424,17 +418,13 @@ export default {
                 console.error(response);
             }
         },
-        updateOperations(item, operations) {
-            item.operations = operations;
-            console.log("item=" + item);
-            console.log("operations=" + operations);
-        },
         updateOrderStatus(item, newOrder) {
             this.order.status = newOrder.status;
             var i;
             for(i = 0; i < newOrder.items.length; i++) {
                 if(newOrder.items[i].id == item.id) {
                     item.operations = newOrder.items[i].operations;
+                    break;
                 }
             }
         },
