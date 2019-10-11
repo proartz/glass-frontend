@@ -1,79 +1,85 @@
 <template>
-    <div>
-        <!-- <v-layout row justify-start class="mb-3">
-            <v-flex>
-                <v-btn icon @click="refresh" :loading="loading">
-                    <v-icon>refresh</v-icon>
-                </v-btn>
-            </v-flex>
-            <v-btn icon @click="groupStatusChange">
-                <v-icon>done</v-icon>
-            </v-btn>
-            <v-flex>
-                <v-select :items="operationsItems" v-model="operationsFilter" label="Filtruj gotowe do:"></v-select>
-            </v-flex>
-        </v-layout> -->
-        <v-container fluid>
-            <v-expansion-panel v-model="panel" expand>
-                <v-expansion-panel-content expand v-for="order in filteredOrders" :key="order.id">
-                    <template v-slot:header class="pa-0 ma-0">
-                        <v-layout row wrap :class="`pa-0 ma-0 order ${order.status}`">
-                             <v-flex>
-                                <v-checkbox v-model="groupOrders[orders.indexOf(order)]" @change="selectAllItems(orders.indexOf(order))">
-                                </v-checkbox>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Zewnętrzny Numer Zlecenia</div>
-                                <div class="slim">{{ order.externalOrderId }}</div>
-                            </v-flex>
-                            <v-flex>
-                               <ViewOrder @refresh='refresh' v-bind:materialsItems="materialsItems" v-bind:materials="materials" v-bind:orderId="order.id"
-                                          v-bind:orderStatusItems="orderStatusItems" v-bind:operationStatusItems="operationStatusItems"/>
-                            </v-flex>
-                        </v-layout>
-                    </template>
-                    <v-divider></v-divider>
-                    <v-container class="py-1 pl-5">
-                        <v-layout row wrap v-for="item in getFilteredItems(order.items)" :key="item.id" :class="`pa-3 item ${item.status}`">
-                            <v-flex>
-                                <v-checkbox ref="items"
-                                            :id="`${item.id}`"
-                                            v-model="groupItems[orders.indexOf(order)][order.items.indexOf(item)]">
-                                </v-checkbox>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Id</div>
-                                <div>{{ item.id }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Materiał:</div>
-                                <div>{{ item.material.name }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Szerokość:</div>
-                                <div>{{ item.width }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Wysokość:</div>
-                                <div>{{ item.height }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Grubość:</div>
-                                <div>{{ item.depth }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <div class="caption grey--text">Ilość:</div>
-                                <div>{{ item.quantity }}</div>
-                            </v-flex>
-                            <v-flex>
-                                <ViewOperations @refresh='refresh' v-bind:operations="item.operations"/>
-                            </v-flex>
-                        </v-layout>
-                    </v-container>
-                </v-expansion-panel-content>
-            </v-expansion-panel>
-        </v-container>
-    </div>
+    <v-container fluid>
+        <template v-for="order in filteredOrders">
+            <v-card
+                :key="'order' + order.id"
+            >
+                <v-layout
+                    row
+                    wrap
+                    justify-start
+                    :class="`pa-1 ma-0 order ${order.status}`">
+                    <v-flex shrink mr-2>
+                        <v-btn
+                            small
+                            icon
+                            height="24"
+                            @click="selectAllItems(orders.indexOf(order))"
+                        >
+                            <v-icon>select_all</v-icon>
+                        </v-btn>
+                    </v-flex>
+                    <v-flex shrink mr-4 class="text-xs-left">
+                        <div class="caption grey--text text-xs-left">Id</div>
+                        <div class="slim">{{ order.id }}</div>
+                    </v-flex>
+                    <v-flex shrink mr-4>
+                        <div class="caption grey--text">Zewnętrzny Numer Zlecenia</div>
+                        <div class="slim">{{ order.externalOrderId }}</div>
+                    </v-flex>
+                </v-layout>
+            </v-card>
+            <template v-for="item in getFilteredItems(order.items)">
+                <v-card
+                    :key="item.id"
+                >
+                    <v-layout
+                        row
+                        wrap
+                        align-center
+                        :key="item.id"
+                        :class="`pa-1 pl-4 ma-0 item ${item.status}`"
+                    >
+                        <v-flex shrink ml-3 mr-2>
+                            <v-checkbox
+                                ref="items"
+                                :id="`${item.id}`"
+                                v-model="groupItems[orders.indexOf(order)][order.items.indexOf(item)]"
+                            >
+                            </v-checkbox>
+                        </v-flex>
+                        <v-flex>
+                            <div class="caption grey--text">Id</div>
+                            <div>{{ item.id }}</div>
+                        </v-flex>
+                        <v-flex>
+                            <div class="caption grey--text">Materiał:</div>
+                            <div>{{ item.material.name }}</div>
+                        </v-flex>
+                        <v-flex>
+                            <div class="caption grey--text">Szerokość:</div>
+                            <div>{{ item.width }}</div>
+                        </v-flex>
+                        <v-flex>
+                            <div class="caption grey--text">Wysokość:</div>
+                            <div>{{ item.height }}</div>
+                        </v-flex>
+                        <v-flex>
+                            <div class="caption grey--text">Grubość:</div>
+                            <div>{{ item.depth }}</div>
+                        </v-flex>
+                        <v-flex>
+                            <div class="caption grey--text">Ilość:</div>
+                            <div>{{ item.quantity }}</div>
+                        </v-flex>
+                        <v-flex>
+                            <ViewOperations @refresh='refresh' v-bind:operations="item.operations"/>
+                        </v-flex>
+                    </v-layout>
+                </v-card>
+            </template>
+        </template>
+    </v-container>
 </template>
 
 <script>
@@ -174,10 +180,14 @@ export default {
             }
         },
         selectAllItems(orderId) {
+            console.log(orderId);
             var i;
             for(i = 0; i < this.groupItems[orderId].length; i++) {
+                console.log(this.groupItems[orderId][i]);
                 this.groupItems[orderId][i] = !this.groupItems[orderId][i];
+                console.log(this.groupItems[orderId][i]);
             }
+            console.log(this.groupItems);
         },
         getFilteredItems(items) {
             if(this.operationsFilter != this.operationsEnum.ROZLICZENIE) {
@@ -315,14 +325,25 @@ export default {
     },
     created() {
         this.loadData();
-        EventBus.$on('refreshPositions', () => { this.refresh() });
-        EventBus.$on('operationsFilterInput', (input) => { this.operationsFilter = input });
-        EventBus.$on('groupStatusChange', () => { this.groupStatusChange() });
+        EventBus.$on('refreshPositions', () => { this.refresh(); });
+        EventBus.$on('operationsFilterInput', (input) => { this.operationsFilter = input; });
+        EventBus.$on('groupStatusChange', () => { this.groupStatusChange(); });
+        EventBus.$on('refreshOperations', () => { this.refresh(); })
     },
 }
 </script>
 
 <style scoped>
+
+/* .v-input--selection-controls{
+    margin: 0px !important;
+    padding: 0;
+}
+
+.v-input__slot {
+    margin: 0;
+} */
+
 .v-expansion-panel__header{
     padding: 0px 0px;
 

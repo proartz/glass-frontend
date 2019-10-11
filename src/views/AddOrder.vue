@@ -175,7 +175,8 @@
                                                 >
                                                     <span class="caption grey--text">{{ value }}</span>
                                                     <v-checkbox
-                                                        class="ml-2"                                    v-bind:checked="operationsSelected[propertyName].selected"
+                                                        class="ml-2"
+                                                        v-bind:checked="operationsSelected[propertyName].selected"
                                                         v-model="operationsSelected[propertyName].selected"
                                                         :disabled="operationsSelected[propertyName].required"
                                                     >
@@ -294,6 +295,11 @@ export default {
                 GOTOWE_DO_REALIZACJI: 'GOTOWE_DO_REALIZACJI',
                 ZROBIONE: 'ZROBIONE'
             },
+            itemStatusEnum: {
+                NOWA: 'NOWA',
+                USUNIĘTA: 'USUNIĘTA'
+            },
+
 
             order: {
                 items: [],
@@ -397,7 +403,7 @@ export default {
                         height: this.item.height,
                         depth: this.item.depth,
                         quantity: this.item.quantity,
-                        status: this.operationStatusEnum.ZAPLANOWANE,
+                        status: this.itemStatusEnum.NOWA,
                         note: this.item.note
                     }
 
