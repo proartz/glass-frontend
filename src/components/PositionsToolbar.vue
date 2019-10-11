@@ -1,25 +1,46 @@
 <template>
-    <v-layout row>
-            <v-flex shrink>
-                <v-btn icon @click="refreshPositions" :loading="loading">
-                    <v-icon>refresh</v-icon>
-                </v-btn>
-            </v-flex>
-            <v-flex shrink>
-                <v-btn icon @click="groupStatusChange">
+    <v-toolbar-items>
+        <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+                <v-btn
+                    icon @click="groupStatusChange"
+                    v-on="on"
+                >
                     <v-icon>done</v-icon>
                 </v-btn>
-            </v-flex>
-            <v-flex shrink>
+            </template>
+            <span>Grupowa Zmiana Statusu</span>
+        </v-tooltip>
+        <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
                 <v-select
                     :items="operationsItems"
+                    dense
                     v-model="operationsFilter"
+                    hint="Filtruj po"
                     @input="operationsFilterInput(operationsFilter)"
-                    label="Filtruj gotowe do:"
+                    v-on="on"
+                    label="Filtruj Po"
+                    solo
                 >
                 </v-select>
-            </v-flex>
-        </v-layout>
+            </template>
+            <span>Filtruj po...</span>
+        </v-tooltip>
+        <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+                <v-btn
+                    icon
+                    @click="refreshPositions"
+                    :loading="loading"
+                    v-on="on"
+                >
+                    <v-icon>refresh</v-icon>
+                </v-btn>
+            </template>
+            <span>Odśwież</span>
+        </v-tooltip>
+    </v-toolbar-items>
 </template>
 
 <script>
@@ -39,7 +60,7 @@ export default {
                 { title: 'Data Przyjęcia', value: 'createDate'},
                 { title: 'Status', value: 'status'}
             ],
-            operationsFilter: 'Wszystkie',
+            operationsFilter: '',
             operationsItems: ['Wszystkie', 'Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC', 'Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie', 'Rozliczenie'],
         }
     },
@@ -60,3 +81,11 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+
+.v-input {
+    align-items: center !important;
+}
+
+</style>

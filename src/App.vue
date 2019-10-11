@@ -6,7 +6,6 @@
         <v-layout>
           <v-flex text-xs-center>
             <router-view></router-view>
-             <!-- <router-view name="navigation"></router-view> -->
           </v-flex>
         </v-layout>
       </v-container>
