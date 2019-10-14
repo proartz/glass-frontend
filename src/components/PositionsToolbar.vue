@@ -2,9 +2,24 @@
     <v-toolbar-items>
         <v-tooltip bottom>
             <template v-slot:activator="{ on }">
+            <v-btn
+                small
+                icon
+                height="24"
+                @click="selectAllItems"
+                :disabled="isFilteringOn"
+            >
+                <v-icon>select_all</v-icon>
+            </v-btn>
+            </template>
+            <span>Zaznacz Wszystko</span>
+        </v-tooltip>
+        <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
                 <v-btn
                     icon @click="groupStatusChange"
                     v-on="on"
+                    :disabled="isFilteringOn"
                 >
                     <v-icon>done</v-icon>
                 </v-btn>
@@ -62,6 +77,18 @@ export default {
             ],
             operationsFilter: '',
             operationsItems: ['Wszystkie', 'Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC', 'Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie', 'Rozliczenie'],
+            operationsEnum: {
+                WSZYSTKIE: 'Wszystkie',
+                CIĘCIE: 'Cięcie',
+                SZLIFOWANIE: 'Szlifowanie',
+                WIERCENIE: 'Wiercenie',
+                CNC: 'CNC',
+                HARTOWANIE: 'Hartowanie',
+                EMALIOWANIE: 'Emaliowanie',
+                LAMINOWANIE: 'Laminowanie',
+                WYDANIE: 'Wydanie',
+                ROZLICZENIE: 'Rozliczenie'
+            },
         }
     },
     methods: {
@@ -78,7 +105,19 @@ export default {
             console.log(prop);
             EventBus.$emit('sortOrders', prop);
         },
+        selectAllItems() {
+            EventBus.$emit('selectAllItems');
+        }
     },
+    computed: {
+        isFilteringOn() {
+            return this.operationsFilter == this.operationsEnum.WSZYSTKIE ||
+                this.operationsFilter == '';
+        },
+    },
+    created() {
+        EventBus.$on('operationsFilterChange', (value) => { this.operationsFilter = value; })
+    }
 }
 </script>
 

@@ -3,6 +3,7 @@
         <template v-for="order in filteredOrders">
             <v-card
                 :key="'order' + order.id"
+                ripple
             >
                 <v-layout
                     row
@@ -14,7 +15,8 @@
                             small
                             icon
                             height="24"
-                            @click="selectAllItems(orders.indexOf(order))"
+                            @click="selectAllOrderItems(order)"
+                            value="false"
                         >
                             <v-icon>select_all</v-icon>
                         </v-btn>
@@ -43,8 +45,8 @@
                         <v-flex shrink ml-3 mr-2>
                             <v-checkbox
                                 ref="items"
-                                :id="`${item.id}`"
-                                v-model="groupItems[orders.indexOf(order)][order.items.indexOf(item)]"
+                                :value="item.id"
+                                v-model="itemsSelected"
                             >
                             </v-checkbox>
                         </v-flex>
@@ -95,7 +97,7 @@ export default {
     data() {
         return {
             readyForOperation: false,
-            operationsFilter: 'Wszystkie',
+            operationsFilter: '',
             operationsEnum: {
                 WSZYSTKIE: 'Wszystkie',
                 CIĘCIE: 'Cięcie',
@@ -115,6 +117,7 @@ export default {
                 WYDANE: 'WYDANE',
                 ROZLICZONE: 'ROZLICZONE'
             },
+            itemsSelected: [],
             groupItems: [],
             groupOrders: [],
             operationsItems: ['Wszystkie', 'Cięcie', 'Szlifowanie', 'Wiercenie', 'CNC', 'Hartowanie', 'Emaliowanie', 'Laminowanie', 'Wydanie', 'Rozliczenie'],
@@ -179,15 +182,22 @@ export default {
                 this.groupOrders[i] = false;
             }
         },
-        selectAllItems(orderId) {
-            console.log(orderId);
-            var i;
-            for(i = 0; i < this.groupItems[orderId].length; i++) {
-                console.log(this.groupItems[orderId][i]);
-                this.groupItems[orderId][i] = !this.groupItems[orderId][i];
-                console.log(this.groupItems[orderId][i]);
-            }
-            console.log(this.groupItems);
+        changeOperationsFilter(value) {
+            this.operationsFilter = value;
+            this.itemsSelected = [];
+        },
+        selectAllOrderItems(order) {
+            console.log(order);
+            order.items.forEach((item) => {
+                if(!this.itemsSelected.includes(item.id)) {
+                    this.itemsSelected.push(item.id);
+                } else {
+                    this.itemsSelected.splice(this.itemsSelected.indexOf(item.id), 1);
+                }
+            });
+        },
+        selectAllItems() {
+            this.filteredOrders.forEach((order) => { this.selectAllOrderItems(order); })
         },
         getFilteredItems(items) {
             if(this.operationsFilter != this.operationsEnum.ROZLICZENIE) {
@@ -210,37 +220,39 @@ export default {
             }
         },
         groupStatusChange() {
-            if(this.operationsFilter != this.operationsEnum.WSZYSTKIE) {
+            if(this.operationsFilter != this.operationsEnum.WSZYSTKIE &&
+                this.operationsFilter != '') {
                 var i;
-                for(i = 0; i < this.$refs.items.length; i++) {
-                    if(this.$refs.items[i]._data.lazyValue) {
-                        this.loading = true;
-                        var itemId = this.$refs.items[i]._props.id;
-                        var item = this.findItem(itemId);
-                        var operationId = this.findOperationReadyForRealisation(item);
-                        console.log("itemId=" + itemId);
-                        console.log("item=");
-                        console.log(item);
-                        console.log("operationId=" + operationId);
+                for(i = 0; i < this.itemsSelected.length; i++) {
+                    this.loading = true;
+                    var itemId = this.itemsSelected[i];
+                    var item = this.findItem(itemId);
+                    var operationId = this.findOperationReadyForRealisation(item);
+                    console.log("itemId=" + itemId);
+                    console.log("item=");
+                    console.log(item);
+                    console.log("operationId=" + operationId);
 
-                        const changeStatusDto = {
-                            operationId: operationId,
-                            newStatus: this.operationStatusEnum.ZROBIONE
-                        };
+                    const changeStatusDto = {
+                        operationId: operationId,
+                        newStatus: this.operationStatusEnum.ZROBIONE
+                    };
 
-                        console.log(changeStatusDto);
+                    console.log(changeStatusDto);
 
-                        this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
-                        {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
-                            console.log(response.status);
-                            this.refresh();
-                            this.loading = false;
-                        }, response => {
-                            console.log(response);
-                        });
-                        // console.log(this.$refs.items[i]._props.id);
-                    }
+                    this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
+                    {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
+                        console.log(response.status);
+                    }, response => {
+                        console.log(response);
+                    });
+                    // console.log(this.$refs.items[i]._props.id);
                 }
+                this.loading = false;
+                this.operationsFilter = '';
+                EventBus.$emit('operationsFilterChange', this.operationsFilter);
+                this.itemsSelected = [];
+                this.refresh();
             } else {
                 this.showSnackbar("Nie można grupowo zmienić statusu pozycji przy filtrowaniu 'Wszystkie'. Wybierz inne filtrowanie.");
             }
@@ -271,7 +283,8 @@ export default {
         },
         includesOrder(order) {
             var result = true;
-            if(this.operationsFilter != this.operationsEnum.WSZYSTKIE) {
+            if(this.operationsFilter != this.operationsEnum.WSZYSTKIE &&
+                this.operationsFilter != '') {
                 result = result && this.isOrderReadyForOperation(order);
             }
             return result;
@@ -293,7 +306,8 @@ export default {
         },
         includes(item) {
             var result = true;
-            if(this.operationsFilter != this.operationsEnum.WSZYSTKIE) {
+            if(this.operationsFilter != this.operationsEnum.WSZYSTKIE &&
+                this.operationsFilter != '') {
                 result = result && this.isReadyForOperation(item);
             }
             return result;
@@ -326,9 +340,10 @@ export default {
     created() {
         this.loadData();
         EventBus.$on('refreshPositions', () => { this.refresh(); });
-        EventBus.$on('operationsFilterInput', (input) => { this.operationsFilter = input; });
+        EventBus.$on('operationsFilterInput', (input) => { this.changeOperationsFilter(input); });
         EventBus.$on('groupStatusChange', () => { this.groupStatusChange(); });
-        EventBus.$on('refreshOperations', () => { this.refresh(); })
+        EventBus.$on('refreshOperations', () => { this.refresh(); });
+        EventBus.$on('selectAllItems', () => { this.selectAllItems(); })
     },
 }
 </script>
