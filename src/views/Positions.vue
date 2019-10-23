@@ -1,5 +1,8 @@
 <template>
-    <v-container fluid>
+    <v-container
+        fluid
+        text-xs-left
+        >
         <template v-for="order in filteredOrders">
             <v-card
                 :key="'order' + order.id"

@@ -62,6 +62,7 @@
                             <v-btn
                             color="primary"
                             @click="e1 = 2"
+                            text-xs-center
                             >
                                 Dalej
                             </v-btn>

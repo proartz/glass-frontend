@@ -4,7 +4,7 @@
     <v-content>
       <v-container fluid fill-height>
         <v-layout>
-          <v-flex>
+          <v-flex text-xs-center>
             <router-view></router-view>
           </v-flex>
         </v-layout>
