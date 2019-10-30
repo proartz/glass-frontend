@@ -13,17 +13,25 @@ import ViewOrder from './views/ViewOrder.vue'
 import ViewOrderToolbar from './components/ViewOrderToolbar.vue'
 import EditOrder from './views/EditOrder.vue'
 import EditOrderToolbar from './components/EditOrderToolbar.vue'
+import store from './store'
+import Login from './views/Login.vue'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
+
   routes: [
     {
       path: '/',
       name: 'home',
       component:  Home
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
     },
     {
       path: '/orders',
@@ -79,3 +87,19 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if(to.matched.some(record => record.meta.requiresAuth)) {
+    if(!store.getters.isLoggedIn) {
+      next({
+        path: '/login'
+      })
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
+export default router;
