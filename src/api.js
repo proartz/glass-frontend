@@ -1,14 +1,12 @@
-import axios from 'axios'
+import AXIOS from 'axios'
 
-const AXIOS = axios.create({
-    baseURL: "http://192.168.1.30:9090",
+const axios = AXIOS.create({
+    baseURL: process.env.VUE_APP_URL,
 });
 
 export default {
     login(username, password) {
-        console.log(username);
-        console.log(password);
-        return AXIOS({
+        return axios({
             method: 'post',
             url: '/login',
             data: {
@@ -16,5 +14,12 @@ export default {
                 password: password
             }
         });
+    },
+    setHeader(token) {
+        // set up authorization header
+        axios.defaults.headers.common['Authorization'] = token;
+    },
+    deleteHeader() {
+        delete axios.defaults.headers.common['Authorization'];
     }
 }

@@ -19,6 +19,7 @@
 <script>
 import Navbar from '@/components/Navbar';
 import EventBus from '@/event-bus.js';
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'App',
@@ -28,5 +29,10 @@ export default {
       
     }
   },
+  computed: {
+    ...mapGetters([
+      'isLoggedIn'
+    ])
+  }
 }
 </script>
