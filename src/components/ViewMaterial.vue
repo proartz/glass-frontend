@@ -111,7 +111,7 @@ export default {
 
                     console.log(material);
 
-                    this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/updateMaterial', material,
+                    this.$http.post(process.env.VUE_APP_URL + '/updateMaterial', material,
                     {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                         console.log(response);
                         EventBus.$emit('showSnackbar', "Materiał " + this.material.name + " zaaktualizowany.");
@@ -136,7 +136,7 @@ export default {
 
                     console.log(material);
 
-                    this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/deleteMaterial', material,
+                    this.$http.post(process.env.VUE_APP_URL + '/deleteMaterial', material,
                     {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                         console.log(response);
                         EventBus.$emit('showSnackbar', "Materiał " + this.material.name + " usunięty.");

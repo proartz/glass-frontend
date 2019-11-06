@@ -187,7 +187,7 @@ export default {
 
                     console.log(order);
 
-                    this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/order', order,
+                    this.$http.post(process.env.VUE_APP_URL + '/order', order,
                     {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                         this.loading = false;
                         this.dialog = false;

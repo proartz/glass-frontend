@@ -397,7 +397,7 @@ export default {
         fetchOrder(id) {
             console.log("fetchOrder");
             this.loading = true;
-            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/order/' + id).then(response => {
+            this.$http.get(process.env.VUE_APP_URL + '/order/' + id).then(response => {
                 this.order = response.body;
                 console.log(this.order);
                 this.loading = false;
@@ -407,7 +407,7 @@ export default {
         },
         fetchMaterials() {
             this.loading = true;
-            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/materials').then(response => {
+            this.$http.get(process.env.VUE_APP_URL + '/materials').then(response => {
                 this.materials = response.body;
                 this.materialsItems = [];
                 this.materials.forEach((material) => {
@@ -531,7 +531,7 @@ export default {
 
           console.log(changeStatusDto);
 
-          this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
+          this.$http.post(process.env.VUE_APP_URL + '/changeStatus', changeStatusDto,
           {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
               this.order = response.body;
               console.log(response.status);
@@ -587,7 +587,7 @@ export default {
 
             console.log(order);
 
-            this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/updateOrder', order,
+            this.$http.post(process.env.VUE_APP_URL + '/updateOrder', order,
             {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                 this.loading = false;
                 this.order = response.body;

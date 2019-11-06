@@ -150,7 +150,7 @@ export default {
         },
         fetchOrders() {
             this.loading = true;
-            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/orders').then(response => {
+            this.$http.get(process.env.VUE_APP_URL + '/orders').then(response => {
                 this.orders = response.body;
                 this.initializeGroupItems();
                 this.initializeGroupOrders();
@@ -212,7 +212,7 @@ export default {
         },
         fetchMaterials() {
             this.loading = true;
-            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/materials').then(response => {
+            this.$http.get(process.env.VUE_APP_URL + '/materials').then(response => {
                 this.materials = response.body;
                 this.materials.forEach((material) => {
                     this.materialsItems.push(material.name);
@@ -243,7 +243,7 @@ export default {
 
                     console.log(changeStatusDto);
 
-                    this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
+                    this.$http.post(process.env.VUE_APP_URL + '/changeStatus', changeStatusDto,
                     {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                         console.log(response.status);
                     }, response => {

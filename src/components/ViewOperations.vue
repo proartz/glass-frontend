@@ -117,7 +117,7 @@ export default {
                     newStatus: newStatus
                 };
 
-                this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
+                this.$http.post(process.env.VUE_APP_URL + '/changeStatus', changeStatusDto,
                 {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                     EventBus.$emit('refreshOperations');
                     this.$emit('updateOperations', response.body);

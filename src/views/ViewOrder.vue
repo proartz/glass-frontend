@@ -188,7 +188,7 @@ export default {
         },
         fetchOrder(id) {
             this.loading = true;
-            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/order/' + id).then(response => {
+            this.$http.get(process.env.VUE_APP_URL + '/order/' + id).then(response => {
                 this.order = response.body;
                 console.log(this.order);
                 this.loading = false;
@@ -230,7 +230,7 @@ export default {
 
           console.log(item.id);
 
-          this.$http.delete('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/item', {body: deleteItemDto}).then(response => {
+          this.$http.delete(process.env.VUE_APP_URL + '/item', {body: deleteItemDto}).then(response => {
               this.showSnackbar("Pozycja " + item.material.name + " została usunięta.");
               // remove the item from the order in viewOrder
             //   this.order.items.splice(this.items.indexOf(item), 1);
@@ -253,7 +253,7 @@ export default {
 
           console.log(changeStatusDto);
 
-          this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/changeStatus', changeStatusDto,
+          this.$http.post(process.env.VUE_APP_URL + '/changeStatus', changeStatusDto,
           {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
               this.order = response.body;
               console.log(response.status);

@@ -361,7 +361,7 @@ export default {
         },
         fetchMaterials() {
             this.loading = true;operationsItems:
-            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/materials').then(response => {
+            this.$http.get(process.env.VUE_APP_URL + '/materials').then(response => {
                 this.materials = response.body;
                 this.materialsItems = [];
                 this.materials.forEach((material) => {
@@ -462,7 +462,7 @@ export default {
 
             console.log(order);
 
-            this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/order', order,
+            this.$http.post(process.env.VUE_APP_URL + '/order', order,
             {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                 const id = response.body;
                 this.loading = false;

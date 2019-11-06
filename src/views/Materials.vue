@@ -75,7 +75,7 @@ export default {
     methods: {
         fetchMaterials() {
             this.loading = true;
-            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/materials').then(response => {
+            this.$http.get(process.env.VUE_APP_URL + '/materials').then(response => {
                 this.materials = response.body;
                 this.loading = false;
             }), response => {

@@ -124,7 +124,7 @@ export default {
         },
         fetchOrders() {
             this.loading = true;
-            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/orders').then(response => {
+            this.$http.get(process.env.VUE_APP_URL + '/orders').then(response => {
                 this.orders = response.body;
                 this.loading = false;
             }, response => { 
@@ -133,7 +133,7 @@ export default {
         },
         fetchMaterials() {
             this.loading = true;
-            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/materials').then(response => {
+            this.$http.get(process.env.VUE_APP_URL + '/materials').then(response => {
                 this.materials = response.body;
                 this.materialsItems = [];
                 this.materials.forEach((material) => {
@@ -147,7 +147,7 @@ export default {
         fetchItems(orderIndex) {
             this.loading = true;
             var orderId = this.orders[orderIndex].id;
-            this.$http.get('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/items/' + orderId).then(response => {
+            this.$http.get(process.env.VUE_APP_URL + '/items/' + orderId).then(response => {
                 const items = response.body;
                 this.orders[orderIndex].items = items;
                 this.loading = false;

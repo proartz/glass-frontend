@@ -59,15 +59,6 @@ const router = new Router({
       }
     },
     {
-      path: '/users/edit',
-      name: 'Edytuj Użytkownika',
-      component: EditUser,
-      meta: {
-        requiresAuth: true,
-        requiresAdmin: true
-      }
-    },
-    {
       path: '/users/:login',
       name: 'Edytuj Użytkownika',
       component: ViewUser,

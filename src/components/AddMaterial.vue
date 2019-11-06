@@ -80,7 +80,7 @@ export default {
 
                     console.log(material);
 
-                    this.$http.post('http://' + process.env.VUE_APP_HOST + ':' + process.env.VUE_APP_BACKEND_PORT + '/material', material,
+                    this.$http.post(process.env.VUE_APP_URL + '/material', material,
                     {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
                         console.log(response.status);
                         this.loading = false;
