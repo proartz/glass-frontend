@@ -629,13 +629,13 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
 
     .v-chip.PRZYJĘTO{
         background: blue;
     }
     .v-chip.W_REALIZACJI{
-        background: red;
+        background: #EB0174;
     }
     .v-chip.GOTOWE{
         background: green;
@@ -644,7 +644,7 @@ export default {
         background: orange;
     }
     .v-chip.ROZLICZONE{
-        background: red;
+        background: #EB0174;
     }
     
     .v-chip.GOTOWE_DO_REALIZACJI{

@@ -129,13 +129,13 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 .operation.GOTOWE_DO_REALIZACJI{
     border-left: 4px solid blue;
 }
 .operation.W_REALIZACJI{
-    border-left: 4px solid red;
+    border-left: 4px solid #EB0174;
 }
 .operation.ZROBIONE{
     border-left: 4px solid green;
@@ -145,7 +145,7 @@ export default {
     background: blue;
 }
 .v-chip.W_REALIZACJI{
-    background: red;
+    background: #EB0174;
 }
 .v-chip.ZROBIONE{
     background: green;

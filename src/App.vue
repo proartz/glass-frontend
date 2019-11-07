@@ -10,7 +10,7 @@
         </v-layout>
       </v-container>
     </v-content>
-    <v-footer class="pl-2" color="indigo" app>
+    <v-footer class="pl-2" color="primary" app>
       <span class="white--text">&copy; 2019 OnCode - Glass</span>
     </v-footer>
   </v-app>

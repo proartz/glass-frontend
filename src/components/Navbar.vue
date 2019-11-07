@@ -58,7 +58,7 @@
 
         <!-- Toolbar -->
 
-        <v-toolbar color="indigo" dark fixed app>
+        <v-toolbar color="primary" dark fixed app>
             <v-toolbar-side-icon v-if="isLoggedIn" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
             <v-toolbar-title>{{ this.$router.currentRoute.name }}</v-toolbar-title>
             <v-spacer></v-spacer>

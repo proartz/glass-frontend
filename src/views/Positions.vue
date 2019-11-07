@@ -374,7 +374,7 @@ export default {
     border-left: 4px solid blue;
 }
 .item.W_REALIZACJI{
-    border-left: 4px solid red;
+    border-left: 4px solid #EB0174;
 }
 .item.ZROBIONE{
     border-left: 4px solid green;
@@ -384,7 +384,7 @@ export default {
     background: blue;
 }
 .v-chip.W_REALIZACJI{
-    background: red;
+    background: #EB0174;
 }
 .v-chip.GOTOWE{
     background: green;

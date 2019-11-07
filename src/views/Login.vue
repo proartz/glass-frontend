@@ -13,7 +13,7 @@
                   <li
                     v-for="error in errs"
                     :key=error
-                    class="text-xs-left red--text"
+                    class="text-xs-left error--text"
                   >{{ error }}</li>
                 </ul>
               </p>

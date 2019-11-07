@@ -223,35 +223,29 @@ export default {
 }
 
 .order.PRZYJĘTO{
-    border-left: 4px solid blue;
+    border-left: 4px solid #303030;
 }
 .order.W_REALIZACJI{
-    border-left: 4px solid red;
-}
-.order.GOTOWE{
-    border-left: 4px solid green;
+    border-left: 4px solid #ff3f99;
 }
 .order.WYDANE{
-    border-left: 4px solid yellow;
+    border-left: 4px solid #6f00ff;
 }
 .order.ROZLICZONE{
-    border-left: 4px solid orange;
+    border-left: 4px solid gray;
 }
 
 .v-chip.PRZYJĘTO{
-    background: blue;
+    background: #303030;
 }
 .v-chip.W_REALIZACJI{
-    background: red;
-}
-.v-chip.GOTOWE{
-    background: green;
+    background: #ff3f99;
 }
 .v-chip.WYDANE{
-    background: orange;
+    background: #6f00ff;
 }
 .v-chip.ROZLICZONE{
-    background: red;
+    background: gray;
 }
 
 </style>

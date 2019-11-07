@@ -53,9 +53,9 @@ export default {
             },
             buttonColor: {
                 NIEROBIONE: 'gray',
-                ZAPLANOWANE: 'red',
-                GOTOWE_DO_REALIZACJI: 'yellow',
-                ZROBIONE: 'green'
+                ZAPLANOWANE: '#ff3f99',
+                GOTOWE_DO_REALIZACJI: '#19ff6d',
+                ZROBIONE: '#6f00ff'
             }
         }
     },
@@ -163,7 +163,7 @@ div.btn__content {
 }
 
 .v-btn.GOTOWE_DO_REALIZACJI {
-    background-color: yellow;
+    background-color: #ffff37;
 }
 
 .v-btn.ZROBIONE {
