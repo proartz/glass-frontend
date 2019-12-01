@@ -21,5 +21,18 @@ export default {
     },
     deleteHeader() {
         delete axios.defaults.headers.common['Authorization'];
+    },
+    fetchUsers() {
+        return axios({
+            method: 'get',
+            url: '/admin/users',
+        })
+    },
+    addUser(user) {
+        return axios({
+            method: 'post',
+            url: '/admin/user',
+            data: user
+        })
     }
 }

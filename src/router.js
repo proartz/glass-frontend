@@ -141,7 +141,7 @@ const router = new Router({
         requiresAuth: true,
       }
     },
-    { path: '*', redirect: '/' }
+    { path: '*', redirect: '/orders' }
   ]
 })
 

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1>Strona Główna</h1>
+    <h1>Użytkownicy</h1>
   </v-container>
 </template>
 

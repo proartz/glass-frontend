@@ -65,7 +65,7 @@ import EventBus from '@/event-bus.js';
         this.$store.dispatch('login', { username, password })
             .then(response => {
               EventBus.$emit('showSnackbar', "Zalogowano użytkownika '" + this.user.name + "'")
-              this.$router.push("/");
+              this.$router.push("/orders");
             })
             .catch(error => {
               console.log(error);
