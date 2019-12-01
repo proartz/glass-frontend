@@ -17,8 +17,7 @@ import store from './store'
 import Login from './views/Login.vue'
 import Users from './views/Users.vue'
 import AddUser from './views/AddUser.vue'
-import EditUser from './views/EditUser.vue'
-import ViewUser from './views/ViewUser.vue'
+import UsersToolbar from './components/UsersToolbar.vue'
 
 Vue.use(Router)
 
@@ -28,14 +27,6 @@ const router = new Router({
 
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component:  Home,
-      meta: {
-        requiresAuth: true,
-      }
-    },
-    {
       path: '/login',
       name: 'Zaloguj',
       component: Login
@@ -43,7 +34,10 @@ const router = new Router({
     {
       path: '/users',
       name: 'Użytkownicy',
-      component: Users,
+      components: {
+        default: Users,
+        navigation: UsersToolbar
+      },
       meta: {
         requiresAuth: true,
         requiresAdmin: true
@@ -53,16 +47,6 @@ const router = new Router({
       path: '/users/add',
       name: 'Dodaj Użytkownika',
       component: AddUser,
-      meta: {
-        requiresAuth: true,
-        requiresAdmin: true
-      }
-    },
-    {
-      path: '/users/:login',
-      name: 'Edytuj Użytkownika',
-      component: ViewUser,
-      props: true,
       meta: {
         requiresAuth: true,
         requiresAdmin: true

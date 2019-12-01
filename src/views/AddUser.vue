@@ -4,7 +4,7 @@
            <v-flex>
                 <v-stepper v-model="e1">
                     <v-stepper-header>
-                        <v-stepper-step :complete="e1 > 1" step="1" editable>Dodaj Użytkownika</v-stepper-step>
+                        <v-stepper-step :complete="e1 > 1" step="1" editable color="#6f00ff">Dodaj Użytkownika</v-stepper-step>
                     </v-stepper-header>
                     <v-stepper-items>
                         <v-stepper-content step="1">
@@ -80,8 +80,9 @@
                             </v-card>
 
                             <v-btn
-                            color="primary"
+                            color="#6f00ff"
                             @click="addUser"
+                            dark
                             >
                                 Dodaj Użytkownika
                             </v-btn>

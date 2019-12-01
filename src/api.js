@@ -34,5 +34,14 @@ export default {
             url: '/admin/user',
             data: user
         })
+    },
+    deleteUser(user) {
+        return axios({
+            method: 'delete',
+            url: '/admin/user',
+            data: {
+                id: user.id
+            }
+        })
     }
 }

@@ -8,12 +8,14 @@
                             :complete="e1 > 1"
                             step="1"
                             editable
+                            color="#6f00ff"
                         >Podstawowe Informacje</v-stepper-step>
                         <v-divider></v-divider>
                         <v-stepper-step
                             :complete="e1 > 2"
                             step="2"
                             editable
+                            color="#6f00ff"
                         >Dodaj Pozycje</v-stepper-step>
                     </v-stepper-header>
                     <v-stepper-items>
@@ -113,7 +115,8 @@
                                 </v-form>
                             </v-card>
                             <v-btn
-                            color="primary"
+                            color="#6f00ff"
+                            dark
                             @click="stage1Next"
                             >
                                 Dalej
@@ -212,6 +215,8 @@
                                     </v-layout>
                                 </v-form>
                                 <v-btn
+                                    color="#6f00ff"
+                                    dark
                                     @click="addItem"
                                     :disabled="order.status == orderStatusEnum.ROZLICZONE"
                                 >Dodaj Pozycję</v-btn>
@@ -261,7 +266,8 @@
                             </v-card>
 
                             <v-btn
-                                color="primary"
+                                color="#6f00ff"
+                                dark
                                 @click="finish"
                                 :disabled="!isOrderEdited"
                             >

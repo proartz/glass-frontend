@@ -4,9 +4,9 @@
            <v-flex>
                 <v-stepper v-model="e1">
                     <v-stepper-header>
-                        <v-stepper-step :complete="e1 > 1" step="1" editable>Podstawowe Informacje</v-stepper-step>
+                        <v-stepper-step :complete="e1 > 1" step="1" editable color="#6f00ff">Podstawowe Informacje</v-stepper-step>
                         <v-divider></v-divider>
-                        <v-stepper-step :complete="e1 > 2" step="2" editable>Dodaj Pozycje</v-stepper-step>
+                        <v-stepper-step :complete="e1 > 2" step="2" editable color="#6f00ff">Dodaj Pozycje</v-stepper-step>
                     </v-stepper-header>
                     <v-stepper-items>
                         <v-stepper-content step="1">
@@ -88,7 +88,8 @@
                             </v-card>
 
                             <v-btn
-                            color="primary"
+                            color="#6f00ff"
+                            dark
                             @click="stage1Next"
                             >
                                 Dalej
@@ -186,7 +187,7 @@
                                         </v-flex>
                                     </v-layout>
                                 </v-form>
-                                <v-btn @click="addItem">Dodaj Pozycję</v-btn>
+                                <v-btn @click="addItem" color="#6f00ff" dark>Dodaj Pozycję</v-btn>
                                 <v-btn @click="clearForm2">Wyczyść</v-btn>
                                 <v-subheader>POZYCJE</v-subheader>
                                 <span v-if="itemCounterError" class="red--text caption text-xs-left">BŁĄD: Nie dodano żadnej pozycji</span>
@@ -233,13 +234,14 @@
                             </v-card>
 
                             <v-btn
-                            color="primary"
+                            color="#6f00ff"
+                            dark
                             @click="finish"
                             >
                             Dodaj Zlecenie
                             </v-btn>
 
-                            <v-btn flat>Anuluj</v-btn>
+                            <v-btn >Anuluj</v-btn>
                         </v-stepper-content>
                     </v-stepper-items>
                 </v-stepper>
