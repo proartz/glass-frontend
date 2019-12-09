@@ -307,6 +307,7 @@
 import AddItem from '@/components/AddItem';
 import ViewOperations from '@/components/ViewOperations';
 import EventBus from '@/event-bus.js';
+import api from '@/api.js';
 
 export default {
     components: {
@@ -403,26 +404,26 @@ export default {
         fetchOrder(id) {
             console.log("fetchOrder");
             this.loading = true;
-            this.$http.get(process.env.VUE_APP_URL + '/order/' + id).then(response => {
-                this.order = response.body;
+            api.fetchOrder(id).then(response => {
+                this.order = response.data;
                 console.log(this.order);
                 this.loading = false;
-            }, response => { 
-                console.log(response.body);
+            }).catch(error => { 
+                console.log(error);
             });
         },
         fetchMaterials() {
             this.loading = true;
-            this.$http.get(process.env.VUE_APP_URL + '/materials').then(response => {
-                this.materials = response.body;
+            api.fetchMaterials().then(response => {
+                this.materials = response.data;
                 this.materialsItems = [];
                 this.materials.forEach((material) => {
                     this.materialsItems.push(material.name);
                 })
                 this.loading = false;
-            }), response => {
-                console.error(response);
-            }
+            }).catch(error => {
+                console.error(error);
+            });
         },
         updateOrderStatus(item, newOrder) {
             this.order.status = newOrder.status;
@@ -537,13 +538,11 @@ export default {
 
           console.log(changeStatusDto);
 
-          this.$http.post(process.env.VUE_APP_URL + '/changeStatus', changeStatusDto,
-          {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
-              this.order = response.body;
-              console.log(response.status);
+          api.changeStatus(changeStatusDto).then(response => {
+              this.order = response.data;
               this.loading = false;
-          }, response => {
-              console.log(response);
+          }).catch(error => {
+              console.log(error);
           });
         },
         stage1Next() {
@@ -593,16 +592,15 @@ export default {
 
             console.log(order);
 
-            this.$http.post(process.env.VUE_APP_URL + '/updateOrder', order,
-            {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
+            api.updateOrder(order).then(response => {
                 this.loading = false;
-                this.order = response.body;
+                this.order = response.data;
                 EventBus.$emit('disableLoading');
                 EventBus.$emit('showSnackbar', "Zaktualizowano zlecenie. Id = " + this.id)
                 this.isOrderEdited = false;
                 // this.clearForm();
-            }, response => {
-                console.log(response);
+            }).catch(error => {
+                console.log(error);
             });
         },
         showSnackbar(message) {
@@ -637,26 +635,4 @@ export default {
 </script>
 <style scoped>
 
-    .v-chip.PRZYJĘTO{
-        background: blue;
-    }
-    .v-chip.W_REALIZACJI{
-        background: #EB0174;
-    }
-    .v-chip.GOTOWE{
-        background: green;
-    }
-    .v-chip.WYDANE{
-        background: orange;
-    }
-    .v-chip.ROZLICZONE{
-        background: #EB0174;
-    }
-    
-    .v-chip.GOTOWE_DO_REALIZACJI{
-        background: blue;
-    }
-    .v-chip.ZROBIONE{
-        background: green;
-    }
 </style>

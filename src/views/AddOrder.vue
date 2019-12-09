@@ -254,6 +254,7 @@
 import AddItem from '@/components/AddItem';
 import ViewOperations from '@/components/ViewOperations';
 import EventBus from '@/event-bus.js';
+import api from '@/api.js';
 
 export default {
     components: {
@@ -363,16 +364,16 @@ export default {
         },
         fetchMaterials() {
             this.loading = true;operationsItems:
-            this.$http.get(process.env.VUE_APP_URL + '/materials').then(response => {
-                this.materials = response.body;
+            api.fetchMaterials().then(response => {
+                this.materials = response.data;
                 this.materialsItems = [];
                 this.materials.forEach((material) => {
                     this.materialsItems.push(material.name);
                 })
                 this.loading = false;
-            }), response => {
-                console.error(response);
-            }
+            }).catch(error => {
+                console.error(error);
+            });
         },
         addItem() {
             this.loading = true;
@@ -464,15 +465,14 @@ export default {
 
             console.log(order);
 
-            this.$http.post(process.env.VUE_APP_URL + '/order', order,
-            {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
-                const id = response.body;
+            api.addOrder(order).then(response => {
+                const id = response.data;
                 this.loading = false;
                 EventBus.$emit('disableLoading');
                 EventBus.$emit('showSnackbar', "Dodano nowe zlecenie. Id = " + id)
                 this.$router.push({ name: 'Zlecenie', params: {id: id }});
                 // this.clearForm();
-            }, response => {
+            }).catch(error => {
                 console.log(response);
             });
         }

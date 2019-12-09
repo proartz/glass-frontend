@@ -320,26 +320,4 @@ export default {
 </script>
 <style scoped>
 
-    .v-chip.PRZYJĘTO{
-        background: blue;
-    }
-    .v-chip.W_REALIZACJI{
-        background: #EB0174;
-    }
-    .v-chip.GOTOWE{
-        background: green;
-    }
-    .v-chip.WYDANE{
-        background: orange;
-    }
-    .v-chip.ROZLICZONE{
-        background: #EB0174;
-    }
-    
-    .v-chip.GOTOWE_DO_REALIZACJI{
-        background: blue;
-    }
-    .v-chip.ZROBIONE{
-        background: green;
-    }
 </style>

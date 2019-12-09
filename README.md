@@ -27,3 +27,16 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### Deploying an app to the gcp
+
+### Initializie the gcloud and setup the project id
+gcloud init
+
+npm install
+
+npm run build
+
+gcloud app deploy
+
+

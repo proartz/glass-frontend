@@ -86,15 +86,12 @@
 </template>
 
 <script>
-import AddOrder from '@/components/AddOrder';
-import ViewOrder from '@/components/ViewOrder';
 import ViewOperations from '@/components/ViewOperations';
 import EventBus from '@/event-bus.js';
+import api from '@/api.js';
 
 export default {
     components: { 
-        AddOrder,
-        ViewOrder,
         ViewOperations
     },
     data() {
@@ -124,35 +121,35 @@ export default {
         },
         fetchOrders() {
             this.loading = true;
-            this.$http.get(process.env.VUE_APP_URL + '/orders').then(response => {
-                this.orders = response.body;
-                this.loading = false;
-            }, response => { 
-                console.log(response.body);
+            api.fetchOrders().then(response => {
+                this.orders = response.data;
+            }).catch(error => { 
+                console.log(error);
             });
+            this.loading = false;
         },
         fetchMaterials() {
             this.loading = true;
-            this.$http.get(process.env.VUE_APP_URL + '/materials').then(response => {
-                this.materials = response.body;
+            api.fetchMaterials().then(response => {
+                this.materials = response.data;
                 this.materialsItems = [];
                 this.materials.forEach((material) => {
                     this.materialsItems.push(material.name);
                 })
                 this.loading = false;
-            }), response => {
-                console.error(response);
-            }
+            }).catch(error => {
+                console.error(error);
+            });
         },
         fetchItems(orderIndex) {
             this.loading = true;
             var orderId = this.orders[orderIndex].id;
-            this.$http.get(process.env.VUE_APP_URL + '/items/' + orderId).then(response => {
-                const items = response.body;
+            api.fetchItems(orderId).then(response => {
+                const items = response.data;
                 this.orders[orderIndex].items = items;
                 this.loading = false;
-            }, response => { 
-                console.log(response.body);
+            }).catch(error => { 
+                console.log(error);
             });
         },
         searchTextInput(input) {

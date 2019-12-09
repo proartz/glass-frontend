@@ -17,6 +17,7 @@
 
 <script>
 import EventBus from '@/event-bus.js';
+import api from '@/api.js';
 
 export default {
     props: [
@@ -117,13 +118,12 @@ export default {
                     newStatus: newStatus
                 };
 
-                this.$http.post(process.env.VUE_APP_URL + '/changeStatus', changeStatusDto,
-                {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
+                api.changeStatus(changeStatusDto).then(response => {
                     EventBus.$emit('refreshOperations');
-                    this.$emit('updateOperations', response.body);
+                    this.$emit('updateOperations', response.data);
                     this.loading = false;
-                }, response => {
-                    console.log(response);
+                }).catch(error => {
+                    console.log(error);
                 });
           }
         },

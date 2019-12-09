@@ -4,9 +4,9 @@
            <v-flex>
                 <v-stepper v-model="e1">
                     <v-stepper-header>
-                        <v-stepper-step :complete="e1 > 1" step="1" editable>Podstawowe Informacje</v-stepper-step>
+                        <v-stepper-step :complete="e1 > 1" step="1" editable color="#6f00ff">Podstawowe Informacje</v-stepper-step>
                         <v-divider></v-divider>
-                        <v-stepper-step :complete="e1 > 2" step="2" editable>Pozycje</v-stepper-step>
+                        <v-stepper-step :complete="e1 > 2" step="2" editable color="#6f00ff">Pozycje</v-stepper-step>
                     </v-stepper-header>
                     <v-stepper-items>
                         <v-stepper-content step="1">
@@ -60,7 +60,8 @@
                             </v-card>
 
                             <v-btn
-                            color="primary"
+                            color="#6f00ff"
+                            dark
                             @click="e1 = 2"
                             >
                                 Dalej
@@ -118,7 +119,8 @@
                             </v-container>
 
                             <v-btn
-                            color="primary"
+                            color="#6f00ff"
+                            dark
                             @click="e1 = 1"
                             >
                             Wstecz
@@ -135,6 +137,7 @@
 import AddItem from '@/components/AddItem'
 import ViewOperations from '@/components/ViewOperations'
 import EventBus from '@/event-bus.js';
+import api from '@/api.js';
 
 export default {
     components: {
@@ -188,12 +191,12 @@ export default {
         },
         fetchOrder(id) {
             this.loading = true;
-            this.$http.get(process.env.VUE_APP_URL + '/order/' + id).then(response => {
-                this.order = response.body;
+            api.fetchOrder(id).then(response => {
+                this.order = response.data;
                 console.log(this.order);
                 this.loading = false;
-            }, response => { 
-                console.log(response.body);
+            }).catch(error => { 
+                console.log(error);
             });
         },
         isReadyForDelete(item) {
@@ -230,17 +233,16 @@ export default {
 
           console.log(item.id);
 
-          this.$http.delete(process.env.VUE_APP_URL + '/item', {body: deleteItemDto}).then(response => {
+          api.deleteItem(deleteItemDto).then(response => {
               this.showSnackbar("Pozycja " + item.material.name + " została usunięta.");
               // remove the item from the order in viewOrder
             //   this.order.items.splice(this.items.indexOf(item), 1);
-              console.log(response.status);
               this.refresh();
               this.itemToDelete = '';
               this.deleteDialog = false;
               this.loading = false;
-          }, response => {
-              console.log(response);
+          }).catch(error => {
+              console.log(error);
           });
         },
         changeStatus(operation, newStatus) {
@@ -253,13 +255,11 @@ export default {
 
           console.log(changeStatusDto);
 
-          this.$http.post(process.env.VUE_APP_URL + '/changeStatus', changeStatusDto,
-          {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(response => {
-              this.order = response.body;
-              console.log(response.status);
+          api.changeStatus(changeStatusDto).then(response => {
+              this.order = response.data;
               this.loading = false;
-          }, response => {
-              console.log(response);
+          }).catch(error => {
+              console.log(error);
           });
         },
         showSnackbar(message) {
@@ -286,26 +286,6 @@ export default {
     .theme--light.v-divider {
         border-color: #949494;
     }
-    .v-chip.PRZYJĘTO{
-        background: blue;
-    }
-    .v-chip.W_REALIZACJI{
-        background: #EB0174;
-    }
-    .v-chip.GOTOWE{
-        background: green;
-    }
-    .v-chip.WYDANE{
-        background: orange;
-    }
-    .v-chip.ROZLICZONE{
-        background: #EB0174;
-    }
-    
-    .v-chip.GOTOWE_DO_REALIZACJI{
-        background: blue;
-    }
-    .v-chip.ZROBIONE{
-        background: green;
-    }
+   
+
 </style>

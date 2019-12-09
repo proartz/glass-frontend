@@ -17,7 +17,7 @@ export default {
     },
     setHeader(token) {
         // set up authorization header
-        axios.defaults.headers.common['Authorization'] = token;
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
     },
     deleteHeader() {
         delete axios.defaults.headers.common['Authorization'];
@@ -42,6 +42,58 @@ export default {
             data: {
                 id: user.id
             }
+        })
+    },
+    fetchOrders() {
+        return axios({
+            method: 'get',
+            url: '/orders',
+        })
+    },
+    fetchOrder(id) {
+        return axios({
+            method: 'get',
+            url: '/order/' + id,
+        })
+    },
+    fetchMaterials() {
+        return axios({
+            method: 'get',
+            url: '/materials',
+        })
+    },
+    changeStatus(changeStatusDto) {
+        return axios({
+            method: 'post',
+            url: '/changeStatus',
+            data: changeStatusDto
+        })
+    },
+    updateOrder(order) {
+        return axios({
+            method: 'post',
+            url: '/updateOrder',
+            data: order
+        })
+    },
+    addOrder(order) {
+        return axios({
+            method: 'post',
+            url: '/order',
+            data: order
+        })
+    },
+    deleteItem(deleteItemDto) {
+        return axios({
+            method: 'delete',
+            url: '/item',
+            data: deleteItemDto
+        })
+    },
+    fetchItems(orderId) {
+        return axios({
+            method: 'get',
+            url: '/items' + orderId,
         })
     }
 }
